@@ -5,9 +5,9 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour {
 
     public Transform cameraTarget;
-    public float smoothing = 0.5f;
-    public float cameraSpeed = 50.0f;
-    public float mouseDeadzoneOffset = 45.0f;
+    [Range(0.1f, 10.0f)] public float smoothing = 2.0f;
+    [Range(0.0f, 1000.0f)] public float cameraSpeed = 50.0f;
+    [Range(0.0f, 300.0f)]  public float mouseDeadzoneOffset = 45.0f;
 
     private Vector3 cameraOffset;
 

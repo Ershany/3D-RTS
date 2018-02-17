@@ -477,6 +477,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraTarget: {fileID: 0}
-  smoothing: 0.5
+  smoothing: 2
   cameraSpeed: 50
   mouseDeadzoneOffset: 45
