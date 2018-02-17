@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [System.Serializable]
-public abstract class PlayerUnit : DynamicUnit {
+public class PlayerUnit : DynamicUnit {
 
-	public PlayerUnit(float health) : base(health, true)
+    public PlayerController playerController;
+
+	public PlayerUnit(GameObject obj, float health) : base(obj, health, true)
     {
-        
+        playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
     }
 }

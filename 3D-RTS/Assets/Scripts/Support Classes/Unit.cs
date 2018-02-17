@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public abstract class Unit : MonoBehaviour {
+public abstract class Unit {
 
     protected float maxHealth, currentHealth;
     public bool IsDead { get; protected set; }

@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [System.Serializable]
-public abstract class DemonUnit : DynamicUnit {
+public class DemonUnit : DynamicUnit {
 
-	public DemonUnit(float health) : base(health, false)
+	public DemonUnit(GameObject obj, float health) : base(obj, health, false)
     {
 
     }

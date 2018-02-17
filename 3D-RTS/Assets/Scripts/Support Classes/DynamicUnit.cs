@@ -9,10 +9,10 @@ public abstract class DynamicUnit : Unit {
     public bool IsPlayerControlled { get; protected set; }
     protected NavMeshAgent agent;
 
-    public DynamicUnit(float health, bool playerControlled) : base(health)
+    public DynamicUnit(GameObject obj, float health, bool playerControlled) : base(health)
     {
         IsPlayerControlled = playerControlled;
-        agent = GetComponent<NavMeshAgent>();
+        agent = obj.GetComponent<NavMeshAgent>();
     }
 	
     public void SetDestination(Vector3 destination)
