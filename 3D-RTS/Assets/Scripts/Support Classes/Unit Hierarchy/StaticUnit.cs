@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public abstract class StaticUnit : Unit {
 
-    public StaticUnit(float health) : base(health)
+    public StaticUnit(GameObject obj, float health) : base(obj, health)
     {
 
     }

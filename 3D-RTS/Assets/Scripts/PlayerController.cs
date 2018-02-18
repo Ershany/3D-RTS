@@ -4,21 +4,19 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    public PlayerUnit selectedUnit; // TEMP should be selectedGroup and should be private
+    private List<Group> groups;
+    private Group selectedGroup;
 
     void Awake()
     {
-        selectedUnit = null;
-    }
-
-    // Use this for initialization
-    void Start () {
-        
+        groups = new List<Group>();
+        selectedGroup = null;
     }
 	
 	// Update is called once per frame
-	void Update () {
-		if (Input.GetMouseButtonDown(0) && selectedUnit != null)
+	void Update ()
+    {
+		if (Input.GetMouseButtonDown(0) && selectedGroup != null)
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -26,9 +24,15 @@ public class PlayerController : MonoBehaviour {
             if (Physics.Raycast(ray, out hit))
             {
                 Transform objectHit = hit.transform;
-                selectedUnit.SetDestination(hit.point);
-                Debug.Log("Unit is moving to " + hit.point.ToString());
+                selectedGroup.SetGroupDestination(hit.point);
+                Debug.Log("Group is moving to " + hit.point.ToString());
             }
         }
 	}
+    
+    public void AddGroup(Group group)
+    {
+        groups.Add(group);
+        selectedGroup = group;
+    }
 }
