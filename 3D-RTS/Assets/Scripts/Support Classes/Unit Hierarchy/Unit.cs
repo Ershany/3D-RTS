@@ -25,6 +25,15 @@ public abstract class Unit {
         }
     }
 
+    public void HealDamage(float healAmount)
+    {
+        currentHealth += healAmount;
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+    }
+
     public void SetGameObjectParent(Transform parent)
     {
         gameObject.transform.SetParent(parent);
