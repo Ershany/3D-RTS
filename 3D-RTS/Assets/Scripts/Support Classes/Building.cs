@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Building {
 
@@ -68,6 +69,9 @@ public class Building {
         {
             boxCollider.enabled = true;
             renderer.material.color = new Color(renderer.material.color.r, renderer.material.color.g, renderer.material.color.b, 1.0f);
+            NavMeshObstacle obstacle = GameObject.AddComponent<NavMeshObstacle>();
+            obstacle.carving = true;
+
             return true;
         }
         return false;
