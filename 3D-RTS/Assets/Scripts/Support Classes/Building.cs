@@ -10,12 +10,15 @@ public class Building {
     public float BuildingHeight { get; private set; }
     public GameObject GameObject { get; private set; }
     private BoxCollider boxCollider;
+    private Renderer renderer;
 
     public Building(GameObject obj, float health, float buildingHeight)
     {
         GameObject = obj;
         boxCollider = GameObject.GetComponent<BoxCollider>();
         boxCollider.enabled = false;
+        renderer = GameObject.GetComponent<Renderer>();
+        renderer.material.color = new Color(renderer.material.color.r, renderer.material.color.g, renderer.material.color.b, 0.5f);
 
         maxHealth = currentHealth = health;
         IsDestroyed = false;
@@ -64,6 +67,7 @@ public class Building {
         if (IsPlaceableOnTerrain())
         {
             boxCollider.enabled = true;
+            renderer.material.color = new Color(renderer.material.color.r, renderer.material.color.g, renderer.material.color.b, 1.0f);
             return true;
         }
         return false;
