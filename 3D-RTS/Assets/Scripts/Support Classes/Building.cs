@@ -6,13 +6,21 @@ public class Building {
 
     private float maxHealth, currentHealth;
     public bool IsDestroyed { get; private set; }
-    private GameObject gameObject;
+    public bool IsPlaced { get; private set; }
+    public float BuildingHeight { get; private set; }
+    public GameObject GameObject { get; private set; }
+    private BoxCollider boxCollider;
 
-    public Building(GameObject obj, float health)
+    public Building(GameObject obj, float health, float buildingHeight)
     {
-        gameObject = obj;
+        GameObject = obj;
+        boxCollider = GameObject.GetComponent<BoxCollider>();
+        boxCollider.enabled = false;
+
         maxHealth = currentHealth = health;
         IsDestroyed = false;
+        IsPlaced = false;
+        BuildingHeight = buildingHeight;
     }
 
     public void TakeDamage(float damage)
@@ -33,22 +41,31 @@ public class Building {
         }
     }
 
-    // Checks if the building in its current position, is allowed to be placed on the terrain (not on sloped terrain)
-    public bool IsPlaceableOnTerrain()
+    public void MoveBuilding(Vector3 newPos)
     {
-        // Loop through all of the children's positions and make sure they are on the same level of elevation
-        bool firstIter = true;
-        float terrainHeight = 0.0f;
-        foreach (Transform child in gameObject.transform)
+        GameObject.transform.position = newPos;
+    }
+
+    // Checks if the building in its current position, is allowed to be placed on the terrain (not on sloped terrain)
+    private bool IsPlaceableOnTerrain()
+    {
+        if (IsPlaced) return true;
+        // Loop through all of the children's positions and make sure they are on the terrain
+        foreach (Transform child in GameObject.transform)
         {
-            float currentHeight = Terrain.activeTerrain.SampleHeight(child.position);
-            if (firstIter)
-            {
-                terrainHeight = currentHeight;
-                firstIter = false;
-            }
-            if (terrainHeight != currentHeight) return false;
+            if (Terrain.activeTerrain.SampleHeight(child.position) != child.position.y) return false;
         }
         return true;
+    }
+
+    // Attempts to place the building on the terrain. Will return true if successful
+    public bool PlaceBuildingOnTerrain()
+    {
+        if (IsPlaceableOnTerrain())
+        {
+            boxCollider.enabled = true;
+            return true;
+        }
+        return false;
     }
 }

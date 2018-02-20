@@ -12,6 +12,6 @@ public class GuildHallController : MonoBehaviour {
 
     void Awake()
     {
-        building = new Building(gameObject, buildingHealth);
+        building = new Building(gameObject, buildingHealth, transform.localScale.y);
     }
 }
