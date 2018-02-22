@@ -12,4 +12,10 @@ public class PlayerUnit : DynamicUnit {
     {
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
     }
+
+    public void AnimateUnit()
+    {
+        anim.SetBool("Moving", agent.velocity.sqrMagnitude > 0 ? true : false);
+        anim.SetFloat("Speed", agent.velocity.sqrMagnitude);
+    }
 }

@@ -14,4 +14,9 @@ public class MageController : MonoBehaviour {
     {
         unit = new PlayerUnit(gameObject, unitHealth);
     }
+
+    void Update()
+    {
+        unit.AnimateUnit();    
+    }
 }
