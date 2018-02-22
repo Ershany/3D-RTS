@@ -32,4 +32,9 @@ public class Group : MonoBehaviour {
             unit.StopMovement();
         }
     }
+
+    public DynamicUnit GetFirstUnit()
+    {
+        return units[0];
+    }
 }

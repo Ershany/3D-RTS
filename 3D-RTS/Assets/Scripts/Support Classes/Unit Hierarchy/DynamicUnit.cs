@@ -16,6 +16,11 @@ public abstract class DynamicUnit : Unit {
         agent = gameObject.GetComponent<NavMeshAgent>();
         anim = gameObject.GetComponent<Animator>();
     }
+
+    public Transform GetTransform()
+    {
+        return gameObject.transform;
+    }
 	
     public void SetDestination(Vector3 destination)
     {

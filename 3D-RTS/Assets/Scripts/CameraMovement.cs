@@ -9,16 +9,23 @@ public class CameraMovement : MonoBehaviour {
     [Range(0.0f, 1000.0f)] public float cameraSpeed = 50.0f;
     [Range(0.0f, 300.0f)]  public float mouseDeadzoneOffset = 45.0f;
 
+    private PlayerController player;
     private Vector3 cameraOffset;
 
 	void Awake ()
     {
+        player = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
         cameraOffset = new Vector3(0.0f, transform.position.y, -20.0f); // Used for camera targeting
     }
 
     void Update()
     {
-        // Free movement
+        if (Input.GetKeyDown("space"))
+        {
+            cameraTarget = cameraTarget == null ? player.SelectedGroup.GetFirstUnit().GetTransform() : null;
+        }
+
+        // Free Movement
         if (cameraTarget == null)
         {
             float horizontalMovement = Mathf.Clamp(Input.GetAxis("Horizontal") + CheckHorizontalMouse(), -1.0f, 1.0f);

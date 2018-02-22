@@ -5,9 +5,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
     public GameObject guildHallPrefab;
+    public Group SelectedGroup { get; private set; }
 
     private List<Group> groups;
-    private Group selectedGroup;
     private Building buildingSelected;
 
     private int terrainMask;
@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour {
     void Awake()
     {
         groups = new List<Group>();
-        selectedGroup = null;
+        SelectedGroup = null;
         terrainMask = LayerMask.GetMask("TerrainLayer");
     }
 	
@@ -50,10 +50,10 @@ public class PlayerController : MonoBehaviour {
                     Debug.Log("Building Placed");
                 }
             }
-            else if (selectedGroup != null) // Check if the player is commanding a group of units
+            else if (SelectedGroup != null) // Check if the player is commanding a group of units
             {
                 Transform objectHit = hit.transform;
-                selectedGroup.SetGroupDestination(hit.point);
+                SelectedGroup.SetGroupDestination(hit.point);
                 Debug.Log("Group is moving to " + hit.point.ToString());
             }
         }
@@ -70,6 +70,6 @@ public class PlayerController : MonoBehaviour {
     public void AddGroup(Group group)
     {
         groups.Add(group);
-        selectedGroup = group;
+        SelectedGroup = group;
     }
 }
