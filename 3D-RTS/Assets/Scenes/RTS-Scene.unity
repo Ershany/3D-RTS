@@ -260,11 +260,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7716b4197ceed71458c41e1e31ab54b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  warriorPrefab: {fileID: 1730149957237150, guid: 51cae623261bc4340a1d018ce68ce87f,
+  warriorPrefab: {fileID: 1908435321661620, guid: 0b0c27cf5f4d42a4ca395a71377d9c94,
     type: 2}
-  roguePrefab: {fileID: 1970586484525724, guid: d1e385d32c6c6c2409a9d4d5ed177feb,
+  roguePrefab: {fileID: 1719253358520630, guid: d1e385d32c6c6c2409a9d4d5ed177feb,
     type: 2}
-  magePrefab: {fileID: 1161591649820544, guid: 75a8f1ae898e8bc4c88a8ed7fde408f8, type: 2}
+  magePrefab: {fileID: 1996216839547518, guid: 75a8f1ae898e8bc4c88a8ed7fde408f8, type: 2}
   groupPrefab: {fileID: 1409932899419140, guid: 36fd7a8a6d25caa49bf1c4c7260dfa8e,
     type: 2}
 --- !u!1 &1572964990

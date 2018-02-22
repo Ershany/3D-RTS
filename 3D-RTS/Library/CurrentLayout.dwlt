@@ -105,10 +105,10 @@ MonoBehaviour:
     y: 30
     width: 1536
     height: 731
-  m_MinSize: {x: 711, y: 492}
-  m_MaxSize: {x: 18006, y: 14042}
+  m_MinSize: {x: 713, y: 492}
+  m_MaxSize: {x: 18008, y: 14042}
   vertical: 1
-  controlID: 1442
+  controlID: 6544
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -130,10 +130,10 @@ MonoBehaviour:
     y: 0
     width: 1536
     height: 731
-  m_MinSize: {x: 711, y: 492}
-  m_MaxSize: {x: 18006, y: 14042}
+  m_MinSize: {x: 713, y: 492}
+  m_MaxSize: {x: 18008, y: 14042}
   vertical: 0
-  controlID: 1443
+  controlID: 6545
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -157,7 +157,7 @@ MonoBehaviour:
   m_MinSize: {x: 202, y: 442}
   m_MaxSize: {x: 4002, y: 8042}
   vertical: 1
-  controlID: 1444
+  controlID: 6802
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -184,7 +184,7 @@ MonoBehaviour:
   - {fileID: 16}
   - {fileID: 17}
   m_Selected: 0
-  m_LastSelected: 0
+  m_LastSelected: 2
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -233,7 +233,7 @@ MonoBehaviour:
   m_MinSize: {x: 234, y: 492}
   m_MaxSize: {x: 10004, y: 14042}
   vertical: 1
-  controlID: 1348
+  controlID: 6727
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -418,14 +418,14 @@ MonoBehaviour:
     height: 366
   m_PersistentViewDataDictionary: {fileID: 0}
   m_SceneLighting: 1
-  lastFramingTime: 823.493230774785
+  lastFramingTime: 1255.5609177935735
   m_2DMode: 0
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 22.2, y: 1.3, z: 23}
+    m_Target: {x: 0.014238238, y: 2.963632, z: 0.3640418}
     speed: 2
-    m_Value: {x: 22.2, y: 1.3, z: 23}
+    m_Value: {x: 0.014238238, y: 2.963632, z: 0.3640418}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -449,13 +449,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: -0.19052742, y: -0.24958134, z: 0.05017051, w: -0.94811714}
+    m_Target: {x: 0.009476581, y: 0.98291206, z: -0.1761384, w: 0.053123806}
     speed: 2
-    m_Value: {x: -0.19052742, y: -0.24958135, z: 0.050170515, w: -0.9481172}
+    m_Value: {x: 0.009476581, y: 0.98291206, z: -0.17613839, w: 0.053123806}
   m_Size:
-    m_Target: 46.93083
+    m_Target: 21.589584
     speed: 2
-    m_Value: 46.93083
+    m_Value: 21.589584
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -491,8 +491,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 92
-    width: 1119
-    height: 465
+    width: 896
+    height: 366
   m_PersistentViewDataDictionary: {fileID: 0}
 --- !u!114 &17
 MonoBehaviour:
@@ -518,8 +518,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 92
-    width: 1229
-    height: 926
+    width: 896
+    height: 366
   m_PersistentViewDataDictionary: {fileID: 0}
   m_AnimEditor: {fileID: 0}
   m_Locked: 0
@@ -554,7 +554,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 9efbffff00000000
+    m_ExpandedIDs: 9e4afdff644ffeff2609ffff9efbffff00000000f8630000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -616,19 +616,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Scripts/Support Classes
+    - Assets/Prefabs/Unit Prefabs
   m_ViewMode: 1
   m_StartGridSize: 39
   m_LastFolders:
-  - Assets/Scripts/Support Classes
+  - Assets/Prefabs/Unit Prefabs
   m_LastFoldersGridSize: 39
   m_LastProjectPath: D:\GitHub Projects\3D-RTS\3D-RTS
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 32280000
-    m_LastClickedID: 10290
-    m_ExpandedIDs: 0000000092270000b6270000c6270000102800003228000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 17}
+    m_SelectedIDs: 52280000
+    m_LastClickedID: 10322
+    m_ExpandedIDs: 0000000092270000b4270000bc270000d6270000e42700003c28000062280000e04e0000ee4e000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -656,7 +656,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: a6ebffff
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000092270000b6270000c6270000102800003228000000ca9a3bffffff7f
+    m_ExpandedIDs: 0000000092270000b4270000bc270000d6270000e42700003c28000062280000e04e0000ee4e000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

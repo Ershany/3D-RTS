@@ -5,7 +5,7 @@ using UnityEngine;
 public class RogueController : MonoBehaviour {
 
     // Unit Stats
-    [Range(1.0f, 1000.0f)] public float unitHealth = 20.0f;
+    [Range(1.0f, 1000.0f)] public float unitHealth = 15.0f;
 
     // Construct the Unit
     public PlayerUnit unit;
