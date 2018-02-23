@@ -5,13 +5,16 @@ using UnityEngine;
 [System.Serializable]
 public abstract class Unit {
 
-    protected float maxHealth, currentHealth;
     public bool IsDead { get; protected set; }
+
+    protected float maxHealth, currentHealth;
     protected GameObject gameObject;
+    protected BoxCollider collider;
 
 	public Unit(GameObject obj, float health)
     {
         gameObject = obj;
+        collider = gameObject.GetComponent<BoxCollider>();
         maxHealth = currentHealth = health;
         IsDead = false;
     }

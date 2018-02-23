@@ -32,6 +32,11 @@ public class PlayerController : MonoBehaviour {
             buildingSelected = Instantiate(guildHallPrefab, Vector3.zero, Quaternion.identity).GetComponent<GuildHallController>().building;
             buildingSelected.MoveBuilding(hit.point + new Vector3(0.0f, buildingSelected.BuildingHeight / 2.0f, 0.0f));
         }
+        // TEMP Unit Death Testing
+        if (Input.GetKeyDown("k"))
+        {
+            SelectedGroup.GroupTakeDamage(5);
+        }
 
         // Move building with cursor if a building is currently selected (keep it on the terrain)
         if (buildingSelected != null)

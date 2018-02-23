@@ -17,6 +17,6 @@ public class WarriorController : MonoBehaviour {
 
     void Update()
     {
-        unit.AnimateUnit();
+        unit.Update();
     }
 }

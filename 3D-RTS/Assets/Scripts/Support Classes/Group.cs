@@ -17,6 +17,22 @@ public class Group : MonoBehaviour {
         units.Add(unit);
     }
 
+    public void GroupTakeDamage(float damage)
+    {
+        foreach(DynamicUnit unit in units)
+        {
+            unit.TakeDamage(damage);
+        }
+    }
+
+    public void GroupHealDamage(float healAmount)
+    {
+        foreach (DynamicUnit unit in units)
+        {
+            unit.HealDamage(healAmount);
+        }
+    }
+
     public void SetGroupDestination(Vector3 dest)
     {
         foreach(DynamicUnit unit in units)

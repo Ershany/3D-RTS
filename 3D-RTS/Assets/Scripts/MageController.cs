@@ -17,6 +17,6 @@ public class MageController : MonoBehaviour {
 
     void Update()
     {
-        unit.AnimateUnit();    
+        unit.Update();    
     }
 }
