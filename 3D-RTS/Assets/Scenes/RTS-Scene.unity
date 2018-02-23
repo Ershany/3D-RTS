@@ -433,7 +433,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraTarget: {fileID: 0}
   smoothing: 2
-  cameraSpeed: 50
+  cameraSpeed: 100
   mouseDeadzoneOffset: 45
   minCameraFOV: 40
   cameraZoomSpeed: 1000

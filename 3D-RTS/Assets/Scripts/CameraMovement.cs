@@ -39,12 +39,7 @@ public class CameraMovement : MonoBehaviour {
             transform.position = Vector3.Lerp(transform.position, destination, cameraSpeed * Time.deltaTime);
         }
 
-        // Process Mouse Scroll
-        float deltaScroll = Input.GetAxis("Mouse ScrollWheel"); // Zoom out = negative      Zoom in = positive
-        cameraFOV += -(deltaScroll * cameraZoomSpeed * Time.deltaTime);
-        if (cameraFOV > maxCameraFOV) cameraFOV = maxCameraFOV;
-        else if (cameraFOV < minCameraFOV) cameraFOV = minCameraFOV;
-        Camera.main.fieldOfView = cameraFOV;
+        ProcessMouseScroll();
     }
 
     void LateUpdate ()
@@ -55,6 +50,15 @@ public class CameraMovement : MonoBehaviour {
             Vector3 destination = cameraTarget.position + cameraOffset;
             transform.position = Vector3.Lerp(transform.position, destination, smoothing * Time.deltaTime);
         }
+    }
+
+    void ProcessMouseScroll()
+    {
+        float deltaScroll = Input.GetAxis("Mouse ScrollWheel"); // Zoom out = negative      Zoom in = positive
+        cameraFOV += -(deltaScroll * cameraZoomSpeed * Time.deltaTime);
+        if (cameraFOV > maxCameraFOV) cameraFOV = maxCameraFOV;
+        else if (cameraFOV < minCameraFOV) cameraFOV = minCameraFOV;
+        Camera.main.fieldOfView = cameraFOV;
     }
 
     float CheckHorizontalMouse()
