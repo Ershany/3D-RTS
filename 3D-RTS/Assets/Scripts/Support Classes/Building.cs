@@ -8,23 +8,20 @@ public class Building {
     private float maxHealth, currentHealth;
     public bool IsDestroyed { get; private set; }
     public bool IsPlaced { get; private set; }
-    public float BuildingHeight { get; private set; }
     public GameObject GameObject { get; private set; }
     private BoxCollider boxCollider;
     private Renderer renderer;
 
-    public Building(GameObject obj, float health, float buildingHeight)
+    public Building(GameObject obj, float health)
     {
         GameObject = obj;
         boxCollider = GameObject.GetComponent<BoxCollider>();
         boxCollider.enabled = false;
         renderer = GameObject.GetComponent<Renderer>();
-        renderer.material.color = new Color(renderer.material.color.r, renderer.material.color.g, renderer.material.color.b, 0.5f);
 
         maxHealth = currentHealth = health;
         IsDestroyed = false;
         IsPlaced = false;
-        BuildingHeight = buildingHeight;
     }
 
     public void TakeDamage(float damage)
@@ -57,7 +54,8 @@ public class Building {
         // Loop through all of the children's positions and make sure they are on the terrain
         foreach (Transform child in GameObject.transform)
         {
-            if (Terrain.activeTerrain.SampleHeight(child.position) != child.position.y) return false;
+            // Round the height, due to float precision errors
+            if (child.CompareTag("HeightCheck") && Terrain.activeTerrain.SampleHeight(child.position) != System.Math.Round(child.position.y, 2)) return false;
         }
         return true;
     }
@@ -68,7 +66,6 @@ public class Building {
         if (IsPlaceableOnTerrain())
         {
             boxCollider.enabled = true;
-            renderer.material.color = new Color(renderer.material.color.r, renderer.material.color.g, renderer.material.color.b, 1.0f);
             NavMeshObstacle obstacle = GameObject.AddComponent<NavMeshObstacle>();
             obstacle.carving = true;
 

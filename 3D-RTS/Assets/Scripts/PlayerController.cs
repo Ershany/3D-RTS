@@ -29,8 +29,8 @@ public class PlayerController : MonoBehaviour {
         // TEMP Building Selection Code
         if (Input.GetKeyDown("1") && buildingSelected == null)
         {
-            buildingSelected = Instantiate(guildHallPrefab, Vector3.zero, Quaternion.identity).GetComponent<GuildHallController>().building;
-            buildingSelected.MoveBuilding(hit.point + new Vector3(0.0f, buildingSelected.BuildingHeight / 2.0f, 0.0f));
+            buildingSelected = Instantiate(guildHallPrefab, Vector3.zero, Quaternion.Euler(-90.0f, 0.0f, 0.0f)).GetComponent<GuildHallController>().building;
+            buildingSelected.MoveBuilding(hit.point);
         }
         // TEMP Unit Death Testing
         if (Input.GetKeyDown("k"))
@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour {
         // Move building with cursor if a building is currently selected (keep it on the terrain)
         if (buildingSelected != null)
         {
-            buildingSelected.MoveBuilding(hit.point + new Vector3(0.0f, buildingSelected.BuildingHeight / 2.0f, 0.0f));
+            buildingSelected.MoveBuilding(hit.point);
         }
 
         // Check if the player issued a command by clicking and act accordingly

@@ -205,7 +205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2baf957ae1d18eb4ba9bd2dbc1c068cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guildHallPrefab: {fileID: 1699058215105342, guid: 2350f60b2d62c8245bdcce9542ac1ba4,
+  guildHallPrefab: {fileID: 1668168907793830, guid: 2350f60b2d62c8245bdcce9542ac1ba4,
     type: 2}
 --- !u!4 &813388358
 Transform:

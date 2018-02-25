@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerUnit
   - PlayerController
+  - HeightCheck
   layers:
   - Default
   - TransparentFX
