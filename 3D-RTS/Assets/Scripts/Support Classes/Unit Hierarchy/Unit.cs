@@ -9,12 +9,12 @@ public abstract class Unit {
 
     protected float maxHealth, currentHealth;
     protected GameObject gameObject;
-    protected BoxCollider collider;
+    protected CapsuleCollider collider;
 
 	public Unit(GameObject obj, float health)
     {
         gameObject = obj;
-        collider = gameObject.GetComponent<BoxCollider>();
+        collider = gameObject.GetComponent<CapsuleCollider>();
         maxHealth = currentHealth = health;
         IsDead = false;
     }
