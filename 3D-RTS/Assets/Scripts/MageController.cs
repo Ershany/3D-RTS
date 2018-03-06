@@ -12,7 +12,12 @@ public class MageController : MonoBehaviour {
 
     void Awake()
     {
-        unit = new PlayerUnit(gameObject, unitHealth);
+        int[] stats = new int[3];
+        stats[0] = 2;
+        stats[1] = 8;
+        stats[2] = 4;
+        unit = new PlayerUnit(gameObject, unitHealth, stats);
+        
     }
 
     void Update()

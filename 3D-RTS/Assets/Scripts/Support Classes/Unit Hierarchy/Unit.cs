@@ -7,11 +7,13 @@ public abstract class Unit {
 
     public bool IsDead { get; protected set; }
 
+
     protected float maxHealth, currentHealth;
     protected GameObject gameObject;
     protected CapsuleCollider collider;
 
-	public Unit(GameObject obj, float health)
+
+    public Unit(GameObject obj, float health)
     {
         gameObject = obj;
         collider = gameObject.GetComponent<CapsuleCollider>();
@@ -41,4 +43,8 @@ public abstract class Unit {
     {
         gameObject.transform.SetParent(parent);
     }
+
+
+
+
 }

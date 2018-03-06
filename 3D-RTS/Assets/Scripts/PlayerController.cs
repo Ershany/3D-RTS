@@ -5,15 +5,20 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
     public GameObject guildHallPrefab;
+    public GameObject arenaPrefab;
     public Group SelectedGroup { get; private set; }
 
     private List<Group> groups;
     private Building buildingSelected;
 
+    private List<TurnBasedBattleController> battles;
+
+
     private int terrainMask;
 
     void Awake()
     {
+        battles = new List<TurnBasedBattleController>();
         groups = new List<Group>();
         SelectedGroup = null;
         terrainMask = LayerMask.GetMask("TerrainLayer");
@@ -57,9 +62,13 @@ public class PlayerController : MonoBehaviour {
             }
             else if (SelectedGroup != null) // Check if the player is commanding a group of units
             {
-                Transform objectHit = hit.transform;
-                SelectedGroup.SetGroupDestination(hit.point);
+                if (!SelectedGroup.GetUnits()[0].IsInBattle)
+                {
+                    Transform objectHit = hit.transform;
+                    SelectedGroup.SetGroupDestination(hit.point);
+                }
                 Debug.Log("Group is moving to " + hit.point.ToString());
+
             }
         }
 
@@ -70,7 +79,35 @@ public class PlayerController : MonoBehaviour {
             buildingSelected = null;
             Debug.Log("Cancelling Building Placement");
         }
-	}
+
+        for(int i = 0; i < 1; i++)
+        {
+            if (groups[0].GetUnits()[i].IsInBattle)
+                continue;
+
+            for (int j = 0; j < 1; j++)
+            {
+                if (groups[1].GetUnits()[j].IsInBattle)
+                    continue;
+
+                if (Vector3.Distance(groups[0].GetUnits()[i].GetTransform().position, groups[1].GetUnits()[j].GetTransform().position) < 4)
+                {
+                    GameObject arena = Instantiate(arenaPrefab, groups[1].GetUnits()[i].GetTransform().position, Quaternion.identity);
+                    battles.Add(new TurnBasedBattleController(groups[1].GetUnits()[i].GetTransform().position, groups[0], groups[1], arena));
+                    i = 4;
+                    groups[0].BattleStarted();
+                    groups[1].BattleStarted();
+                    break;
+                }
+            }
+        }
+
+        foreach (TurnBasedBattleController tbbc in battles)
+        {
+            tbbc.Update();
+        }
+
+    }
     
     public void AddGroup(Group group)
     {

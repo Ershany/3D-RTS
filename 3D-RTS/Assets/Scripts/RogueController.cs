@@ -12,7 +12,11 @@ public class RogueController : MonoBehaviour {
 
     void Awake()
     {
-        unit = new PlayerUnit(gameObject, unitHealth);
+        int[] stats = new int[3];
+        stats[0] = 4;
+        stats[1] = 6;
+        stats[2] = 8;
+        unit = new PlayerUnit(gameObject, unitHealth, stats);
     }
 
     void Update()
