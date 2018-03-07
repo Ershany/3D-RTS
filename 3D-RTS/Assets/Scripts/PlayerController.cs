@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour {
                 if (Vector3.Distance(groups[0].GetUnits()[i].GetTransform().position, groups[1].GetUnits()[j].GetTransform().position) < 4)
                 {
                     GameObject arena = Instantiate(arenaPrefab, groups[1].GetUnits()[i].GetTransform().position, Quaternion.identity);
-                    battles.Add(new TurnBasedBattleController(groups[1].GetUnits()[i].GetTransform().position, groups[0], groups[1], arena));
+                    battles.Add(new TurnBasedBattleController(new Vector3(groups[1].GetUnits()[i].GetTransform().position.x, 0.0f, groups[1].GetUnits()[i].GetTransform().position.z), groups[0], groups[1], arena));
                     i = 4;
                     groups[0].BattleStarted();
                     groups[1].BattleStarted();

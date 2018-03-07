@@ -31,11 +31,10 @@ public class PlayerUnit : DynamicUnit {
         }
         if (IsAttacking)
         {
-            IsInBattle = true;
-            Debug.Log("Destination: " + agent.destination.ToString());
-            Debug.Log("Position: " + GetTransform().position.ToString());
+            //Debug.Log("Destination: " + agent.destination.ToString());
+            //Debug.Log("Position: " + GetTransform().position.ToString());
 
-            if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1)
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attacking") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1.0f)
             {
 
                 IsAttacking = false;
@@ -50,10 +49,10 @@ public class PlayerUnit : DynamicUnit {
         anim.SetBool("Moving", agent.velocity.sqrMagnitude > 0 ? true : false);
         anim.SetFloat("Speed", agent.velocity.sqrMagnitude);
 
-        anim.SetBool("Combat", true);
+        anim.SetBool("Combat", IsInBattle ? true : false);
 
-        Debug.Log("Distance Between " + Vector3.Distance(agent.destination, GetTransform().position).ToString());
-        Debug.Log("Local Scale" + GetTransform().localScale.x.ToString());
+        //Debug.Log("Distance Between " + Vector3.Distance(agent.destination, GetTransform().position).ToString());
+        //Debug.Log("Local Scale" + GetTransform().localScale.x.ToString());
 
         if (IsAttacking && Vector3.Distance(agent.destination, GetTransform().position) < GetTransform().localScale.x && !attackAnimTriggered)
         {

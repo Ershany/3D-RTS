@@ -66,7 +66,6 @@ public abstract class DynamicUnit : Unit {
         {
             if(!opponents[i].IsDead)
             {
-                Debug.Log("4");
                 targetUnit = opponents[i];
                 SetDestination(opponents[i].GetTransform().position);
                 break;
