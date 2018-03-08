@@ -37,6 +37,11 @@ public class PlayerController : MonoBehaviour {
             buildingSelected = Instantiate(guildHallPrefab, Vector3.zero, Quaternion.Euler(-90.0f, 0.0f, 0.0f)).GetComponent<GuildHallController>().building;
             buildingSelected.MoveBuilding(hit.point);
         }
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (groups.Count > 0)
+                SelectedGroup = groups[(groups.IndexOf(SelectedGroup) + 1) % groups.Count];
+        }
         // TEMP Unit Death Testing
         if (Input.GetKeyDown("k"))
         {
@@ -102,13 +107,41 @@ public class PlayerController : MonoBehaviour {
             }
         }
 
-        foreach (TurnBasedBattleController tbbc in battles)
+        for (int i = 0; i < battles.Count; i++)
         {
-            tbbc.Update();
+            TurnBasedBattleController tbbc = battles[i];
+
+            if (tbbc.battleOver)
+            {
+                bool playersWon = true;
+                tbbc.enemyGroup.BattledEnded();
+                for (int j = 0; i < tbbc.enemyGroup.GetUnits().Count; i++)
+                {
+                    if (!tbbc.enemyGroup.GetUnits()[j].IsDead)
+                        playersWon = false;
+                }
+                tbbc.playerGroup.BattledEnded();
+                for (int j = 0; i < tbbc.playerGroup.GetUnits().Count; i++)
+                {
+                    if (playersWon)
+                    {
+                        //Give players rewards
+                    }
+                }
+                tbbc.playerGroup.BattledEnded();
+
+                Destroy(tbbc.arena);
+                battles.Remove(tbbc);
+                i--;
+            }
+            else
+                tbbc.Update();
         }
 
     }
     
+
+
     public void AddGroup(Group group)
     {
         groups.Add(group);

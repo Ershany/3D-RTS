@@ -21,14 +21,6 @@ public abstract class Unit {
         IsDead = false;
     }
 
-    public void TakeDamage(float damage)
-    {
-        currentHealth -= damage;
-        if (currentHealth <= 0.0f)
-        {
-            IsDead = true;
-        }
-    }
 
     public void HealDamage(float healAmount)
     {

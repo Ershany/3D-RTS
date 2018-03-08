@@ -13,20 +13,21 @@ public class TurnBasedBattleController {
     private Queue<DynamicUnit> attackQueue;
     private DynamicUnit attackingUnit;
     private Vector3 returnPos;
-    private bool rpSet;
+    private bool returningToStartingPosition;
     private float delayTime;
     private bool delaying;
+    public bool battleOver;
 
     public TurnBasedBattleController(Vector3 pos, Group p, Group e, GameObject a)
     {
         this.playerGroup = p;
         this.enemyGroup = e;
         attackQueue = new Queue<DynamicUnit>();
-        rpSet = false;
+        returningToStartingPosition = false;
         delayTime = 0.0f;
         arena = a;
         delaying = false;
-        
+        battleOver = false;
 
         for(int i = 0; i < playerGroup.GetUnits().Count; i++)
         {
@@ -37,6 +38,7 @@ public class TurnBasedBattleController {
 
             playerGroup.GetUnits()[i].attackTime = Mathf.Min((float)playerGroup.GetUnits()[i].GetDexterity() * (1.0f - ((float)playerGroup.GetUnits()[i].GetDexterity() / 10f)) * 3.0f, 75.0f) / 100.0f;
 
+            playerGroup.GetUnits()[i].GetAgent().stoppingDistance = 2.0f;
             playerGroup.GetUnits()[i].Halt();
 
         }
@@ -50,6 +52,7 @@ public class TurnBasedBattleController {
 
             enemyGroup.GetUnits()[i].attackTime = Mathf.Min((float)enemyGroup.GetUnits()[i].GetDexterity() * (1.0f - ((float)enemyGroup.GetUnits()[i].GetDexterity() / 10f)) * 3.0f, 75.0f) / 100.0f;
 
+            enemyGroup.GetUnits()[i].GetAgent().stoppingDistance = 2.0f;
             enemyGroup.GetUnits()[i].Halt();
         }
 
@@ -59,27 +62,38 @@ public class TurnBasedBattleController {
 
 
 
-    public void Update () {
+    public void Update() {
         float deltaTime = Time.deltaTime;
         delayTime += deltaTime;
-        Debug.Log("Delay Time: " + delayTime.ToString());
+
+        int deathCount = 0;
+
         for (int i = 0; i < playerGroup.GetUnits().Count; i++)
         {
             playerGroup.GetUnits()[i].attackTime += deltaTime * ((float)playerGroup.GetUnits()[i].GetDexterity() / 25.0f) + deltaTime;
-
-            if (playerGroup.GetUnits()[i].attackTime >= 3.0f)
+            if (playerGroup.GetUnits()[i].IsDead)
+                deathCount++;
+            if (playerGroup.GetUnits()[i].attackTime >= 5.0f && playerGroup.GetUnits()[i].IsDead == false)
                 if (!attackQueue.Contains(playerGroup.GetUnits()[i]) && attackingUnit != playerGroup.GetUnits()[i])
                 {
                     attackQueue.Enqueue(playerGroup.GetUnits()[i]);
                     playerGroup.GetUnits()[i].BeginAttack(enemyGroup.GetUnits());
                 }
         }
-
+        if (deathCount >= playerGroup.GetUnits().Count)
+        {
+            battleOver = true;
+        }
+        else
+            deathCount = 0;
         for (int i = 0; i < enemyGroup.GetUnits().Count; i++)
         {
-            enemyGroup.GetUnits()[i].attackTime += deltaTime * (float)(enemyGroup.GetUnits()[i].GetDexterity() / 25) + deltaTime;
+            if (enemyGroup.GetUnits()[i].IsDead)
+                deathCount++;
+            else
+                enemyGroup.GetUnits()[i].attackTime += deltaTime * (float)(enemyGroup.GetUnits()[i].GetDexterity() / 25) + deltaTime;
 
-            if (enemyGroup.GetUnits()[i].attackTime >= 3.0f)
+            if (enemyGroup.GetUnits()[i].attackTime >= 5.0f && enemyGroup.GetUnits()[i].IsDead == false)
                 if (!attackQueue.Contains(enemyGroup.GetUnits()[i]) && attackingUnit != enemyGroup.GetUnits()[i])
                 {
                     attackQueue.Enqueue(enemyGroup.GetUnits()[i]);
@@ -87,44 +101,77 @@ public class TurnBasedBattleController {
                 }
         }
 
-        if(attackingUnit != null)
+        if (deathCount >= enemyGroup.GetUnits().Count)
         {
-            if (!attackingUnit.IsAttacking)
+            battleOver = true;
+        }
+        if (attackQueue.Count > 0) {
+
+            if (attackingUnit == null)
             {
-                if (!rpSet)
-                {
+                attackingUnit = attackQueue.Dequeue();
+                returnPos = attackingUnit.GetTransform().position;
+                attackingUnit.AttackAnyEnemy();
+            }
 
-                    returnPos = returnPos + Vector3.Normalize(returnPos - attackingUnit.GetTransform().position) * 1.5f;
+            else if (ResolvedAttack() || attackingUnit.IsDead)
+            {
+                attackingUnit = attackQueue.Dequeue();
+                returnPos = attackingUnit.GetTransform().position;
+                attackingUnit.AttackAnyEnemy();
+            }
 
-                    attackingUnit.SetDestination(returnPos);
-                    Debug.Log("Returning to " + returnPos.ToString());
-;                    rpSet = true;
-                }
-                if (!attackingUnit.GetAgent().pathPending && attackingUnit.GetAgent().remainingDistance <= attackingUnit.GetAgent().stoppingDistance && !delaying)
-                {
-                    rpSet = false;
-                    attackingUnit.GetTransform().LookAt(new Vector3(arena.transform.position.x, attackingUnit.GetTransform().position.y, attackingUnit.GetTransform().position.z));
-                    attackingUnit.attackTime = 0.0f;
-                    delaying = true;
-                    delayTime = 0;
-                }
-                if (attackQueue.Count > 0 && delayTime > 1.0f && delaying)
-                {
-                    delaying = false;
-                    attackingUnit = attackQueue.Dequeue();
-                    returnPos = attackingUnit.GetTransform().position;
-                    attackingUnit.AttackAnyEnemy();
-                }
+        }
 
+
+        if(attackingUnit != null && !ResolvedAttack())
+        {
+
+            if (!attackingUnit.IsAttacking && !delaying)
+            {
+                if (!attackingUnit.GetAgent().pathPending && attackingUnit.GetAgent().remainingDistance <= attackingUnit.GetAgent().stoppingDistance)
+                {
+                    if (!returningToStartingPosition)
+                    {
+                        returningToStartingPosition = true;
+
+                        attackingUnit.GetAgent().stoppingDistance = 0.1f;
+                        attackingUnit.SetDestination(returnPos);
+                        Debug.Log("Returning to " + returnPos.ToString());
+                    }
+                    else if (attackingUnit.GetTransform().position != returnPos)
+                    {
+                        attackingUnit.GetTransform().position = returnPos;
+                    }
+                    else
+                    {
+                        attackingUnit.GetAgent().stoppingDistance = 2.0f;
+                        returningToStartingPosition = false;
+                        attackingUnit.GetTransform().LookAt(new Vector3(arena.transform.position.x, attackingUnit.GetTransform().position.y, attackingUnit.GetTransform().position.z));
+                        attackingUnit.attackTime = 0.0f;
+                        delaying = true;
+                        delayTime = 0;
+                    }
+                }
+                
             }
         }
-        else if (attackQueue.Count > 0)
-        {
-            rpSet = false;
-            attackingUnit = attackQueue.Dequeue();
-            returnPos = attackingUnit.GetTransform().position;
-            attackingUnit.AttackAnyEnemy();
-        }
     }
+    
+    
+
+    public bool ResolvedAttack()
+    {
+
+        if (delaying && delayTime > 1.0)
+        {
+            delaying = false;
+            return true;
+        }
+
+
+        return false;
+    }
+
 
 }

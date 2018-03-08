@@ -16,8 +16,8 @@ public abstract class DynamicUnit : Unit {
     public float attackTime { get; set; }
     public bool IsAttacking { get; protected set; }
     public bool IsInBattle { get;  set; }
-    private DynamicUnit targetUnit;
-    private List<DynamicUnit> opponents;
+    protected DynamicUnit targetUnit;
+    protected List<DynamicUnit> opponents;
 
     public DynamicUnit(GameObject obj, float health, bool playerControlled) : base(obj, health)
     {
@@ -74,13 +74,24 @@ public abstract class DynamicUnit : Unit {
                 targetUnit = opponents[i];
 
                 Vector3 offsetVector = Vector3.Normalize(opponents[i].GetTransform().position - GetTransform().position);
-                float scale = 0.5f;
+                float scale = 4.0f;
                 Vector3 targetPosition = opponents[i].GetTransform().position - scale * offsetVector;
                 SetDestination(targetPosition);
                 Debug.Log(agent.destination.ToString());
                 break;
             }
         }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+        if (currentHealth <= 0.0f)
+        {
+            IsDead = true;
+        }
+        else
+            anim.SetBool("TakeDamage", true);
     }
 
     public int GetDexterity()
