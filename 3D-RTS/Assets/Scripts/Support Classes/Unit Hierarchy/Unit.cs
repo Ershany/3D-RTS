@@ -7,11 +7,13 @@ public abstract class Unit {
 
     public bool IsDead { get; protected set; }
 
+
     protected float maxHealth, currentHealth;
     protected GameObject gameObject;
     protected CapsuleCollider collider;
 
-	public Unit(GameObject obj, float health)
+
+    public Unit(GameObject obj, float health)
     {
         gameObject = obj;
         collider = gameObject.GetComponent<CapsuleCollider>();
@@ -19,14 +21,6 @@ public abstract class Unit {
         IsDead = false;
     }
 
-    public void TakeDamage(float damage)
-    {
-        currentHealth -= damage;
-        if (currentHealth <= 0.0f)
-        {
-            IsDead = true;
-        }
-    }
 
     public void HealDamage(float healAmount)
     {
@@ -41,4 +35,8 @@ public abstract class Unit {
     {
         gameObject.transform.SetParent(parent);
     }
+
+
+
+
 }

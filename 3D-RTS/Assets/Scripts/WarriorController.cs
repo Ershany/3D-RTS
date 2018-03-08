@@ -12,7 +12,11 @@ public class WarriorController : MonoBehaviour {
 
     void Awake()
     {
-        unit = new PlayerUnit(gameObject, unitHealth);
+        int[] stats = new int[3];
+        stats[0] = 8;
+        stats[1] = 2;
+        stats[2] = 5;
+        unit = new PlayerUnit(gameObject, unitHealth, stats);
     }
 
     void Update()

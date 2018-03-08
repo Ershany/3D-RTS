@@ -5,15 +5,20 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
     public GameObject guildHallPrefab;
+    public GameObject arenaPrefab;
     public Group SelectedGroup { get; private set; }
 
     private List<Group> groups;
     private Building buildingSelected;
 
+    private List<TurnBasedBattleController> battles;
+
+
     private int terrainMask;
 
     void Awake()
     {
+        battles = new List<TurnBasedBattleController>();
         groups = new List<Group>();
         SelectedGroup = null;
         terrainMask = LayerMask.GetMask("TerrainLayer");
@@ -31,6 +36,11 @@ public class PlayerController : MonoBehaviour {
         {
             buildingSelected = Instantiate(guildHallPrefab, Vector3.zero, Quaternion.Euler(-90.0f, 0.0f, 0.0f)).GetComponent<GuildHallController>().building;
             buildingSelected.MoveBuilding(hit.point);
+        }
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (groups.Count > 0)
+                SelectedGroup = groups[(groups.IndexOf(SelectedGroup) + 1) % groups.Count];
         }
         // TEMP Unit Death Testing
         if (Input.GetKeyDown("k"))
@@ -57,9 +67,13 @@ public class PlayerController : MonoBehaviour {
             }
             else if (SelectedGroup != null) // Check if the player is commanding a group of units
             {
-                Transform objectHit = hit.transform;
-                SelectedGroup.SetGroupDestination(hit.point);
-                Debug.Log("Group is moving to " + hit.point.ToString());
+                if (!SelectedGroup.GetUnits()[0].IsInBattle)
+                {
+                    Transform objectHit = hit.transform;
+                    SelectedGroup.SetGroupDestination(hit.point);
+                    Debug.Log("Group is moving to " + hit.point.ToString());
+                }
+
             }
         }
 
@@ -70,8 +84,64 @@ public class PlayerController : MonoBehaviour {
             buildingSelected = null;
             Debug.Log("Cancelling Building Placement");
         }
-	}
+
+        for(int i = 0; i < 1; i++)
+        {
+            if (groups[0].GetUnits()[i].IsInBattle)
+                continue;
+
+            for (int j = 0; j < 1; j++)
+            {
+                if (groups[1].GetUnits()[j].IsInBattle)
+                    continue;
+
+                if (Vector3.Distance(groups[0].GetUnits()[i].GetTransform().position, groups[1].GetUnits()[j].GetTransform().position) < 4)
+                {
+                    GameObject arena = Instantiate(arenaPrefab, groups[1].GetUnits()[i].GetTransform().position, Quaternion.identity);
+                    battles.Add(new TurnBasedBattleController(new Vector3(groups[1].GetUnits()[i].GetTransform().position.x, 0.0f, groups[1].GetUnits()[i].GetTransform().position.z), groups[0], groups[1], arena));
+                    i = 4;
+                    groups[0].BattleStarted();
+                    groups[1].BattleStarted();
+                    break;
+                }
+            }
+        }
+
+        for (int i = 0; i < battles.Count; i++)
+        {
+            TurnBasedBattleController tbbc = battles[i];
+
+            if (tbbc.battleOver)
+            {
+                bool playersWon = true;
+                tbbc.enemyGroup.BattledEnded();
+                for (int j = 0; i < tbbc.enemyGroup.GetUnits().Count; i++)
+                {
+                    if (!tbbc.enemyGroup.GetUnits()[j].IsDead)
+                        playersWon = false;
+                }
+                tbbc.playerGroup.BattledEnded();
+                for (int j = 0; i < tbbc.playerGroup.GetUnits().Count; i++)
+                {
+                    if (playersWon)
+                    {
+                        //Give players rewards
+                    }
+                }
+                tbbc.playerGroup.BattledEnded();
+
+                Destroy(tbbc.arena);
+                battles.Remove(tbbc);
+                i--;
+            }
+            else
+                tbbc.Update();
+        }
+
+    }
     
+
+
     public void AddGroup(Group group)
     {
         groups.Add(group);

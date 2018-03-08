@@ -49,6 +49,30 @@ public class Group : MonoBehaviour {
         }
     }
 
+    public void BattleStarted()
+    {
+        foreach(DynamicUnit unit in units)
+        {
+            
+            unit.IsInBattle = true;
+        }
+    }
+
+
+    public void BattledEnded()
+    {
+        foreach (DynamicUnit unit in units)
+        {
+            unit.IsInBattle = false;
+        }
+    }
+
+
+    public List<DynamicUnit> GetUnits()
+    {
+        return units;
+    }
+
     public DynamicUnit GetFirstUnit()
     {
         return units[0];
