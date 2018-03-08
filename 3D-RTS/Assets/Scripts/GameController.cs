@@ -22,15 +22,15 @@ public class GameController : MonoBehaviour {
     void Start ()
     {
         // Make a group, with one of each unit type and assign it to the player
-        WarriorController warController = Instantiate(warriorPrefab, new Vector3(15.0f, 15.0f, 15.0f), Quaternion.identity).GetComponent<WarriorController>();
-        WarriorController warControllera = Instantiate(warriorPrefab, new Vector3(15.0f, 15.0f, 15.0f), Quaternion.identity).GetComponent<WarriorController>();
-        WarriorController warControllerb = Instantiate(warriorPrefab, new Vector3(15.0f, 15.0f, 15.0f), Quaternion.identity).GetComponent<WarriorController>();
+        WarriorController warController = Instantiate(warriorPrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<WarriorController>();
+        WarriorController warControllera = Instantiate(warriorPrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<WarriorController>();
+        WarriorController warControllerb = Instantiate(warriorPrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<WarriorController>();
         //RogueController rogueController = Instantiate(roguePrefab, new Vector3(0.0f, 1.0f, 3.0f), Quaternion.identity).GetComponent<RogueController>();
         //MageController mageController = Instantiate(magePrefab, new Vector3(3.0f, 1.0f, 0.0f), Quaternion.identity).GetComponent<MageController>();
 
-        WarriorController warController2 = Instantiate(warriorPrefab, new Vector3(26.0f, 26.0f, 26.0f), Quaternion.identity).GetComponent<WarriorController>();
-        WarriorController warController2a = Instantiate(warriorPrefab, new Vector3(26.0f, 26.0f, 26.0f), Quaternion.identity).GetComponent<WarriorController>();
-        WarriorController warController2b = Instantiate(warriorPrefab, new Vector3(26.0f, 26.0f, 26.0f), Quaternion.identity).GetComponent<WarriorController>();
+        WarriorController warController2 = Instantiate(warriorPrefab, new Vector3(26.0f, 2.0f, 26.0f), Quaternion.identity).GetComponent<WarriorController>();
+        WarriorController warController2a = Instantiate(warriorPrefab, new Vector3(27.0f, 2.0f, 26.0f), Quaternion.identity).GetComponent<WarriorController>();
+        WarriorController warController2b = Instantiate(warriorPrefab, new Vector3(28.0f, 2.0f, 26.0f), Quaternion.identity).GetComponent<WarriorController>();
         //RogueController rogueController2 = Instantiate(roguePrefab, new Vector3(12.0f, 12.0f, 12.0f), Quaternion.identity).GetComponent<RogueController>();
         //MageController mageController2 = Instantiate(magePrefab, new Vector3(13.0f, 13.0f, 13.0f), Quaternion.identity).GetComponent<MageController>();
 
