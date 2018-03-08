@@ -32,6 +32,11 @@ public abstract class DynamicUnit : Unit {
     {
         return gameObject.transform;
     }
+
+    public NavMeshAgent GetAgent()
+    {
+        return agent;
+    }
 	
     public void SetDestination(Vector3 destination)
     {
@@ -67,7 +72,12 @@ public abstract class DynamicUnit : Unit {
             if(!opponents[i].IsDead)
             {
                 targetUnit = opponents[i];
-                SetDestination(opponents[i].GetTransform().position);
+
+                Vector3 offsetVector = Vector3.Normalize(opponents[i].GetTransform().position - GetTransform().position);
+                float scale = 0.5f;
+                Vector3 targetPosition = opponents[i].GetTransform().position - scale * offsetVector;
+                SetDestination(targetPosition);
+                Debug.Log(agent.destination.ToString());
                 break;
             }
         }

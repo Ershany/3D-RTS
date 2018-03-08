@@ -34,9 +34,10 @@ public class PlayerUnit : DynamicUnit {
             //Debug.Log("Destination: " + agent.destination.ToString());
             //Debug.Log("Position: " + GetTransform().position.ToString());
 
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attacking") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1.0f)
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("AttackAnimation") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
             {
 
+                attackAnimTriggered = false;
                 IsAttacking = false;
                 anim.SetBool("Attacking", false);
             }
@@ -46,7 +47,7 @@ public class PlayerUnit : DynamicUnit {
 
     private void AnimateUnit()
     {   
-        anim.SetBool("Moving", agent.velocity.sqrMagnitude > 0 ? true : false);
+        anim.SetBool("Moving", (agent.velocity.sqrMagnitude > 0 ? true : false) || agent.hasPath);
         anim.SetFloat("Speed", agent.velocity.sqrMagnitude);
 
         anim.SetBool("Combat", IsInBattle ? true : false);
@@ -54,11 +55,11 @@ public class PlayerUnit : DynamicUnit {
         //Debug.Log("Distance Between " + Vector3.Distance(agent.destination, GetTransform().position).ToString());
         //Debug.Log("Local Scale" + GetTransform().localScale.x.ToString());
 
-        if (IsAttacking && Vector3.Distance(agent.destination, GetTransform().position) < GetTransform().localScale.x && !attackAnimTriggered)
+        if (IsAttacking && !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance && !attackAnimTriggered)
         {
             Debug.Log(anim.GetCurrentAnimatorStateInfo(0).normalizedTime);
             anim.SetBool("Attacking", true);
-            
+            Halt();
             attackAnimTriggered = true;
         }
 

@@ -66,8 +66,8 @@ public class PlayerController : MonoBehaviour {
                 {
                     Transform objectHit = hit.transform;
                     SelectedGroup.SetGroupDestination(hit.point);
+                    Debug.Log("Group is moving to " + hit.point.ToString());
                 }
-                Debug.Log("Group is moving to " + hit.point.ToString());
 
             }
         }
