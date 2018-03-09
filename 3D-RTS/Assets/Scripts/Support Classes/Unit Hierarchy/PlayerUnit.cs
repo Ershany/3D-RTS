@@ -62,7 +62,7 @@ public class PlayerUnit : DynamicUnit {
 
     private void AnimateUnit()
     {   
-        anim.SetBool("Moving", (agent.velocity.sqrMagnitude > 0 ? true : false) || agent.hasPath);
+        anim.SetBool("Moving", agent.velocity.sqrMagnitude > 0 ? true : false);
         anim.SetFloat("Speed", agent.velocity.sqrMagnitude);
 
         anim.SetBool("Combat", IsInBattle ? true : false);

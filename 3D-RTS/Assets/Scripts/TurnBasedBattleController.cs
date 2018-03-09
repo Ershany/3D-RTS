@@ -156,6 +156,18 @@ public class TurnBasedBattleController {
                 
             }
         }
+
+        if (battleOver)
+        {
+            for (int i = 0; i < playerGroup.GetUnits().Count; i++)
+            {
+                playerGroup.GetUnits()[i].GetAgent().stoppingDistance = 6.0f;
+            }
+            for (int i = 0; i < enemyGroup.GetUnits().Count; i++)
+            {
+                enemyGroup.GetUnits()[i].GetAgent().stoppingDistance = 6.0f;
+            }
+        }
     }
     
     
