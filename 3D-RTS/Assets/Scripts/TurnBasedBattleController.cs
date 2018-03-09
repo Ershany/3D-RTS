@@ -9,6 +9,7 @@ public class TurnBasedBattleController {
     public Group enemyGroup;
     //public List<Unit> combatants;
     public GameObject arena;
+    public bool battleOver;
 
     private Queue<DynamicUnit> attackQueue;
     private DynamicUnit attackingUnit;
@@ -16,20 +17,21 @@ public class TurnBasedBattleController {
     private bool returningToStartingPosition;
     private float delayTime;
     private bool delaying;
-    public bool battleOver;
+    private float initialStoppingDistance;
 
     public TurnBasedBattleController(Vector3 pos, Group p, Group e, GameObject a)
     {
         this.playerGroup = p;
         this.enemyGroup = e;
+        battleOver = false;
         attackQueue = new Queue<DynamicUnit>();
         returningToStartingPosition = false;
         delayTime = 0.0f;
         arena = a;
         delaying = false;
-        battleOver = false;
+        initialStoppingDistance = playerGroup.GetUnits()[0].GetAgent().stoppingDistance;
 
-        for(int i = 0; i < playerGroup.GetUnits().Count; i++)
+        for (int i = 0; i < playerGroup.GetUnits().Count; i++)
         {
             playerGroup.GetUnits()[i].GetTransform().position = new Vector3(pos.x + 0.45f * arena.transform.localScale.x, pos.y, pos.z - 0.5f * arena.transform.localScale.z + arena.transform.localScale.z * (1.0f / (float)(playerGroup.GetUnits().Count + 1)) * (i + 1));
 
@@ -161,11 +163,11 @@ public class TurnBasedBattleController {
         {
             for (int i = 0; i < playerGroup.GetUnits().Count; i++)
             {
-                playerGroup.GetUnits()[i].GetAgent().stoppingDistance = 6.0f;
+                playerGroup.GetUnits()[i].GetAgent().stoppingDistance = initialStoppingDistance;
             }
             for (int i = 0; i < enemyGroup.GetUnits().Count; i++)
             {
-                enemyGroup.GetUnits()[i].GetAgent().stoppingDistance = 6.0f;
+                enemyGroup.GetUnits()[i].GetAgent().stoppingDistance = initialStoppingDistance;
             }
         }
     }
