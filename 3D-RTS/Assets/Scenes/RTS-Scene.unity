@@ -299,7 +299,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 783052920}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fdd113c2549eeb4badb7fb3ad894075, type: 3}
+  m_Script: {fileID: 11500000, guid: 91266c39c57eaa44a9ce367fcc5503a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enemyArcherPrefab: {fileID: 133574, guid: 73df584fd2872094198958e452adca03, type: 2}
@@ -397,9 +397,6 @@ MonoBehaviour:
   roguePrefab: {fileID: 1719253358520630, guid: d1e385d32c6c6c2409a9d4d5ed177feb,
     type: 2}
   magePrefab: {fileID: 1996216839547518, guid: 75a8f1ae898e8bc4c88a8ed7fde408f8, type: 2}
-  enemyArcherPrefab: {fileID: 0}
-  enemyInfantryPrefab: {fileID: 0}
-  enemyMagePrefab: {fileID: 0}
   groupPrefab: {fileID: 1409932899419140, guid: 36fd7a8a6d25caa49bf1c4c7260dfa8e,
     type: 2}
   arenaPrefab: {fileID: 1335127391431722, guid: cf81b553b53d6b54fa7f594ba3645a32,
