@@ -9,7 +9,7 @@ public class EnemyController : MonoBehaviour
     public GameObject enemyMagePrefab;
     public GameObject groupPrefab;
 
-    public List<Group> enemyGroups;
+    public List<Group> enemyGroups { get; private set; }
     public Group selectedGroup { get; set; }
 
     //maybe handle enemy units and buildings here
@@ -32,8 +32,6 @@ public class EnemyController : MonoBehaviour
 
         //add this group to the array 
         enemyGroups.Add(enemyGroup);
-
-        //build animators first b4 doing any of movement stuff since that won't work atm 
         enemyGroups[0].SetGroupDestination(new Vector3(20, 0, 50));
     }
 

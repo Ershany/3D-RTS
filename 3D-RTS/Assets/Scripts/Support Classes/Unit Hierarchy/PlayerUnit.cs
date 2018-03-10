@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [System.Serializable]
-public class PlayerUnit : DynamicUnit {
+public class PlayerUnit : DynamicUnit
+{
 
     public PlayerController playerController;
 
@@ -12,7 +13,7 @@ public class PlayerUnit : DynamicUnit {
     private bool attackAnimTriggered;
     private bool dealtDamage;
 
-	public PlayerUnit(GameObject obj, float health, int[] stats) : base(obj, health, true)
+    public PlayerUnit(GameObject obj, float health, int[] stats) : base(obj, health, true)
     {
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
         deathAnimTriggered = false;
@@ -36,7 +37,8 @@ public class PlayerUnit : DynamicUnit {
             //Debug.Log("Destination: " + agent.destination.ToString());
             //Debug.Log("Position: " + GetTransform().position.ToString());
 
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("AttackAnimation")){
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("AttackAnimation"))
+            {
 
                 if (anim.GetCurrentAnimatorStateInfo(0).length >= 0.45f)
                 {
@@ -49,7 +51,7 @@ public class PlayerUnit : DynamicUnit {
 
                 if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 {
-                    
+
                     dealtDamage = false;
                     attackAnimTriggered = false;
                     IsAttacking = false;
@@ -61,7 +63,7 @@ public class PlayerUnit : DynamicUnit {
     }
 
     private void AnimateUnit()
-    {   
+    {
         anim.SetBool("Moving", agent.velocity.sqrMagnitude > 0 ? true : false);
         anim.SetFloat("Speed", agent.velocity.sqrMagnitude);
 
@@ -70,7 +72,7 @@ public class PlayerUnit : DynamicUnit {
         //Debug.Log("Distance Between " + Vector3.Distance(agent.destination, GetTransform().position).ToString());
         //Debug.Log("Local Scale" + GetTransform().localScale.x.ToString());
 
-        if(anim.GetCurrentAnimatorStateInfo(0).IsName("TakeDamageAnimation"))
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("TakeDamageAnimation"))
         {
             anim.SetBool("TakeDamage", false);
         }

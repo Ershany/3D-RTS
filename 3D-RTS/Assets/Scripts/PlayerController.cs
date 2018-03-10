@@ -2,18 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
-
+public class PlayerController : MonoBehaviour
+{
+    //prefabs
     public GameObject guildHallPrefab;
     public GameObject arenaPrefab;
+
+    //selected group of units
     public Group SelectedGroup { get; private set; }
 
-    private List<Group> groups;
+    //players groups 
+    public List<Group> groups { get; private set; }
+
+    //selected building
     private Building buildingSelected;
 
-    private List<TurnBasedBattleController> battles;
+    //number of battles occuring
+    public List<TurnBasedBattleController> battles { get; private set; }
 
-
+    //terrain mask
     private int terrainMask;
 
     void Awake()
@@ -23,8 +30,8 @@ public class PlayerController : MonoBehaviour {
         SelectedGroup = null;
         terrainMask = LayerMask.GetMask("TerrainLayer");
     }
-	
-	void Update ()
+
+    void Update()
     {
         // Shoot a raycast at the mouse position
         RaycastHit hit;
@@ -85,7 +92,8 @@ public class PlayerController : MonoBehaviour {
             Debug.Log("Cancelling Building Placement");
         }
 
-        for(int i = 0; i < 1; i++)
+        /*
+        for (int i = 0; i < 1; i++)
         {
             if (groups[0].GetUnits()[i].IsInBattle)
                 continue;
@@ -104,8 +112,9 @@ public class PlayerController : MonoBehaviour {
                     groups[1].BattleStarted();
                     break;
                 }
-            }
+            }  
         }
+        */
 
         for (int i = 0; i < battles.Count; i++)
         {
@@ -139,7 +148,7 @@ public class PlayerController : MonoBehaviour {
         }
 
     }
-    
+
 
 
     public void AddGroup(Group group)

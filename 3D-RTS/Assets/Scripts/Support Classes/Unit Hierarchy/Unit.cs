@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public abstract class Unit {
+public abstract class Unit
+{
 
     public bool IsDead { get; protected set; }
 
