@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     public List<Group> groups { get; private set; }
 
     //selected building
-    private Building buildingSelected;
+    public Building buildingSelected;
 
     //number of battles occuring
     public List<TurnBasedBattleController> battles { get; private set; }

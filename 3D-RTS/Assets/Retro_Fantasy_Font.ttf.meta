@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: d1d3b7ea0ab8404448141cb8c3867dc9
+timeCreated: 1520893730
+licenseType: Pro
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Final Fantasy 1 PSXa
+  fontNames:
+  - Final Fantasy 1 PSXa
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
