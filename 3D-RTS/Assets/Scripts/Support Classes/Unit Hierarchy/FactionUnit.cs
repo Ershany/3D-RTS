@@ -4,18 +4,14 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [System.Serializable]
-public class PlayerUnit : DynamicUnit
+public class FactionUnit : DynamicUnit
 {
-
-    public PlayerController playerController;
-
     private bool deathAnimTriggered;
     private bool attackAnimTriggered;
     private bool dealtDamage;
 
-    public PlayerUnit(GameObject obj, float health, int[] stats) : base(obj, health, true)
+    public FactionUnit(GameObject obj, float health, int[] stats, bool isPlayerControlled) : base(obj, health, isPlayerControlled)
     {
-        playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
         deathAnimTriggered = false;
         attackAnimTriggered = false;
         dealtDamage = false;
@@ -74,9 +70,6 @@ public class PlayerUnit : DynamicUnit
 
         anim.SetBool("Combat", IsInBattle ? true : false);
 
-        //Debug.Log("Distance Between " + Vector3.Distance(agent.destination, GetTransform().position).ToString());
-        //Debug.Log("Local Scale" + GetTransform().localScale.x.ToString());
-
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("TakeDamageAnimation"))
         {
             anim.SetBool("TakeDamage", false);
@@ -84,7 +77,6 @@ public class PlayerUnit : DynamicUnit
 
         if (IsAttacking && !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance && !attackAnimTriggered)
         {
-            Debug.Log(anim.GetCurrentAnimatorStateInfo(0).normalizedTime);
             anim.SetBool("Attacking", true);
             Halt();
             attackAnimTriggered = true;

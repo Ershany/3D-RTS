@@ -10,14 +10,14 @@ public class Building {
     public bool IsPlaced { get; private set; }
     public GameObject GameObject { get; private set; }
     private BoxCollider boxCollider;
-    private Renderer renderer;
+    private int containingColliderCount;
 
     public Building(GameObject obj, float health)
     {
         GameObject = obj;
         boxCollider = GameObject.GetComponent<BoxCollider>();
         boxCollider.enabled = false;
-        renderer = GameObject.GetComponent<Renderer>();
+        containingColliderCount = 0;
 
         maxHealth = currentHealth = health;
         IsDestroyed = false;
@@ -63,7 +63,7 @@ public class Building {
     // Attempts to place the building on the terrain. Will return true if successful
     public bool PlaceBuildingOnTerrain()
     {
-        if (IsPlaceableOnTerrain())
+        if (IsPlaceableOnTerrain() && containingColliderCount == 0)
         {
             boxCollider.enabled = true;
             NavMeshObstacle obstacle = GameObject.AddComponent<NavMeshObstacle>();
@@ -71,6 +71,17 @@ public class Building {
 
             return true;
         }
+        Debug.Log("Can't place building - Current contained collider count: " + containingColliderCount);
         return false;
+    }
+
+    public void OnTriggerEnter()
+    {
+        ++containingColliderCount;
+    }
+
+    public void OnTriggerExit()
+    {
+        --containingColliderCount;
     }
 }

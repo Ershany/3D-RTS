@@ -50,11 +50,6 @@ public class PlayerController : MonoBehaviour
             if (groups.Count > 0)
                 SelectedGroup = groups[(groups.IndexOf(SelectedGroup) + 1) % groups.Count];
         }
-        // TEMP Unit Death Testing
-        if (Input.GetKeyDown("k"))
-        {
-            SelectedGroup.GroupTakeDamage(5);
-        }
 
         // Move building with cursor if a building is currently selected (keep it on the terrain)
         if (buildingSelected != null)
@@ -66,7 +61,6 @@ public class PlayerController : MonoBehaviour
         // Check if the player issued a command by clicking and act accordingly
         if (Input.GetMouseButtonDown(0))
         {
-            // Check if the player is placing a building
             if (buildingSelected != null)
             {
                 if (buildingSelected.PlaceBuildingOnTerrain())
@@ -74,25 +68,18 @@ public class PlayerController : MonoBehaviour
                     buildingSelected = null;
                     Debug.Log("Building Placed");
                 }
-            }
-            else if (SelectedGroup != null) // Check if the player is commanding a group of units then we would set it to null
-            {
-                Debug.Log("No Longer selecting a group");
-                SelectedGroup = null;
-                /*
-                if (!SelectedGroup.GetUnits()[0].IsInBattle)
-                {
-                    Transform objectHit = hit.transform;
-                    SelectedGroup.SetGroupDestination(hit.point);
-                    Debug.Log("Group is moving to " + hit.point.ToString());
-                }
-                */
 
+                SelectedGroup = null;
             }
-            else if (SelectedGroup == null) // selecting a group 
+            else if (hit.collider.gameObject.name == "Terrain")
+            {
+                Debug.Log("clicked terrain deselect everything");
+                SelectedGroup = null;
+            }
+            // Check if the player is placing a buildin
+            else //search for a group
             {
                 //Debug.Log(hit.collider.gameObject.name);
-
                 //check if we are clicking this group so check any of the units being selected 
                 for (int i = 0; i < groups.Count; i++)
                 {
@@ -133,12 +120,6 @@ public class PlayerController : MonoBehaviour
                 SelectedGroup.SetGroupDestination(hit.point);
                 Debug.Log("Group is moving to " + hit.point.ToString());
             }
-            /*
-            add more functionality here 
-            else if ()
-            {
-            }
-            */
         }
 
         /*

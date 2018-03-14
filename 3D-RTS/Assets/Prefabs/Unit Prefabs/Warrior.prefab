@@ -2930,8 +2930,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitHealth: 20
-  unit:
-    playerController: {fileID: 0}
 --- !u!136 &136524531215598450
 CapsuleCollider:
   m_ObjectHideFlags: 1
