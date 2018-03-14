@@ -50,11 +50,6 @@ public class PlayerController : MonoBehaviour
             if (groups.Count > 0)
                 SelectedGroup = groups[(groups.IndexOf(SelectedGroup) + 1) % groups.Count];
         }
-        // TEMP Unit Death Testing
-        if (Input.GetKeyDown("k"))
-        {
-            SelectedGroup.GroupTakeDamage(5);
-        }
 
         // Move building with cursor if a building is currently selected (keep it on the terrain)
         if (buildingSelected != null)

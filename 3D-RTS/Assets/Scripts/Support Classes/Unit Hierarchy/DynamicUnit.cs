@@ -82,7 +82,6 @@ public abstract class DynamicUnit : Unit
                 float scale = 4.0f;
                 Vector3 targetPosition = opponents[i].GetTransform().position - scale * offsetVector;
                 SetDestination(targetPosition);
-                Debug.Log(agent.destination.ToString());
                 break;
             }
         }

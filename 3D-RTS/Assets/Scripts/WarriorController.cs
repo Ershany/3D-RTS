@@ -8,7 +8,7 @@ public class WarriorController : MonoBehaviour {
     [Range(1.0f, 1000.0f)] public float unitHealth = 20.0f;
 
     // Construct the Unit
-    public PlayerUnit unit;
+    public FactionUnit unit;
 
     void Awake()
     {
@@ -16,7 +16,7 @@ public class WarriorController : MonoBehaviour {
         stats[0] = 8;
         stats[1] = 2;
         stats[2] = 5;
-        unit = new PlayerUnit(gameObject, unitHealth, stats);
+        unit = new FactionUnit(gameObject, unitHealth, stats, true);
     }
 
     void Update()
