@@ -13,6 +13,13 @@ public abstract class DynamicUnit : Unit
     protected int dexterity;
     protected int strength;
     protected int intelligence;
+    protected int maxMana;
+    protected int currentMana;
+    protected int level;
+    protected int experience;
+
+    protected string name;
+    protected string className;
     public float attackTime { get; set; }
     public bool IsAttacking { get; protected set; }
     public bool IsInBattle { get; set; }
@@ -111,4 +118,55 @@ public abstract class DynamicUnit : Unit
     {
         return intelligence;
     }
+
+    public int GetLevel()
+    {
+        return level;
+    }
+    
+    public void GetMana(ref int curr, ref int max)
+    {
+        curr = currentMana;
+        max = maxMana;
+    }
+
+    public void GetHealth(ref float curr, ref float max)
+    {
+        curr = currentHealth;
+        max = maxHealth;
+    }
+
+
+    public void GetStatus(ref int str, ref int intel, ref int dex, ref float mHP, ref float currHP, ref int mMP, ref int currMP, ref int lvl)
+    {
+        str = GetStrength();
+        intel = GetIntelligence();
+        dex = GetDexterity();
+        GetHealth(ref currHP,ref mHP);
+        GetMana(ref currMP, ref mMP);
+        lvl = GetLevel();
+        
+    }
+    public string GetName()
+    {
+       return name;
+    }
+
+    public string GetClassName()
+    {
+        return className;
+    }
+
+    public int GetExperience()
+    {
+        return experience;
+    }
+
+    public int GetExperienceRequired()
+    {
+
+        return level * 100;
+    }
+
+
 }

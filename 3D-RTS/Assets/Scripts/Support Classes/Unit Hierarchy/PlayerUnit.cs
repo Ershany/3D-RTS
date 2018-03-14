@@ -22,6 +22,11 @@ public class PlayerUnit : DynamicUnit
         strength = stats[0];
         intelligence = stats[1];
         dexterity = stats[2];
+        level = 1;
+        experience = 0;
+        Random.InitState((int)(Time.deltaTime * 200.0f));
+        name = "TempName" + ((int) Random.Range(0, 2000)).ToString();
+        className = "TempClass";
     }
 
     public void Update()
