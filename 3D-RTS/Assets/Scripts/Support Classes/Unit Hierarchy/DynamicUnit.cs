@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [System.Serializable]
-public abstract class DynamicUnit : Unit {
-
+public abstract class DynamicUnit : Unit
+{
     public bool IsPlayerControlled { get; protected set; }
     protected NavMeshAgent agent;
     protected Animator anim;
@@ -15,7 +15,7 @@ public abstract class DynamicUnit : Unit {
     protected int intelligence;
     public float attackTime { get; set; }
     public bool IsAttacking { get; protected set; }
-    public bool IsInBattle { get;  set; }
+    public bool IsInBattle { get; set; }
     protected DynamicUnit targetUnit;
     protected List<DynamicUnit> opponents;
 
@@ -28,6 +28,11 @@ public abstract class DynamicUnit : Unit {
         IsInBattle = false;
     }
 
+    public GameObject GetGameObject()
+    {
+        return gameObject;
+    }
+
     public Transform GetTransform()
     {
         return gameObject.transform;
@@ -37,7 +42,7 @@ public abstract class DynamicUnit : Unit {
     {
         return agent;
     }
-	
+
     public void SetDestination(Vector3 destination)
     {
         agent.SetDestination(destination);
@@ -69,7 +74,7 @@ public abstract class DynamicUnit : Unit {
         IsAttacking = true;
         for (int i = 0; i < opponents.Count; i++)
         {
-            if(!opponents[i].IsDead)
+            if (!opponents[i].IsDead)
             {
                 targetUnit = opponents[i];
 
@@ -106,5 +111,4 @@ public abstract class DynamicUnit : Unit {
     {
         return intelligence;
     }
-
 }

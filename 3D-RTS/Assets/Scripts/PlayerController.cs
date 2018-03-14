@@ -36,7 +36,8 @@ public class PlayerController : MonoBehaviour
         // Shoot a raycast at the mouse position
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Physics.Raycast(ray, out hit, float.MaxValue, terrainMask);
+        //Physics.Raycast(ray, out hit, float.MaxValue, terrainMask);
+        Physics.Raycast(ray, out hit);
 
         // TEMP Building Selection Code
         if (Input.GetKeyDown("1") && buildingSelected == null)
@@ -60,11 +61,13 @@ public class PlayerController : MonoBehaviour
         {
             buildingSelected.MoveBuilding(hit.point);
         }
-
+        
+        // Left click input 
         // Check if the player issued a command by clicking and act accordingly
         if (Input.GetMouseButtonDown(0))
         {
-            if (buildingSelected != null) // Check if the player is placing a building
+            // Check if the player is placing a building
+            if (buildingSelected != null)
             {
                 if (buildingSelected.PlaceBuildingOnTerrain())
                 {
@@ -72,24 +75,70 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("Building Placed");
                 }
             }
-            else if (SelectedGroup != null) // Check if the player is commanding a group of units
+            else if (SelectedGroup != null) // Check if the player is commanding a group of units then we would set it to null
             {
+                Debug.Log("No Longer selecting a group");
+                SelectedGroup = null;
+                /*
                 if (!SelectedGroup.GetUnits()[0].IsInBattle)
                 {
                     Transform objectHit = hit.transform;
                     SelectedGroup.SetGroupDestination(hit.point);
                     Debug.Log("Group is moving to " + hit.point.ToString());
                 }
+                */
 
             }
+            else if (SelectedGroup == null) // selecting a group 
+            {
+                //Debug.Log(hit.collider.gameObject.name);
+
+                //check if we are clicking this group so check any of the units being selected 
+                for (int i = 0; i < groups.Count; i++)
+                {
+                    for (int j = 0; j < groups[i].GetUnits().Count; j++)
+                    {
+                        if (hit.collider.gameObject == groups[i].GetUnits()[j].GetGameObject())
+                        {
+                            SelectedGroup = groups[i];
+                            Debug.Log("selected a group");
+                            break;
+                        }
+                    }
+                }
+            }
+
+            /*
+            do more stuff maybe selecting a building
+            else if ()
+            {
+
+            }
+            */
         }
 
+        // Right click input 
         // Check if the player is cancelling the command to place a building
-        if (Input.GetMouseButtonDown(1) && buildingSelected != null)
+        if (Input.GetMouseButtonDown(1))
         {
-            Destroy(buildingSelected.GameObject);
-            buildingSelected = null;
-            Debug.Log("Cancelling Building Placement");
+            if (buildingSelected != null) // Deselecting building
+            {
+                Destroy(buildingSelected.GameObject);
+                buildingSelected = null;
+                Debug.Log("Cancelling Building Placement");
+            }
+            else if (SelectedGroup != null && !SelectedGroup.GetUnits()[0].IsInBattle) // Move a group to a position 
+            {
+                Transform objectHit = hit.transform;
+                SelectedGroup.SetGroupDestination(hit.point);
+                Debug.Log("Group is moving to " + hit.point.ToString());
+            }
+            /*
+            add more functionality here 
+            else if ()
+            {
+            }
+            */
         }
 
         /*
@@ -149,7 +198,11 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    void InputCheck()
+    {
+        //do input checks here
 
+    }
 
     public void AddGroup(Group group)
     {

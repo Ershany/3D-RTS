@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StandardGUIController : MonoBehaviour {
-
+public class StandardGUIController : MonoBehaviour
+{
     public PlayerController playerController;
 
     public Group currentGroup;
@@ -27,22 +27,25 @@ public class StandardGUIController : MonoBehaviour {
     void Awake()
     {
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
-        
+
     }
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         currentSelectionType = "null";
         groupInfoPanel = GameObject.FindGameObjectWithTag("GroupInformationPanel");
         unitInfoPanel = groupInfoPanel.transform.Find("StatusWindow").gameObject;
-        groupInfoPanel.transform.Find("GroupMembers").gameObject.GetComponentsInChildren<GameObject>(true, GroupInformation.members);
+        //doesn't work
+        //groupInfoPanel.transform.Find("GroupMembers").gameObject.GetComponentsInChildren<GameObject>(true, GroupInformation.members);
 
         buildingInfoPanel = this.transform.Find("BuildingInformationPanel").gameObject;
 
-	}
-    
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+
+    // Update is called once per frame
+    void Update()
+    {
         if (playerController.SelectedGroup != null)
         {
 
@@ -71,5 +74,5 @@ public class StandardGUIController : MonoBehaviour {
         {
 
         }
-	}
+    }
 }

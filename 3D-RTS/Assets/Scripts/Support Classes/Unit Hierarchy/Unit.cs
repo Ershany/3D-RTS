@@ -5,14 +5,11 @@ using UnityEngine;
 [System.Serializable]
 public abstract class Unit
 {
-
     public bool IsDead { get; protected set; }
 
-
     protected float maxHealth, currentHealth;
-    protected GameObject gameObject;
+    protected GameObject gameObject { get; private set; }
     protected CapsuleCollider collider;
-
 
     public Unit(GameObject obj, float health)
     {
@@ -21,7 +18,6 @@ public abstract class Unit
         maxHealth = currentHealth = health;
         IsDead = false;
     }
-
 
     public void HealDamage(float healAmount)
     {
