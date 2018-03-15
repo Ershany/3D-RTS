@@ -26,13 +26,14 @@ public abstract class DynamicUnit : Unit
     protected DynamicUnit targetUnit;
     protected List<DynamicUnit> opponents;
 
-    public DynamicUnit(GameObject obj, float health, bool playerControlled) : base(obj, health)
+    public DynamicUnit(GameObject obj, float health, bool playerControlled , string className) : base(obj, health)
     {
         IsPlayerControlled = playerControlled;
         agent = gameObject.GetComponent<NavMeshAgent>();
         anim = gameObject.GetComponent<Animator>();
         IsAttacking = false;
         IsInBattle = false;
+        this.className = className;
     }
 
     public GameObject GetGameObject()

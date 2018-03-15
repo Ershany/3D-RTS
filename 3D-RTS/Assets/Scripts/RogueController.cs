@@ -16,7 +16,7 @@ public class RogueController : MonoBehaviour {
         stats[0] = 4;
         stats[1] = 6;
         stats[2] = 8;
-        unit = new FactionUnit(gameObject, unitHealth, stats, true);
+        unit = new FactionUnit(gameObject, unitHealth, stats, true, "WK_ARCHER");
     }
 
     void Update()

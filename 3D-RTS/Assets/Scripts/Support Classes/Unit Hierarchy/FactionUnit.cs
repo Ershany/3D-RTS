@@ -10,7 +10,7 @@ public class FactionUnit : DynamicUnit
     private bool attackAnimTriggered;
     private bool dealtDamage;
 
-    public FactionUnit(GameObject obj, float health, int[] stats, bool isPlayerControlled) : base(obj, health, isPlayerControlled)
+    public FactionUnit(GameObject obj, float health, int[] stats, bool isPlayerControlled , string className) : base(obj, health, isPlayerControlled , className)
     {
         deathAnimTriggered = false;
         attackAnimTriggered = false;
@@ -21,7 +21,6 @@ public class FactionUnit : DynamicUnit
         level = 1;
         experience = 0;
         name = "TN" + ((int) Random.Range(0, 999)).ToString();
-        className = "TC";
     }
 
     public void Update()

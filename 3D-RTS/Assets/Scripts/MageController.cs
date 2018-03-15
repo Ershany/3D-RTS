@@ -16,7 +16,7 @@ public class MageController : MonoBehaviour {
         stats[0] = 2;
         stats[1] = 8;
         stats[2] = 4;
-        unit = new FactionUnit(gameObject, unitHealth, stats, true);
+        unit = new FactionUnit(gameObject, unitHealth, stats, true , "WK_MAGE");
         
     }
 

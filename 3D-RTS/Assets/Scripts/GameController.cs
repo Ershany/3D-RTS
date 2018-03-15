@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//TO DO LIST 
+//add a string array for names
+//work on guild hall
+//play with unit creation 
+//look at buildings
+//Get Selection GameObject
+
 public class GameController : MonoBehaviour
 {
     /* Prefabs */   
@@ -22,55 +29,59 @@ public class GameController : MonoBehaviour
     private EnemyController enemyController;
 
     void Awake()
-    {
-        
+    {    
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
         enemyController = GameObject.FindGameObjectWithTag("EnemyController").GetComponent<EnemyController>();
 
         List<DynamicUnit> myUnits;
         myUnits = new List<DynamicUnit>();
-        myUnits.Add(CreatePlayerArcher().unit);
-        myUnits.Add(CreatePlayerWarrior().unit);
-        myUnits.Add(CreatePlayerMage().unit);
+        myUnits.Add(CreatePlayerArcher());
+        myUnits.Add(CreatePlayerWarrior());
+        myUnits.Add(CreatePlayerMage());
 
         // add some player units
         AddFactionGroup(myUnits , new Vector3 (20 ,0, 20) , true);  
     }
 
-    //Archer creation
-    public RogueController CreatePlayerArcher()
+    void Update()
     {
-        return Instantiate(roguePrefab, new Vector3(30.0f, 2.0f, 30.0f), Quaternion.identity).GetComponent<RogueController>();
+        BattleCheck();
+    }
+
+    //Archer creation
+    public FactionUnit CreatePlayerArcher()
+    {
+        return Instantiate(roguePrefab, new Vector3(30.0f, 2.0f, 30.0f), Quaternion.identity).GetComponent<RogueController>().unit;
     }
 
     //Warrior creation
-    public WarriorController CreatePlayerWarrior()
+    public FactionUnit CreatePlayerWarrior()
     {
-        return Instantiate(warriorPrefab, new Vector3(30.0f, 2.0f, 30.0f), Quaternion.identity).GetComponent<WarriorController>();
+        return Instantiate(warriorPrefab, new Vector3(30.0f, 2.0f, 30.0f), Quaternion.identity).GetComponent<WarriorController>().unit;
     }
 
     //mage creation
-    public MageController CreatePlayerMage()
+    public FactionUnit CreatePlayerMage()
     {
-        return Instantiate(magePrefab, new Vector3(30.0f, 2.0f, 30.0f), Quaternion.identity).GetComponent<MageController>();
+        return Instantiate(magePrefab, new Vector3(30.0f, 2.0f, 30.0f), Quaternion.identity).GetComponent<MageController>().unit;
     }
 
     //Enemy Archer creation
-    public EnemyArcherController CreateEnemyArcher()
+    public FactionUnit CreateEnemyArcher()
     {
-        return Instantiate(enemyArcherPrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<EnemyArcherController>();
+        return Instantiate(enemyArcherPrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<EnemyArcherController>().demonUnit;
     }
 
     //Enemy Infantry creation
-    public EnemyInfantryController CreateEnemyWarrior()
+    public FactionUnit CreateEnemyWarrior()
     {
-        return Instantiate(enemyInfantryPrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<EnemyInfantryController>();
+        return Instantiate(enemyInfantryPrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<EnemyInfantryController>().demonUnit;
     }
 
     //Enemy mage creation
-    public EnemyMageController CreateEnemyMage()
+    public FactionUnit CreateEnemyMage()
     {
-        return Instantiate(enemyMagePrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<EnemyMageController>();
+        return Instantiate(enemyMagePrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<EnemyMageController>().demonUnit;
     }
 
     //Adding to a faction's grps
@@ -87,6 +98,7 @@ public class GameController : MonoBehaviour
         if (isPlayer) { playerController.groups.Add(grp); }
         else { enemyController.enemyGroups.Add(grp); }
     }
+
 
     //Check for a battle instance 
     void BattleCheck()
@@ -116,11 +128,5 @@ public class GameController : MonoBehaviour
                 }
             }
         }
-    }
-
-    void Update()
-    {
-        BattleCheck();
-
     }
 }

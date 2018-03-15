@@ -16,7 +16,7 @@ public class WarriorController : MonoBehaviour {
         stats[0] = 8;
         stats[1] = 2;
         stats[2] = 5;
-        unit = new FactionUnit(gameObject, unitHealth, stats, true);
+        unit = new FactionUnit(gameObject, unitHealth, stats, true, "WK_WARRIOR");
     }
 
     void Update()
