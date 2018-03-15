@@ -124,11 +124,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             if (groups.Count > 0)
-<<<<<<< HEAD
                 selectedGroup = groups[(groups.IndexOf(selectedGroup) + 1) % groups.Count];
-=======
-                SelectedGroup = groups[(groups.IndexOf(SelectedGroup) + 1) % groups.Count];
->>>>>>> 6d2ec0563ac20386e44ea75986ff887d9a58cabb
         }
 
         // Left click input 
@@ -145,11 +141,11 @@ public class PlayerController : MonoBehaviour
 
                 selectedGroup = null;
             }
-            else if (hit.collider.gameObject.name == "Terrain")
-            {
-                Debug.Log("clicked terrain deselect everything");
-                selectedGroup = null;
-            }
+            //else if (hit.collider.gameObject.name == "Terrain")
+            //{
+            //    Debug.Log("clicked terrain deselect everything");
+             //   selectedGroup = null;
+            //}
             // Check if the player is placing a buildin
             else //search for a group
             {

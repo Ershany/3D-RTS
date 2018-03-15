@@ -23,14 +23,15 @@ public class GameController : MonoBehaviour
 
     void Awake()
     {
+        
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
         enemyController = GameObject.FindGameObjectWithTag("EnemyController").GetComponent<EnemyController>();
 
         List<DynamicUnit> myUnits;
         myUnits = new List<DynamicUnit>();
         myUnits.Add(CreatePlayerArcher().unit);
-        myUnits.Add(CreatePlayerArcher().unit);
-        myUnits.Add(CreatePlayerArcher().unit);
+        myUnits.Add(CreatePlayerWarrior().unit);
+        myUnits.Add(CreatePlayerMage().unit);
 
         // add some player units
         AddFactionGroup(myUnits , new Vector3 (20 ,0, 20) , true);  
@@ -39,19 +40,19 @@ public class GameController : MonoBehaviour
     //Archer creation
     public RogueController CreatePlayerArcher()
     {
-        return Instantiate(roguePrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<RogueController>();
+        return Instantiate(roguePrefab, new Vector3(30.0f, 2.0f, 30.0f), Quaternion.identity).GetComponent<RogueController>();
     }
 
     //Warrior creation
     public WarriorController CreatePlayerWarrior()
     {
-        return Instantiate(warriorPrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<WarriorController>();
+        return Instantiate(warriorPrefab, new Vector3(30.0f, 2.0f, 30.0f), Quaternion.identity).GetComponent<WarriorController>();
     }
 
     //mage creation
     public MageController CreatePlayerMage()
     {
-        return Instantiate(magePrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<MageController>();
+        return Instantiate(magePrefab, new Vector3(30.0f, 2.0f, 30.0f), Quaternion.identity).GetComponent<MageController>();
     }
 
     //Enemy Archer creation
@@ -120,5 +121,6 @@ public class GameController : MonoBehaviour
     void Update()
     {
         BattleCheck();
+
     }
 }

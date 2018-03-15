@@ -20,9 +20,8 @@ public class FactionUnit : DynamicUnit
         dexterity = stats[2];
         level = 1;
         experience = 0;
-        Random.InitState((int)(Time.deltaTime * 200.0f));
-        name = "TempName" + ((int) Random.Range(0, 2000)).ToString();
-        className = "TempClass";
+        name = "TN" + ((int) Random.Range(0, 999)).ToString();
+        className = "TC";
     }
 
     public void Update()

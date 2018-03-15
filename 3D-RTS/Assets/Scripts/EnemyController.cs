@@ -22,15 +22,15 @@ public class EnemyController : MonoBehaviour
 
     void Awake()
     {
-       //Reference Game Controller
+        enemyGroups = new List<Group>();
+
+        //Reference Game Controller
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 
         //do this in a function !!!! in game controller 
         EnemyArcherController archer = Instantiate(enemyArcherPrefab, Vector3.zero, Quaternion.identity, gameObject.transform).GetComponent<EnemyArcherController>();
         EnemyInfantryController infantry = Instantiate(enemyInfantryPrefab, Vector3.zero, Quaternion.identity, gameObject.transform).GetComponent<EnemyInfantryController>();
         EnemyMageController mage = Instantiate(enemyMagePrefab, Vector3.zero, Quaternion.identity, gameObject.transform).GetComponent<EnemyMageController>();
-
-        enemyGroups = new List<Group>();
 
         //make a group of enemies
         Group enemyGroup = Instantiate(groupPrefab, Vector3.zero, Quaternion.identity, gameObject.transform).GetComponent<Group>();
