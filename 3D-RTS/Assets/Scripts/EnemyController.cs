@@ -4,19 +4,27 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    //GET RID OF THAT SHIT
+    /* Prefabs */
     public GameObject enemyArcherPrefab;
     public GameObject enemyInfantryPrefab;
     public GameObject enemyMagePrefab;
     public GameObject groupPrefab;
 
+    //enemy units
     public List<Group> enemyGroups { get; private set; }
     public Group selectedGroup { get; set; }
 
+    //game controller
+    public GameController gameController;
+
     //maybe handle enemy units and buildings here
 
-    // Use this for initialization
-    void Start()
+    void Awake()
     {
+       //Reference Game Controller
+        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+
         //do this in a function !!!! in game controller 
         EnemyArcherController archer = Instantiate(enemyArcherPrefab, Vector3.zero, Quaternion.identity, gameObject.transform).GetComponent<EnemyArcherController>();
         EnemyInfantryController infantry = Instantiate(enemyInfantryPrefab, Vector3.zero, Quaternion.identity, gameObject.transform).GetComponent<EnemyInfantryController>();

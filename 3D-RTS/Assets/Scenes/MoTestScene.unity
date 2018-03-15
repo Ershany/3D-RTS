@@ -307,7 +307,6 @@ MonoBehaviour:
   enemyMagePrefab: {fileID: 199790, guid: 34f5c711ef6b97c4496fbd5618fea8a8, type: 2}
   groupPrefab: {fileID: 1409932899419140, guid: 36fd7a8a6d25caa49bf1c4c7260dfa8e,
     type: 2}
-  enemyGroups: []
 --- !u!1 &813388356
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,6 +396,9 @@ MonoBehaviour:
   roguePrefab: {fileID: 1719253358520630, guid: d1e385d32c6c6c2409a9d4d5ed177feb,
     type: 2}
   magePrefab: {fileID: 1996216839547518, guid: 75a8f1ae898e8bc4c88a8ed7fde408f8, type: 2}
+  enemyArcherPrefab: {fileID: 133574, guid: 73df584fd2872094198958e452adca03, type: 2}
+  enemyInfantryPrefab: {fileID: 197242, guid: 457fc7b325b5eb941a971b791fdb615e, type: 2}
+  enemyMagePrefab: {fileID: 199790, guid: 34f5c711ef6b97c4496fbd5618fea8a8, type: 2}
   groupPrefab: {fileID: 1409932899419140, guid: 36fd7a8a6d25caa49bf1c4c7260dfa8e,
     type: 2}
   arenaPrefab: {fileID: 1335127391431722, guid: cf81b553b53d6b54fa7f594ba3645a32,

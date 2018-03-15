@@ -26,7 +26,7 @@ public class CameraMovement : MonoBehaviour {
     {
         if (Input.GetKeyDown("space"))
         {
-            cameraTarget = cameraTarget == null ? player.SelectedGroup.GetFirstUnit().GetTransform() : null;
+            cameraTarget = cameraTarget == null ? player.selectedGroup.GetFirstUnit().GetTransform() : null;
         }
 
         // Free Movement

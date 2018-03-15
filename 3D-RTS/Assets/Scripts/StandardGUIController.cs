@@ -51,14 +51,14 @@ public class StandardGUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerController.SelectedGroup != null)
+        if (playerController.selectedGroup != null)
         {
             if (currentGroup == null)
                 currentGroup = playerController.SelectedGroup;
 
-            if (playerController.SelectedGroup != currentGroup || currentSelectionType != "group")
+            if (playerController.selectedGroup != currentGroup || currentSelectionType != "group")
             {
-                currentGroup = playerController.SelectedGroup;
+                currentGroup = playerController.selectedGroup;
                 currentSelectionType = "group";
 
                 groupInfoPanel.SetActive(true);

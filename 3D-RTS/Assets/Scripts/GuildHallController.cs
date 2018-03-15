@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GuildHallController : MonoBehaviour {
-
+public class GuildHallController : MonoBehaviour
+{
     // Unit Stats
     [Range(1.0f, 1000.0f)] public float buildingHealth = 500.0f;
 

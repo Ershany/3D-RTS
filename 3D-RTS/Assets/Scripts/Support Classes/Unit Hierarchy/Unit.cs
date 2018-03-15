@@ -6,7 +6,6 @@ using UnityEngine;
 public abstract class Unit
 {
     public bool IsDead { get; protected set; }
-
     protected float maxHealth, currentHealth;
     protected GameObject gameObject { get; private set; }
     protected CapsuleCollider collider;
