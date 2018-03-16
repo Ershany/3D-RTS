@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraMovement : MonoBehaviour {
-
+public class CameraMovement : MonoBehaviour
+{
     public Transform cameraTarget;
     [Range(0.1f, 10.0f)] public float smoothing = 2.0f;
     [Range(0.0f, 1000.0f)] public float cameraSpeed = 50.0f;
@@ -15,7 +15,7 @@ public class CameraMovement : MonoBehaviour {
     private float cameraFOV, maxCameraFOV;
     private Vector3 cameraOffset;
 
-	void Awake ()
+    void Awake()
     {
         player = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
         maxCameraFOV = cameraFOV = Camera.main.fieldOfView;
@@ -26,7 +26,11 @@ public class CameraMovement : MonoBehaviour {
     {
         if (Input.GetKeyDown("space"))
         {
-            cameraTarget = cameraTarget == null ? player.selectedGroup.GetFirstUnit().GetTransform() : null;
+            //check if there is a selected group
+            if (player.selectedGroup != null)
+            {
+                cameraTarget = cameraTarget == null ? player.selectedGroup.GetFirstUnit().GetTransform() : null;
+            }
         }
 
         // Free Movement
@@ -42,7 +46,7 @@ public class CameraMovement : MonoBehaviour {
         ProcessMouseScroll();
     }
 
-    void LateUpdate ()
+    void LateUpdate()
     {
         // Targeting movement
         if (cameraTarget)

@@ -14,11 +14,13 @@ public class PlayerController : MonoBehaviour
     //players groups 
     public List<Group> groups { get; private set; }
 
-    //selected building
+    //selected buildings 
     public Building buildingSelected;
+    public Building buildingToBeBuilt;
 
     //number of battles occuring
     public List<TurnBasedBattleController> battles { get; private set; }
+    public List<Building> playerBuildings;
 
     //terrain mask
     private int terrainMask;
@@ -33,7 +35,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        //do input checks here
+        // do input checks here
         // Shoot a raycast at the mouse position
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -41,12 +43,13 @@ public class PlayerController : MonoBehaviour
         Physics.Raycast(ray, out hit);
 
         // Move building with cursor if a building is currently selected (keep it on the terrain)
-        if (buildingSelected != null) { buildingSelected.MoveBuilding(hit.point); }
+        if (buildingToBeBuilt != null) { buildingToBeBuilt.MoveBuilding(hit.point); }
 
         //check for input
         InputCheck(hit);
     }
 
+    //Check for battles
     void BattleUpdate()
     {
         for (int i = 0; i < battles.Count; i++)
@@ -57,12 +60,15 @@ public class PlayerController : MonoBehaviour
             {
                 bool playersWon = true;
                 tbbc.enemyGroup.BattledEnded();
+
                 for (int j = 0; i < tbbc.enemyGroup.GetUnits().Count; i++)
                 {
                     if (!tbbc.enemyGroup.GetUnits()[j].IsDead)
                         playersWon = false;
                 }
+
                 tbbc.playerGroup.BattledEnded();
+
                 for (int j = 0; i < tbbc.playerGroup.GetUnits().Count; i++)
                 {
                     if (playersWon)
@@ -70,14 +76,16 @@ public class PlayerController : MonoBehaviour
                         //Give players rewards
                     }
                 }
-                tbbc.playerGroup.BattledEnded();
 
+                tbbc.playerGroup.BattledEnded();
                 Destroy(tbbc.arena);
                 battles.Remove(tbbc);
                 i--;
             }
             else
+            {
                 tbbc.Update();
+            }
         }
     }
 
@@ -95,58 +103,81 @@ public class PlayerController : MonoBehaviour
         selectedGroup = myGroup;
     }
 
-    //Deselects 
-    void DeselectGroup()
+    public void Deselect()
     {
-        //nothing is selected
-        if (selectedGroup == null) return;
+        //deselect everything
 
-        //Deactivate the selection gameObject
-        /*
-        for (int i = 0; i < selectedGroup.GetUnits().Count; i++)
+        if (selectedGroup != null)
         {
-            selectedGroup.GetUnits()[i].GetSelectionObject().setActive(false);
-        }
-        */
+            //Deactivate the selection gameObject
+            /*
+            for (int i = 0; i < selectedGroup.GetUnits().Count; i++)
+            {
+                selectedGroup.GetUnits()[i].GetSelectionObject().setActive(false);
+            }
+            */
 
-        selectedGroup = null;
+            selectedGroup = null;
+        }
+
+        if (buildingSelected != null)
+        {
+            //deactivate selection gameObject
+            buildingSelected = null;
+        }
+
+        buildingToBeBuilt = null;
     }
 
-    // Check player Input
+    //Check player Input
     void InputCheck(RaycastHit hit)
     {
+        //CHANGE HEREEEEEEEEEE
         // TEMP Building Selection Code
-        if (Input.GetKeyDown("1") && buildingSelected == null)
+        if (Input.GetKeyDown("1"))
         {
-            buildingSelected = Instantiate(guildHallPrefab, Vector3.zero, Quaternion.Euler(-90.0f, 0.0f, 0.0f)).GetComponent<GuildHallController>().building;
-            buildingSelected.MoveBuilding(hit.point);
-        }
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            if (groups.Count > 0)
-                selectedGroup = groups[(groups.IndexOf(selectedGroup) + 1) % groups.Count];
+            if (buildingToBeBuilt != null)
+            {
+                //Replace buildings if we already have a building to build
+                Destroy(buildingToBeBuilt.GameObject);
+                buildingToBeBuilt = null;
+            }
+
+            buildingToBeBuilt = Instantiate(guildHallPrefab, Vector3.zero, Quaternion.Euler(-90.0f, 0.0f, 0.0f)).GetComponent<GuildHallController>().building;
+            buildingToBeBuilt.MoveBuilding(hit.point);
         }
 
+        // some group selection code
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (groups.Count > 0) { selectedGroup = groups[(groups.IndexOf(selectedGroup) + 1) % groups.Count]; }
+        }
+
+        //CHANGEEE HEREEEEEE
         // Left click input 
         // Check if the player issued a command by clicking and act accordingly
         if (Input.GetMouseButtonDown(0))
         {
-            if (buildingSelected != null)
+            if (buildingToBeBuilt != null)
             {
-                if (buildingSelected.PlaceBuildingOnTerrain())
+                // Place the building on the terrain
+                if (buildingToBeBuilt.PlaceBuildingOnTerrain())
                 {
-                    buildingSelected = null;
+                    buildingToBeBuilt = null;
                     Debug.Log("Building Placed");
                 }
 
+                //Just in case
+                buildingSelected = null;
                 selectedGroup = null;
             }
             //else if (hit.collider.gameObject.name == "Terrain")
             //{
-            //    Debug.Log("clicked terrain deselect everything");
-             //   selectedGroup = null;
+            //   selectedGroup = null;
+            //   buildingSelected = null;
+            //   buildingToBeSelected = null;
+            //   Debug.Log("clicked terrain deselect everything");
             //}
-            // Check if the player is placing a buildin
             else //search for a group
             {
                 //Debug.Log(hit.collider.gameObject.name);
@@ -166,18 +197,27 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        //CHANGEEEE HERREEEEEE
         // Right click input 
         // Check if the player is cancelling the command to place a building
         if (Input.GetMouseButtonDown(1))
         {
-            if (buildingSelected != null) // Deselecting building
+            if (buildingToBeBuilt != null)
             {
-                Destroy(buildingSelected.GameObject);
+                // Deselecting building 
+                if (!buildingToBeBuilt.IsPlaced)
+                {
+                    //check if building has already been placed if it hasn't destroy it
+                    Destroy(buildingToBeBuilt.GameObject);
+                    Debug.Log("Cancelling Building Placement");
+                }
+
                 buildingSelected = null;
-                Debug.Log("Cancelling Building Placement");
+                Debug.Log("Cancelling building related selection");
             }
-            else if (selectedGroup != null && !selectedGroup.GetUnits()[0].IsInBattle) // Move a group to a position 
+            else if (selectedGroup != null && !selectedGroup.GetUnits()[0].IsInBattle)
             {
+                // Move a group to a position 
                 Transform objectHit = hit.transform;
                 selectedGroup.SetGroupDestination(hit.point);
                 Debug.Log("Group is moving to " + hit.point.ToString());

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Building {
-
+public class Building
+{
     private float maxHealth, currentHealth;
     public bool IsDestroyed { get; private set; }
     public bool IsPlaced { get; private set; }
@@ -18,7 +18,6 @@ public class Building {
         boxCollider = GameObject.GetComponent<BoxCollider>();
         boxCollider.enabled = false;
         containingColliderCount = 0;
-
         maxHealth = currentHealth = health;
         IsDestroyed = false;
         IsPlaced = false;
@@ -27,6 +26,7 @@ public class Building {
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+
         if (currentHealth <= 0.0f)
         {
             IsDestroyed = true;
@@ -36,6 +36,7 @@ public class Building {
     public void RepairDamage(float repairAmount)
     {
         currentHealth += repairAmount;
+
         if (currentHealth > maxHealth)
         {
             currentHealth = maxHealth;
@@ -57,6 +58,7 @@ public class Building {
             // Round the height, due to float precision errors
             if (child.CompareTag("HeightCheck") && Terrain.activeTerrain.SampleHeight(child.position) != System.Math.Round(child.position.y, 2)) return false;
         }
+
         return true;
     }
 
@@ -68,9 +70,12 @@ public class Building {
             boxCollider.enabled = true;
             NavMeshObstacle obstacle = GameObject.AddComponent<NavMeshObstacle>();
             obstacle.carving = true;
+            //check this
+            IsPlaced = true;
 
             return true;
         }
+
         Debug.Log("Can't place building - Current contained collider count: " + containingColliderCount);
         return false;
     }
