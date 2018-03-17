@@ -47,6 +47,9 @@ public class PlayerController : MonoBehaviour
 
         //check for input
         InputCheck(hit);
+
+        //check for battles
+        BattleUpdate();
     }
 
     //Check for battles

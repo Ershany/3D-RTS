@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//TO DO LIST 
+//TO DO LIST:
 //Get Selection GameObject
 //Add a string array for names
 //Work on guild hall
 //Play with unit creation 
-//Look at buildings
 
 public class GameController : MonoBehaviour
 {
