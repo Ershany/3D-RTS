@@ -604,7 +604,7 @@ Prefab:
     - target: {fileID: 224171381162376618, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0.7898105
+      value: 0.78993344
       objectReference: {fileID: 0}
     - target: {fileID: 224171381162376618, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
@@ -614,12 +614,12 @@ Prefab:
     - target: {fileID: 224171381162376618, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0.9998764
       objectReference: {fileID: 0}
     - target: {fileID: 224525339166781462, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0.84958416
+      value: 0.8497324
       objectReference: {fileID: 0}
     - target: {fileID: 224525339166781462, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
@@ -708,7 +708,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1263754599320696, guid: a6741b7b18791d045902a32a7191189f, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224648529866498626, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
@@ -769,6 +769,63 @@ Prefab:
         type: 2}
       propertyPath: m_SizeDelta.x
       value: -8
+      objectReference: {fileID: 0}
+    - target: {fileID: 224526746319373070, guid: a6741b7b18791d045902a32a7191189f,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 6.1000137
+      objectReference: {fileID: 0}
+    - target: {fileID: 1844001206156326, guid: a6741b7b18791d045902a32a7191189f, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205308525278044, guid: a6741b7b18791d045902a32a7191189f, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114068788101988376, guid: a6741b7b18791d045902a32a7191189f,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 114967790165305614, guid: a6741b7b18791d045902a32a7191189f,
+        type: 2}
+    - target: {fileID: 114068788101988376, guid: a6741b7b18791d045902a32a7191189f,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetActiveMember
+      objectReference: {fileID: 0}
+    - target: {fileID: 114660772514699598, guid: a6741b7b18791d045902a32a7191189f,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 114967790165305614, guid: a6741b7b18791d045902a32a7191189f,
+        type: 2}
+    - target: {fileID: 114660772514699598, guid: a6741b7b18791d045902a32a7191189f,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetActiveMember
+      objectReference: {fileID: 0}
+    - target: {fileID: 114059594549403062, guid: a6741b7b18791d045902a32a7191189f,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 114967790165305614, guid: a6741b7b18791d045902a32a7191189f,
+        type: 2}
+    - target: {fileID: 114059594549403062, guid: a6741b7b18791d045902a32a7191189f,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetActiveMember
+      objectReference: {fileID: 0}
+    - target: {fileID: 114405024836848214, guid: a6741b7b18791d045902a32a7191189f,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 114967790165305614, guid: a6741b7b18791d045902a32a7191189f,
+        type: 2}
+    - target: {fileID: 114405024836848214, guid: a6741b7b18791d045902a32a7191189f,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetActiveMember
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a6741b7b18791d045902a32a7191189f, type: 2}

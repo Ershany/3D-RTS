@@ -156,9 +156,9 @@ public class StandardGUIController : MonoBehaviour
         int level = 0;
 
         member.GetStatus(ref str, ref intel, ref dex, ref mHP, ref currHP, ref mMP, ref currMP, ref level);
-        
-        panel.transform.Find("Name").GetComponent<UnityEngine.UI.Text>().text = member.GetName();
-        panel.transform.Find("Class").GetComponent<UnityEngine.UI.Text>().text = member.GetClassName();
+
+        panel.transform.Find("Name").GetComponent<UnityEngine.UI.Text>().text = member.GetName(); ;
+        panel.transform.Find("Class").GetComponent<UnityEngine.UI.Text>().text = member.GetClassName().Substring(3) ;
         panel.transform.Find("Level").Find("LevelValue").GetComponent<UnityEngine.UI.Text>().text = member.GetLevel().ToString();
         panel.transform.Find("Level").Find("LevelValue").GetComponent<UnityEngine.UI.Text>().text = level.ToString();
 
@@ -183,7 +183,7 @@ public class StandardGUIController : MonoBehaviour
         member.GetStatus(ref str, ref intel, ref dex, ref mHP, ref currHP, ref mMP, ref currMP, ref level);
 
         statusWindow.transform.Find("Name").GetComponent<UnityEngine.UI.Text>().text = member.GetName();
-        statusWindow.transform.Find("Class").GetComponent<UnityEngine.UI.Text>().text = member.GetClassName();
+        statusWindow.transform.Find("Class").GetComponent<UnityEngine.UI.Text>().text = member.GetClassName().Substring(3);
         statusWindow.transform.Find("Level").Find("LevelValue").GetComponent<UnityEngine.UI.Text>().text = member.GetLevel().ToString();
         statusWindow.transform.Find("Level").Find("LevelValue").GetComponent<UnityEngine.UI.Text>().text = level.ToString();
 
