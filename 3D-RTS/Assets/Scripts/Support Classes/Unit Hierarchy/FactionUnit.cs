@@ -36,7 +36,7 @@ public class FactionUnit : DynamicUnit
             //Debug.Log("Destination: " + agent.destination.ToString());
             //Debug.Log("Position: " + GetTransform().position.ToString());
 
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("AttackAnimation"))
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
             {
 
                 if (anim.GetCurrentAnimatorStateInfo(0).length >= 0.45f)
@@ -68,7 +68,7 @@ public class FactionUnit : DynamicUnit
 
         anim.SetBool("Combat", IsInBattle ? true : false);
 
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("TakeDamageAnimation"))
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("TakeDamage"))
         {
             anim.SetBool("TakeDamage", false);
         }

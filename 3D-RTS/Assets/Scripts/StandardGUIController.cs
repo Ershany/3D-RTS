@@ -5,6 +5,7 @@ using UnityEngine;
 public class StandardGUIController : MonoBehaviour
 {
     public PlayerController playerController;
+    public GameObject standardGUIPanel;
 
     public Group currentGroup;
     public Building currentBuilding;
@@ -19,12 +20,16 @@ public class StandardGUIController : MonoBehaviour
     public static GameObject buildingStatusPanel;
     public static GameObject itemInfoPanel;
 
-
     public GameObject minimap;
     public GameObject selectedUnitInformationPanel;
 
+    public GuildHallGUIUtil guildGUI;
+
+    public GameObject rosterUnitPrefab;
+
     private int activeMember;
     private int activeMemberPanel;
+    public int partyCreationWindowMemberClicked;
 
 
     void Awake()
@@ -39,9 +44,12 @@ public class StandardGUIController : MonoBehaviour
         groupInfoPanel = GameObject.FindGameObjectWithTag("GroupInformationPanel");
         unitInfoPanel = groupInfoPanel.transform.Find("StatusWindow").gameObject;
         groupMembers = new List<GameObject>();
-        for(int i = 0; i < 4; i++)
+        buttonsGroupMembers = new List<UnityEngine.UI.Button>();
+        for (int i = 0; i < 4; i++)
         {
             groupMembers.Add(groupInfoPanel.transform.Find("GroupMembers").Find("GroupMember" + (i + 1)).gameObject);
+            buttonsGroupMembers.Add(groupMembers[i].transform.Find("Button").gameObject.GetComponent<UnityEngine.UI.Button>());
+
         }
 
         for (int i = 0; i < groupMembers.Count; i++)
@@ -49,16 +57,19 @@ public class StandardGUIController : MonoBehaviour
             Debug.Log(groupMembers[i].name);
         }
         //groupInfoPanel.transform.Find("GroupMembers").GetComponentsInChildren<GameObject>(true, groupMembers);
-        buttonsGroupMembers = new List<UnityEngine.UI.Button>();
-        for (int i = 0; i < 4; i++)
-        {
-            buttonsGroupMembers.Add(groupMembers[i].transform.Find("Button").gameObject.GetComponent<UnityEngine.UI.Button>());
-
-        }
+   
 
         activeMember = 0;
         activeMemberPanel = -1;
+        partyCreationWindowMemberClicked = -1;
         buildingInfoPanel = new GameObject();
+
+        if (GameObject.FindGameObjectWithTag("GuildHall") != null)
+            guildGUI = new GuildHallGUIUtil(GameObject.FindGameObjectWithTag("GuildHallGUIPanel"), GameObject.FindGameObjectWithTag("GuildHall").GetComponent<GuildHallController>(), this);
+        else
+            guildGUI = null;
+        standardGUIPanel = GameObject.FindGameObjectWithTag("StandardGUIPanel");
+
         //buildingInfoPanel = GameObject.FindGameObjectWithTag("BuildingInformationPanel");
 
     }
@@ -67,6 +78,14 @@ public class StandardGUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (guildGUI == null)
+        {
+            if (GameObject.FindGameObjectWithTag("GuildHall") != null)
+                guildGUI = new GuildHallGUIUtil(GameObject.FindGameObjectWithTag("GuildHallGUIPanel"), GameObject.FindGameObjectWithTag("GuildHall").GetComponent<GuildHallController>(), this);
+
+        }
+
+
         if (playerController.selectedGroup != null)
         {
             if (currentGroup == null)
@@ -98,7 +117,7 @@ public class StandardGUIController : MonoBehaviour
             {
                 if (activeMemberPanel != activeMember && activeMember < currentGroup.GetUnits().Count)
                 {
-                    PopulateStatusWindow(currentGroup.GetUnits()[activeMember]);
+                    PopulateStatusWindow(currentGroup.GetUnits()[activeMember], unitInfoPanel);
                     activeMemberPanel = activeMember;
                 }
             }
@@ -115,7 +134,17 @@ public class StandardGUIController : MonoBehaviour
         Debug.Log(i);
         activeMember = i;
     }
-    void PopulateMemberInfoPanel(GameObject panel,  DynamicUnit member)
+
+    public void PartyCreationWindowMemberClicked(int i)
+    {
+
+    }
+
+
+
+
+
+    public void PopulateMemberInfoPanel(GameObject panel,  DynamicUnit member)
     {
         int str = 0;
         int intel = 0;
@@ -140,7 +169,7 @@ public class StandardGUIController : MonoBehaviour
 
     }
 
-    void PopulateStatusWindow(DynamicUnit member)
+    public void PopulateStatusWindow(DynamicUnit member, GameObject statusWindow)
     {
         int str = 0;
         int intel = 0;
@@ -153,27 +182,26 @@ public class StandardGUIController : MonoBehaviour
 
         member.GetStatus(ref str, ref intel, ref dex, ref mHP, ref currHP, ref mMP, ref currMP, ref level);
 
-        unitInfoPanel.transform.Find("Name").GetComponent<UnityEngine.UI.Text>().text = member.GetName();
-        unitInfoPanel.transform.Find("Class").GetComponent<UnityEngine.UI.Text>().text = member.GetClassName();
-        unitInfoPanel.transform.Find("Level").Find("LevelValue").GetComponent<UnityEngine.UI.Text>().text = member.GetLevel().ToString();
-        unitInfoPanel.transform.Find("Level").Find("LevelValue").GetComponent<UnityEngine.UI.Text>().text = level.ToString();
-        
-        unitInfoPanel.transform.Find("Health").Find("HealthCurrent").GetComponent<UnityEngine.UI.Text>().text = ((int)currHP).ToString();
-        unitInfoPanel.transform.Find("Health").Find("HealthCurrent").GetComponent<UnityEngine.UI.Text>().text = ((int)currHP).ToString();
-        unitInfoPanel.transform.Find("Health").Find("HealthMax").GetComponent<UnityEngine.UI.Text>().text = ((int)mHP).ToString();
-        unitInfoPanel.transform.Find("Mana").Find("ManaCurrent").GetComponent<UnityEngine.UI.Text>().text = ((int)currMP).ToString();
-        unitInfoPanel.transform.Find("Mana").Find("ManaMax").GetComponent<UnityEngine.UI.Text>().text = ((int)mMP).ToString();
+        statusWindow.transform.Find("Name").GetComponent<UnityEngine.UI.Text>().text = member.GetName();
+        statusWindow.transform.Find("Class").GetComponent<UnityEngine.UI.Text>().text = member.GetClassName();
+        statusWindow.transform.Find("Level").Find("LevelValue").GetComponent<UnityEngine.UI.Text>().text = member.GetLevel().ToString();
+        statusWindow.transform.Find("Level").Find("LevelValue").GetComponent<UnityEngine.UI.Text>().text = level.ToString();
 
-        unitInfoPanel.transform.Find("Strength").Find("StrengthValue").GetComponent<UnityEngine.UI.Text>().text = ((int)str).ToString();
-        unitInfoPanel.transform.Find("Intelligence").Find("IntelligenceValue").GetComponent<UnityEngine.UI.Text>().text = ((int)intel).ToString();
-        unitInfoPanel.transform.Find("Dexterity").Find("DexterityValue").GetComponent<UnityEngine.UI.Text>().text = ((int)dex).ToString();
+        statusWindow.transform.Find("Health").Find("HealthCurrent").GetComponent<UnityEngine.UI.Text>().text = ((int)currHP).ToString();
+        statusWindow.transform.Find("Health").Find("HealthCurrent").GetComponent<UnityEngine.UI.Text>().text = ((int)currHP).ToString();
+        statusWindow.transform.Find("Health").Find("HealthMax").GetComponent<UnityEngine.UI.Text>().text = ((int)mHP).ToString();
+        statusWindow.transform.Find("Mana").Find("ManaCurrent").GetComponent<UnityEngine.UI.Text>().text = ((int)currMP).ToString();
+        statusWindow.transform.Find("Mana").Find("ManaMax").GetComponent<UnityEngine.UI.Text>().text = ((int)mMP).ToString();
 
+        statusWindow.transform.Find("Strength").Find("StrengthValue").GetComponent<UnityEngine.UI.Text>().text = ((int)str).ToString();
+        statusWindow.transform.Find("Intelligence").Find("IntelligenceValue").GetComponent<UnityEngine.UI.Text>().text = ((int)intel).ToString();
+        statusWindow.transform.Find("Dexterity").Find("DexterityValue").GetComponent<UnityEngine.UI.Text>().text = ((int)dex).ToString();
 
-        unitInfoPanel.transform.Find("Damage").Find("DamageMin").GetComponent<UnityEngine.UI.Text>().text = ((int)str).ToString();
-        unitInfoPanel.transform.Find("Damage").Find("DamageMax").GetComponent<UnityEngine.UI.Text>().text = ((int)str).ToString();
+        statusWindow.transform.Find("Damage").Find("DamageMin").GetComponent<UnityEngine.UI.Text>().text = ((int)str).ToString();
+        statusWindow.transform.Find("Damage").Find("DamageMax").GetComponent<UnityEngine.UI.Text>().text = ((int)str).ToString();
 
-        unitInfoPanel.transform.Find("Experience").Find("ExperienceCurrent").GetComponent<UnityEngine.UI.Text>().text = member.GetExperience().ToString();
-        unitInfoPanel.transform.Find("Experience").Find("ExperienceRequired").GetComponent<UnityEngine.UI.Text>().text = member.GetExperienceRequired().ToString();
+        statusWindow.transform.Find("Experience").Find("ExperienceCurrent").GetComponent<UnityEngine.UI.Text>().text = member.GetExperience().ToString();
+        statusWindow.transform.Find("Experience").Find("ExperienceRequired").GetComponent<UnityEngine.UI.Text>().text = member.GetExperienceRequired().ToString();
 
     }
 

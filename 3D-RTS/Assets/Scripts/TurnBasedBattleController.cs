@@ -82,6 +82,8 @@ public class TurnBasedBattleController {
                     playerGroup.GetUnits()[i].BeginAttack(enemyGroup.GetUnits());
                 }
         }
+
+
         if (deathCount >= playerGroup.GetUnits().Count)
         {
             battleOver = true;
@@ -131,10 +133,13 @@ public class TurnBasedBattleController {
 
             if (!attackingUnit.IsAttacking && !delaying)
             {
+                Debug.Log("Check1");
                 if (!attackingUnit.GetAgent().pathPending && attackingUnit.GetAgent().remainingDistance <= attackingUnit.GetAgent().stoppingDistance)
                 {
+                    Debug.Log("Check2");
                     if (!returningToStartingPosition)
                     {
+                        Debug.Log("Check3");
                         returningToStartingPosition = true;
 
                         attackingUnit.GetAgent().stoppingDistance = 0.1f;

@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    /* Prefabs */   
+    /* Prefabs */
     // player units
     public GameObject warriorPrefab;
     public GameObject roguePrefab;
@@ -28,7 +28,7 @@ public class GameController : MonoBehaviour
     private EnemyController enemyController;
 
     void Awake()
-    {    
+    {
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
         enemyController = GameObject.FindGameObjectWithTag("EnemyController").GetComponent<EnemyController>();
 
@@ -39,7 +39,7 @@ public class GameController : MonoBehaviour
         myUnits.Add(CreatePlayerMage());
 
         // add some player units
-        AddFactionGroup(myUnits , new Vector3 (20 ,0, 20) , true);  
+        AddFactionGroup(myUnits, new Vector3(20, 0, 20), true);
     }
 
     void Update()
@@ -61,7 +61,7 @@ public class GameController : MonoBehaviour
     public FactionUnit CreateEnemyMage() { return Instantiate(enemyMagePrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<EnemyMageController>().demonUnit; }
 
     //Adding to a faction's grps
-    public void AddFactionGroup(List<DynamicUnit> factionUnits , Vector3 position , bool isPlayer)
+    public void AddFactionGroup(List<DynamicUnit> factionUnits, Vector3 position, bool isPlayer)
     {
         Group grp = Instantiate(groupPrefab, position, Quaternion.identity).GetComponent<Group>();
 
@@ -87,21 +87,29 @@ public class GameController : MonoBehaviour
 
             for (int j = 0; j < enemyController.enemyGroups.Count; j++)
             {
-                if (Vector3.Distance(playerController.groups[i].GetUnits()[i].GetTransform().position, enemyController.enemyGroups[j].GetUnits()[j].GetTransform().position) < 4)
+
+                for (int k = 0; k < playerController.groups[i].GetUnits().Count; k++)
                 {
-                    GameObject arena = Instantiate(arenaPrefab, playerController.groups[i].GetUnits()[i].GetTransform().position, Quaternion.identity);
+                    for (int l = 0; l < enemyController.enemyGroups[j].GetUnits().Count; l++)
+                    {
+                        if (Vector3.Distance(playerController.groups[i].GetUnits()[k].GetTransform().position, enemyController.enemyGroups[j].GetUnits()[l].GetTransform().position) < 4)
+                        {
+                            GameObject arena = Instantiate(arenaPrefab, playerController.groups[i].GetUnits()[k].GetTransform().position, Quaternion.identity);
 
-                    //position of battle, 2 groups in conflict, and arena asset 
-                    playerController.battles.Add(new TurnBasedBattleController(new Vector3(playerController.groups[i].GetUnits()[i].GetTransform().position.x, 0.0f, playerController.groups[i].GetUnits()[i].GetTransform().position.z), playerController.groups[i], enemyController.enemyGroups[j], arena));
+                            //position of battle, 2 groups in conflict, and arena asset 
+                            playerController.battles.Add(new TurnBasedBattleController(new Vector3(playerController.groups[i].GetUnits()[k].GetTransform().position.x, 0.0f, playerController.groups[i].GetUnits()[k].GetTransform().position.z), playerController.groups[i], enemyController.enemyGroups[j], arena));
 
-                    //i = 4;
+                            //i = 4;
 
-                    //start battle for both units 
-                    playerController.groups[i].BattleStarted();
-                    enemyController.enemyGroups[j].BattleStarted();
-                    break;
+                            //start battle for both units 
+                            playerController.groups[i].BattleStarted();
+                            enemyController.enemyGroups[j].BattleStarted();
+                            break;
+                        }
+                    }
                 }
             }
         }
-    }
+    } 
+
 }
