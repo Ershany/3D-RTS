@@ -71,6 +71,8 @@ public class Building
             NavMeshObstacle obstacle = GameObject.AddComponent<NavMeshObstacle>();
             obstacle.carving = true;
             IsPlaced = true;
+            Rigidbody rb = this.GameObject.AddComponent(typeof(Rigidbody)) as Rigidbody;
+            rb.isKinematic = true;
 
             return true;
         }
