@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -146,8 +145,7 @@ public class PlayerController : MonoBehaviour
             }
 
             buildingToBeBuilt = Instantiate(guildHallPrefab, Vector3.zero, Quaternion.Euler(-90.0f, 0.0f, 0.0f)).GetComponent<GuildHallController>().building;
-            buildingToBeBuilt.MoveBuilding(new Vector3(hit.point.x, Terrain.activeTerrain.SampleHeight(hit.point), hit.point.z));
-            Debug.Log("Terrain Height: " + Terrain.activeTerrain.SampleHeight(hit.point));
+            buildingToBeBuilt.MoveBuilding(hit.point);
         }
 
         // some group selection code

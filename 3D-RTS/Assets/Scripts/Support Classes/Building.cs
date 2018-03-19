@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,16 +9,36 @@ public class Building
     public bool IsPlaced { get; private set; }
     public GameObject GameObject { get; private set; }
     private BoxCollider boxCollider;
+    private List<Renderer> renderers;
     private int containingColliderCount;
 
     public Building(GameObject obj, float health)
     {
         GameObject = obj;
+        renderers = new List<Renderer>();
         boxCollider = GameObject.GetComponent<BoxCollider>();
+        renderers.Add(this.GameObject.GetComponent<Renderer>());
+        foreach(Transform child in this.GameObject.transform)
+        {
+            if (!child.CompareTag("HeightCheck"))
+            {
+                renderers.Add(child.gameObject.GetComponent<Renderer>());
+            }
+        }
+        SetHighlightPower(0.5f);
         containingColliderCount = 0;
         maxHealth = currentHealth = health;
         IsDestroyed = false;
         IsPlaced = false;
+    }
+
+    public void Update()
+    {
+        if(!IsPlaced)
+        {
+            if (IsPlaceableOnTerrain() && containingColliderCount == 0) SetHighlightColor(new Color(0.0f, 1.0f, 0.0f));
+            else SetHighlightColor(new Color(1.0f, 0.0f, 0.0f));
+        }
     }
 
     public void TakeDamage(float damage)
@@ -55,7 +74,10 @@ public class Building
         foreach (Transform child in GameObject.transform)
         {
             // Round the height, due to float precision errors
-            if (child.CompareTag("HeightCheck") && Terrain.activeTerrain.SampleHeight(child.position) != System.Math.Round(child.position.y, 2)) return false;
+            if (child.CompareTag("HeightCheck") && Terrain.activeTerrain.SampleHeight(child.position) != System.Math.Round(child.position.y, 2))
+            {
+                return false;
+            }
         }
 
         return true;
@@ -73,6 +95,7 @@ public class Building
             IsPlaced = true;
             Rigidbody rb = this.GameObject.AddComponent(typeof(Rigidbody)) as Rigidbody;
             rb.isKinematic = true;
+            SetHighlightPower(0.0f);
 
             return true;
         }
@@ -89,5 +112,22 @@ public class Building
     public void OnTriggerExit()
     {
         --containingColliderCount;
+    }
+
+    private void SetHighlightColor(Color highlightColor)
+    {
+        foreach (Renderer renderer in renderers)
+        {
+            renderer.material.SetColor("_HighlightColor", highlightColor);
+        }
+    }
+
+    // Value should be in the following range: [0, 1]
+    private void SetHighlightPower(float value)
+    {
+        foreach (Renderer renderer in renderers)
+        {
+            renderer.material.SetFloat("_HighlightPower", value);
+        }
     }
 }

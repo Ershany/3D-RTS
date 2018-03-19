@@ -123,6 +123,9 @@ public class GuildHallController : MonoBehaviour
     void Update()
     {
         //check gui here 
+
+        // Update building
+        building.Update();
     }
 
     void OnMouseDown()
@@ -139,13 +142,11 @@ public class GuildHallController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Enter");
         building.OnTriggerEnter();
     }
 
     void OnTriggerExit(Collider other)
     {
-        Debug.Log("Exit");
         building.OnTriggerExit();
     }
 }
