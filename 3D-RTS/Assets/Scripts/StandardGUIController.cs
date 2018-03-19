@@ -68,6 +68,7 @@ public class StandardGUIController : MonoBehaviour
             guildGUI = new GuildHallGUIUtil(GameObject.FindGameObjectWithTag("GuildHallGUIPanel"), GameObject.FindGameObjectWithTag("GuildHall").GetComponent<GuildHallController>(), this);
         else
             guildGUI = null;
+
         standardGUIPanel = GameObject.FindGameObjectWithTag("StandardGUIPanel");
 
         //buildingInfoPanel = GameObject.FindGameObjectWithTag("BuildingInformationPanel");
@@ -137,6 +138,10 @@ public class StandardGUIController : MonoBehaviour
 
     public void PartyCreationWindowMemberClicked(int i)
     {
+        if (guildGUI != null)
+        {
+            guildGUI.PartyCreationWindowMemberClicked(i);
+        }
 
     }
 

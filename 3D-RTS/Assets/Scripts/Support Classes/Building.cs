@@ -12,6 +12,9 @@ public class Building
     private List<Renderer> renderers;
     private int containingColliderCount;
 
+
+    public string name;
+
     public Building(GameObject obj, float health)
     {
         GameObject = obj;
@@ -30,6 +33,7 @@ public class Building
         maxHealth = currentHealth = health;
         IsDestroyed = false;
         IsPlaced = false;
+        name = "Building";
     }
 
     public void Update()

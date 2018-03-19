@@ -20,6 +20,7 @@ public class GuildHallController : MonoBehaviour
     {
         //setup members 
         building = new Building(gameObject, buildingHealth);
+        building.name = "GuildHall";
         roster = new List<DynamicUnit>();
         unitsToBeDeployed = new List<DynamicUnit>();
 
@@ -29,7 +30,7 @@ public class GuildHallController : MonoBehaviour
     }
 
     //Add a unit to the roster
-    void CreateUnit(int unitNum)
+    public void CreateUnit(int unitNum)
     { 
         //will have to check which type of unit we are attempting to create
         //setActive of game Object to false first
@@ -49,7 +50,7 @@ public class GuildHallController : MonoBehaviour
     }
 
     //add units to be deployed
-    void AddToDeployedUnits(int unitIndex)
+    public void AddToDeployedUnits(int unitIndex)
     {
         //order buttons and roster array parallely
 
@@ -62,7 +63,23 @@ public class GuildHallController : MonoBehaviour
 
         Debug.Log("added unit to temporary deploy roster");
     }
-    
+
+
+
+    public void RemoveFromDeployedUnits(int unitIndex)
+    {
+        //order buttons and roster array parallely
+
+        //remove unit from roster and add it to the units to be deployed
+        roster.Add(unitsToBeDeployed[unitIndex]);
+        unitsToBeDeployed.RemoveAt(unitIndex);
+
+        //IF WE WANT TO RETURN UNITS BACK CUZ WE CHANGED OUR MIND WE CAN JUST CALL RETURNUNITS
+        //make UI changes here (we could repopulate the roster ui buttons)
+
+        Debug.Log("added unit to temporary deploy roster");
+    }
+
     //deploy units
     void DeployUnits()
     {
