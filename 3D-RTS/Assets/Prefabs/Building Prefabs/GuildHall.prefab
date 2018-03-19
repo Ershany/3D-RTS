@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4309358829053540}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HeightCheck3
   m_TagString: HeightCheck
   m_Icon: {fileID: 0}
@@ -34,7 +34,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4796867771726288}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HeightCheck9
   m_TagString: HeightCheck
   m_Icon: {fileID: 0}
@@ -49,7 +49,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4792229885933404}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HeightCheck6
   m_TagString: HeightCheck
   m_Icon: {fileID: 0}
@@ -64,7 +64,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4943581900288994}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HeightCheck4
   m_TagString: HeightCheck
   m_Icon: {fileID: 0}
@@ -79,7 +79,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4410442609933900}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HeightCheck1
   m_TagString: HeightCheck
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 33674382783484842}
   - component: {fileID: 23648762219056734}
   - component: {fileID: 95374543597243926}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Barrel3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -115,7 +115,7 @@ GameObject:
   - component: {fileID: 33382155162296626}
   - component: {fileID: 23845347044942862}
   - component: {fileID: 95391311641621574}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Barrel1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,7 +130,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4043078023732154}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HeightCheck8
   m_TagString: HeightCheck
   m_Icon: {fileID: 0}
@@ -150,7 +150,7 @@ GameObject:
   - component: {fileID: 95732871387894932}
   - component: {fileID: 65695207713528122}
   - component: {fileID: 114134206842408672}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GuildHall
   m_TagString: GuildHall
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4256527598572354}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HeightCheck2
   m_TagString: HeightCheck
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 33792928170535100}
   - component: {fileID: 23468621856880148}
   - component: {fileID: 95924847671568022}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Barrel2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,7 +198,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4186751117324668}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HeightCheck5
   m_TagString: HeightCheck
   m_Icon: {fileID: 0}
@@ -213,7 +213,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4548743760369946}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HeightCheck7
   m_TagString: HeightCheck
   m_Icon: {fileID: 0}

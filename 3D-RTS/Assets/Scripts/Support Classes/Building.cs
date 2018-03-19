@@ -16,7 +16,6 @@ public class Building
     {
         GameObject = obj;
         boxCollider = GameObject.GetComponent<BoxCollider>();
-        boxCollider.enabled = false;
         containingColliderCount = 0;
         maxHealth = currentHealth = health;
         IsDestroyed = false;
@@ -67,10 +66,10 @@ public class Building
     {
         if (IsPlaceableOnTerrain() && containingColliderCount == 0)
         {
-            boxCollider.enabled = true;
+            // Place building on terrain
+            boxCollider.isTrigger = false;
             NavMeshObstacle obstacle = GameObject.AddComponent<NavMeshObstacle>();
             obstacle.carving = true;
-            //check this
             IsPlaced = true;
 
             return true;

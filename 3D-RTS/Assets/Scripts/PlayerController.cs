@@ -22,15 +22,11 @@ public class PlayerController : MonoBehaviour
     public List<TurnBasedBattleController> battles { get; private set; }
     public List<Building> playerBuildings;
 
-    //terrain mask
-    private int terrainMask;
-
     void Awake()
     {
         battles = new List<TurnBasedBattleController>();
         groups = new List<Group>();
         selectedGroup = null;
-        terrainMask = LayerMask.GetMask("TerrainLayer");
     }
 
     void Update()
@@ -43,7 +39,10 @@ public class PlayerController : MonoBehaviour
         Physics.Raycast(ray, out hit);
 
         // Move building with cursor if a building is currently selected (keep it on the terrain)
-        if (buildingToBeBuilt != null) { buildingToBeBuilt.MoveBuilding(hit.point); }
+        if (buildingToBeBuilt != null)
+        {
+            buildingToBeBuilt.MoveBuilding(hit.point);
+        }
 
         //check for input
         InputCheck(hit);
@@ -147,7 +146,8 @@ public class PlayerController : MonoBehaviour
             }
 
             buildingToBeBuilt = Instantiate(guildHallPrefab, Vector3.zero, Quaternion.Euler(-90.0f, 0.0f, 0.0f)).GetComponent<GuildHallController>().building;
-            buildingToBeBuilt.MoveBuilding(hit.point);
+            buildingToBeBuilt.MoveBuilding(new Vector3(hit.point.x, Terrain.activeTerrain.SampleHeight(hit.point), hit.point.z));
+            Debug.Log("Terrain Height: " + Terrain.activeTerrain.SampleHeight(hit.point));
         }
 
         // some group selection code
@@ -212,6 +212,7 @@ public class PlayerController : MonoBehaviour
                 {
                     //check if building has already been placed if it hasn't destroy it
                     Destroy(buildingToBeBuilt.GameObject);
+                    buildingToBeBuilt = null;
                     Debug.Log("Cancelling Building Placement");
                 }
 
