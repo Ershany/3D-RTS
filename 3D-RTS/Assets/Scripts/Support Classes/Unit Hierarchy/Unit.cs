@@ -18,6 +18,18 @@ public abstract class Unit
         IsDead = false;
     }
 
+    public Unit()
+    {
+
+    }
+
+    public Unit(float health)
+    {
+        gameObject = null;
+        maxHealth = currentHealth = health;
+    }
+
+
     public void HealDamage(float healAmount)
     {
         currentHealth += healAmount;

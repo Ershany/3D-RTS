@@ -21,8 +21,11 @@ public class PlayerController : MonoBehaviour
     public List<TurnBasedBattleController> battles { get; private set; }
     public List<Building> playerBuildings;
 
+    bool guildHallBuilt;
+
     void Awake()
     {
+        guildHallBuilt = false;
         battles = new List<TurnBasedBattleController>();
         groups = new List<Group>();
         selectedGroup = null;
@@ -35,17 +38,30 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         //Physics.Raycast(ray, out hit, float.MaxValue, terrainMask);
+
+        Plane p = new Plane(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 500.0f));
+        float aa;
+        p.Raycast(ray, out aa);
+
+        Vector3 intersectPoint = ray.GetPoint(aa);
         Physics.Raycast(ray, out hit);
 
-        // Move building with cursor if a building is currently selected (keep it on the terrain)
-        if (buildingToBeBuilt != null)
+        if (intersectPoint.x > 0 && intersectPoint.x < 500 &&
+            intersectPoint.z > 0 && intersectPoint.z < 500 && intersectPoint.y == 0)
         {
-            buildingToBeBuilt.MoveBuilding(hit.point);
+
+
+
+            // Move building with cursor if a building is currently selected (keep it on the terrain)
+            if (buildingToBeBuilt != null)
+            {
+                buildingToBeBuilt.MoveBuilding(hit.point);
+            }
+
+            //check for input
+            InputCheck(hit);
+
         }
-
-        //check for input
-        InputCheck(hit);
-
         //check for battles
         BattleUpdate();
     }
@@ -135,7 +151,7 @@ public class PlayerController : MonoBehaviour
     {
         //CHANGE HEREEEEEEEEEE
         // TEMP Building Selection Code
-        if (Input.GetKeyDown("1"))
+        if (Input.GetKeyDown("1") && guildHallBuilt == false)
         {
             if (buildingToBeBuilt != null)
             {
@@ -164,6 +180,7 @@ public class PlayerController : MonoBehaviour
                 // Place the building on the terrain
                 if (buildingToBeBuilt.PlaceBuildingOnTerrain())
                 {
+                    guildHallBuilt = true;
                     buildingToBeBuilt = null;
                     Debug.Log("Building Placed");
                 }
@@ -187,6 +204,7 @@ public class PlayerController : MonoBehaviour
                 {
                     for (int j = 0; j < groups[i].GetUnits().Count; j++)
                     {
+                        
                         if (hit.collider.gameObject == groups[i].GetUnits()[j].GetGameObject())
                         {
                             selectedGroup = groups[i];

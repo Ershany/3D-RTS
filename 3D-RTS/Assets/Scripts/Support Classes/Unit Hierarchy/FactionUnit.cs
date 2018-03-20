@@ -23,6 +23,11 @@ public class FactionUnit : DynamicUnit
         name = "TN" + ((int) Random.Range(0, 999)).ToString();
     }
 
+    public FactionUnit(string className) : base(className)
+    {
+
+    }
+
     public void Update()
     {
         if (IsDead)

@@ -7,7 +7,7 @@ public class CameraMovement : MonoBehaviour
     public Transform cameraTarget;
     [Range(0.1f, 10.0f)] public float smoothing = 2.0f;
     [Range(0.0f, 1000.0f)] public float cameraSpeed = 50.0f;
-    [Range(0.0f, 300.0f)] public float mouseDeadzoneOffset = 45.0f;
+    [Range(0.0f, 300.0f)] public float mouseDeadzoneOffset = 1.0f;
     [Range(10.0f, 60.0f)] public float minCameraFOV = 40.0f;
     [Range(500.0f, 2000.0f)] public float cameraZoomSpeed = 1000.0f;
 

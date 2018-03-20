@@ -35,6 +35,20 @@ public abstract class DynamicUnit : Unit
         IsInBattle = false;
         this.className = className;
     }
+    public DynamicUnit(string className)
+    {
+        IsPlayerControlled = false;
+        IsAttacking = false;
+        IsInBattle = false;
+        StatKey.GetStats(className, ref maxHealth, ref maxMana, ref strength, ref intelligence, ref dexterity);
+        currentHealth = maxHealth;
+        currentMana = maxMana;
+        level = 1;
+        experience = 0;
+        name = "NAME";
+        this.className = "WK_" + className;
+    }
+
 
     public GameObject GetGameObject()
     {

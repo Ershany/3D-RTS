@@ -87,8 +87,11 @@ public class StandardGUIController : MonoBehaviour
         {
             if (GameObject.FindGameObjectWithTag("GuildHall") != null)
             {
-                guildGUI.guildCon = GameObject.FindGameObjectWithTag("GuildHall").GetComponent<GuildHallController>();
-
+                if (GameObject.FindGameObjectWithTag("GuildHall").GetComponent<GuildHallController>().building.IsPlaced)
+                {
+                    guildGUI.guildCon = GameObject.FindGameObjectWithTag("GuildHall").GetComponent<GuildHallController>();
+                    guildGUI.InitButtons();
+                }
             }
         }
 
@@ -98,12 +101,15 @@ public class StandardGUIController : MonoBehaviour
             if (currentGroup == null)
                 currentGroup = playerController.selectedGroup;
 
-            if (playerController.selectedGroup != currentGroup || currentSelectionType != "group")
+           
+
+            if (playerController.selectedGroup != currentGroup || currentSelectionType != "group" || !standardGUIPanel.activeSelf)
             {
                 currentGroup = playerController.selectedGroup;
                 currentSelectionType = "group";
 
-                groupInfoPanel.SetActive(true);
+                standardGUIPanel.SetActive(true);
+                guildGUIPanel.SetActive(false);
                 //buildingInfoPanel.SetActive(false);
 
                 for (int i = 0; i < 4; i++)
@@ -134,16 +140,18 @@ public class StandardGUIController : MonoBehaviour
         {
             if(playerController.buildingSelected.name == "GuildHall")
             {
-                guildGUIPanel.SetActive(true);
-                currentActivePanel.SetActive(false);
 
-                
+                if (currentSelectionType != "GuildHall" || !guildGUIPanel.activeSelf)
+                {
+                    currentSelectionType = "GuildHall";
+                    guildGUIPanel.SetActive(true);
+                    standardGUIPanel.SetActive(false);
+                    guildGUI.recruitPanel.SetActive(false);
+                }
+
+
                 guildGUI.UpdatePartyCreationPanel();
                 guildGUI.UpdateRosterUnitsPanel();
-
-                if (guildGUI.recruitStatusWindow.activeSelf)
-                    guildGUI.UpdateRecruitPanel();
-
 
             }
         }
@@ -155,32 +163,40 @@ public class StandardGUIController : MonoBehaviour
         activeMember = i;
     }
 
+
+
     public void PartyCreationWindowMemberClicked(int i)
     {
-        if (guildGUI != null)
-        {
-            guildGUI.PartyCreationWindowMemberClicked(i);
-        }
+        Debug.Log("PartyCreationWindowMemberClicked called");
+        guildGUI.PartyCreationWindowMemberClicked(i);
 
     }
 
-    public void RecruitUnitSelected(int i)
+    public void ClassSelectedInRecruitPanel()
     {
 
-        if (guildGUI != null)
-        {
-            guildGUI.RecruitUnitSelected(i);
-        }
+        guildGUI.ClassSelectedInRecruitPanel();
 
     }
     public void RecruitSelectedUnit()
     {
-
-        if (guildGUI != null)
-        {
             guildGUI.RecruitSelectedUnit();
-        }
 
+    }
+
+    public void RosterUnitSelected(int i)
+    {
+        guildGUI.RosterUnitSelected(i);
+    }
+
+    public void RosterUnitSubmitted()
+    {
+        guildGUI.RosterUnitSubmitted();
+    }
+    public void DeployNewGroup()
+    {
+        Debug.Log("DeployNewGroup function called");
+        guildGUI.DeployNewGroup();
     }
 
 
@@ -199,7 +215,9 @@ public class StandardGUIController : MonoBehaviour
 
         member.GetStatus(ref str, ref intel, ref dex, ref mHP, ref currHP, ref mMP, ref currMP, ref level);
 
-        panel.transform.Find("Name").GetComponent<UnityEngine.UI.Text>().text = member.GetName(); ;
+        Debug.Log(member.GetName());
+
+        panel.transform.Find("Name").GetComponent<UnityEngine.UI.Text>().text = member.GetName();
         panel.transform.Find("Class").GetComponent<UnityEngine.UI.Text>().text = member.GetClassName().Substring(3) ;
         panel.transform.Find("Level").Find("LevelValue").GetComponent<UnityEngine.UI.Text>().text = member.GetLevel().ToString();
         panel.transform.Find("Level").Find("LevelValue").GetComponent<UnityEngine.UI.Text>().text = level.ToString();

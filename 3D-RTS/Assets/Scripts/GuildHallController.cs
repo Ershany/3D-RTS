@@ -18,7 +18,8 @@ public class GuildHallController : MonoBehaviour
 
     public List<DynamicUnit> defaultUnits;
 
-    public int selectedUnitNum;
+    public int selectedNewUnitNum;
+    public int selectedRosterUnitNum;
 
 
     void Awake()
@@ -35,16 +36,13 @@ public class GuildHallController : MonoBehaviour
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
 
         defaultUnits = new List<DynamicUnit>();
-        defaultUnits.Add(gameController.CreatePlayerWarrior());
-        defaultUnits.Add(gameController.CreatePlayerArcher());
-        defaultUnits.Add(gameController.CreatePlayerMage());
+        defaultUnits.Add(new FactionUnit("Warrior"));
+        defaultUnits.Add(new FactionUnit("Archer"));
+        defaultUnits.Add(new FactionUnit("Mage"));
 
-        for (int i = 0; i < defaultUnits.Count; i++)
-        {
-            defaultUnits[i].GetTransform().position = new Vector3(-30 + i * 6, -30, -30);
-        }
 
-        selectedUnitNum = -1;
+        selectedNewUnitNum = -1;
+        selectedRosterUnitNum = -1;
 
     }
 
@@ -56,15 +54,21 @@ public class GuildHallController : MonoBehaviour
 
         if (unitNum == 1)
         {
-            roster.Add(gameController.CreatePlayerWarrior());
+            FactionUnit tempUnit = gameController.CreatePlayerWarrior();
+            tempUnit.GetGameObject().SetActive(false);
+            roster.Add(tempUnit);
         }
         else if (unitNum == 2)
         {
-            roster.Add(gameController.CreatePlayerArcher());
+            FactionUnit tempUnit = gameController.CreatePlayerArcher();
+            tempUnit.GetGameObject().SetActive(false);
+            roster.Add(tempUnit);
         }
         else if (unitNum == 3)
         {
-            roster.Add(gameController.CreatePlayerMage());
+            FactionUnit tempUnit = gameController.CreatePlayerMage();
+            tempUnit.GetGameObject().SetActive(false);
+            roster.Add(tempUnit);
         }
     }
 
@@ -73,23 +77,30 @@ public class GuildHallController : MonoBehaviour
         //will have to check which type of unit we are attempting to create
         //setActive of game Object to false first
 
-        if (selectedUnitNum == 1)
+        if (selectedNewUnitNum == 1)
         {
-            roster.Add(gameController.CreatePlayerArcher());
+            FactionUnit tempUnit = gameController.CreatePlayerWarrior();
+            tempUnit.GetGameObject().SetActive(false);
+            roster.Add(tempUnit);
         }
-        else if (selectedUnitNum == 2)
+        else if (selectedNewUnitNum == 2)
         {
-            roster.Add(gameController.CreatePlayerWarrior());
+            FactionUnit tempUnit = gameController.CreatePlayerArcher();
+            tempUnit.GetGameObject().SetActive(false);
+            roster.Add(tempUnit);
         }
-        else if (selectedUnitNum == 3)
+        else if (selectedNewUnitNum == 3)
         {
-            roster.Add(gameController.CreatePlayerMage());
+            FactionUnit tempUnit = gameController.CreatePlayerMage();
+            tempUnit.GetGameObject().SetActive(false);
+            roster.Add(tempUnit);
         }
     }
 
     public void SetSelectedUnitNum(int i)
     {
-        selectedUnitNum = i;
+        Debug.Log("GUILDCON SELECTEDUNITNUM = " + i);
+        selectedNewUnitNum = i;
     }
 
     //add units to be deployed
@@ -124,14 +135,22 @@ public class GuildHallController : MonoBehaviour
     }
 
     //deploy units
-    void DeployUnits()
+    public void DeployUnits()
     {
         //make a group of the units
         //reset their gameObject's active to true
-        gameController.AddFactionGroup(unitsToBeDeployed , transform.position + new Vector3 (5 , 0 , 5) , true);
-        unitsToBeDeployed.Clear();
+        if (unitsToBeDeployed.Count > 0)
+        {
 
-        Debug.Log("Deployed group");
+            for(int i = 0; i < unitsToBeDeployed.Count; i++)
+            {
+                unitsToBeDeployed[i].GetGameObject().SetActive(true);
+            }
+            gameController.AddFactionGroup(unitsToBeDeployed, transform.position + new Vector3(5, 0, 5), true);
+            unitsToBeDeployed.Clear();
+
+            Debug.Log("Deployed group");
+        }
     }
 
     //return units back to roster

@@ -5,12 +5,16 @@ using System.Collections.Generic;
 
 public class GuildHallGUIUtil : MonoBehaviour
 {
+    delegate void MyDelegate(int num);
+    MyDelegate myDelegate;
+
+
     public GameObject gameObject;
 
     //Party Creation Window
     public  List<GameObject> groupMembers;
     public  List<Button> groupMembersButtons;
-    public GameObject deployButton;
+    public  GameObject deployButton;
 
     //Roster Window
     public GameObject rosterUnitsPanel;
@@ -21,7 +25,7 @@ public class GuildHallGUIUtil : MonoBehaviour
 
 
 
-
+    public GameObject recruitPanel;
     public GameObject recruitStatusWindow;
     public GameObject recruitButton;
     public GameObject goldCostPanel;
@@ -53,12 +57,16 @@ public class GuildHallGUIUtil : MonoBehaviour
         rosterPanelsButtons = new List<Button>();
         for (int i = 0; i < 4; i++)
         {
-            groupMembers.Add(gui.transform.Find("DeploymentPanel").Find("GroupCreation").Find("GroupCreationWindow").Find("CreateGroup").Find("NewGroupMember" + (i + 1)).gameObject);
+            groupMembers.Add(gui.transform.Find("DeploymentPanel").Find("GroupCreation").Find("GroupCreationWindow").Find("CreateGroup").Find("NewGroupMember" + (i + 1).ToString()).gameObject);
             groupMembersButtons.Add(groupMembers[i].transform.Find("Button").GetComponent<Button>());
         }
 
         rosterUnitsPanel = gui.transform.Find("DeploymentPanel").Find("RosterInformationPanel").Find("Roster").Find("RosterUnits").Find("Viewport").Find("Content").gameObject;
         rosterStatusWindow = gui.transform.Find("DeploymentPanel").Find("RosterInformationPanel").Find("StatusWindow").gameObject;
+
+        recruitPanel = gui.transform.Find("RecruitPanel").gameObject;
+
+
         recruitStatusWindow = gui.transform.Find("RecruitPanel").Find("PreviewPanel").Find("StatusWindow").gameObject;
 
         recruitUnitButton = gui.transform.Find("EnlistUnitButtonPanel").Find("Button").gameObject;
@@ -78,18 +86,55 @@ public class GuildHallGUIUtil : MonoBehaviour
     {
         guildCon.RemoveFromDeployedUnits(i);
     }
-    public void RecruitUnitSelected(int i)
+    public void ClassSelectedInRecruitPanel()
     {
+        if (recruitPanel.transform.Find("NewUnitSelect").Find("Warrior").GetComponent<UnityEngine.UI.Toggle>().isOn)
+            guildCon.SetSelectedUnitNum(1);
 
-        guildCon.SetSelectedUnitNum(i);
+        else if (recruitPanel.transform.Find("NewUnitSelect").Find("Archer").GetComponent<UnityEngine.UI.Toggle>().isOn)
+            guildCon.SetSelectedUnitNum(2);
+
+        else if (recruitPanel.transform.Find("NewUnitSelect").Find("Mage").GetComponent<UnityEngine.UI.Toggle>().isOn)
+            guildCon.SetSelectedUnitNum(3);
+
+
+        UpdateRecruitPanel();
+
 
     }
     public void RecruitSelectedUnit()
     {
-        if (guildCon.selectedUnitNum != -1)
+        if (guildCon.selectedNewUnitNum != -1)
         {
             guildCon.CreateUnit();
         }
+    }
+
+
+    public void RosterUnitSelected(int i)
+    {
+        guildCon.selectedRosterUnitNum = i;
+        stdGUICon.PopulateStatusWindow(guildCon.roster[i], rosterStatusWindow);
+    }
+
+    public void RosterUnitSubmitted()
+    {
+        Debug.Log(guildCon.roster.Count);
+        Debug.Log(guildCon.selectedRosterUnitNum);
+        if ((guildCon.selectedRosterUnitNum - 1) < guildCon.roster.Count && guildCon.roster.Count > 0)
+            guildCon.AddToDeployedUnits(guildCon.selectedRosterUnitNum);
+    }
+
+    public void DeployNewGroup()
+    {
+        guildCon.DeployUnits();
+    }
+
+
+
+    public void InitButtons()
+    {
+        deployButton.GetComponent<Button>().onClick.AddListener(guildCon.DeployUnits);
     }
 
 
@@ -100,12 +145,13 @@ public class GuildHallGUIUtil : MonoBehaviour
         {
             if (i < rosterPanels.Count)
             {
-                if (rosterPanels[i].transform.Find("TextValues").Find("Name").GetComponent<Text>().text != guildCon.roster[i].GetName())
+                if (rosterPanels[i].transform.Find("TextValues").Find("Name").GetComponent<Text>().text != guildCon.roster[i].GetName() ||
+                    rosterPanels[i].transform.Find("Text").GetComponent<Text>().text != (i.ToString())) 
                 {
                     rosterUpdated = true;
                     GameObject temp = rosterPanels[i];
                     rosterPanels[i] = RosterPanelConstructor(guildCon.roster[i], i);
-                    rosterPanels[i].transform.SetParent(rosterUnitsPanel.transform);
+                    rosterPanels[i].transform.SetParent(rosterUnitsPanel.transform, false);
                     Destroy(temp);
                 }
             }
@@ -113,7 +159,7 @@ public class GuildHallGUIUtil : MonoBehaviour
             {
                 rosterUpdated = true;
                 rosterPanels.Add(RosterPanelConstructor(guildCon.roster[i], i));
-                rosterPanels[i].transform.SetParent(rosterUnitsPanel.transform);
+                rosterPanels[i].transform.SetParent(rosterUnitsPanel.transform, false);
             }
         }
         for (int i = guildCon.roster.Count; i < rosterPanels.Count; i++)
@@ -133,7 +179,7 @@ public class GuildHallGUIUtil : MonoBehaviour
                 groupMembers[i].SetActive(true);
                 if (groupMembers[i].transform.Find("TextValues").Find("Name").GetComponent<Text>().text != guildCon.unitsToBeDeployed[i].GetName())
                 {
-                    stdGUICon.PopulateMemberInfoPanel(groupMembers[i], guildCon.unitsToBeDeployed[i]);
+                    stdGUICon.PopulateMemberInfoPanel(groupMembers[i].transform.Find("TextValues").gameObject, guildCon.unitsToBeDeployed[i]);
                 }
             }
             else
@@ -147,9 +193,10 @@ public class GuildHallGUIUtil : MonoBehaviour
 
     public void UpdateRecruitPanel()
     {
-        if (guildCon.selectedUnitNum > 0 && guildCon.selectedUnitNum < guildCon.defaultUnits.Count)
+        Debug.Log(guildCon.selectedNewUnitNum);
+        if (guildCon.selectedNewUnitNum > 0 && guildCon.selectedNewUnitNum <= guildCon.defaultUnits.Count)
         {
-            stdGUICon.PopulateStatusWindow(guildCon.defaultUnits[guildCon.selectedUnitNum], recruitStatusWindow);
+            stdGUICon.PopulateStatusWindow(guildCon.defaultUnits[guildCon.selectedNewUnitNum - 1], recruitStatusWindow);
         }
     }
 
@@ -161,10 +208,13 @@ public class GuildHallGUIUtil : MonoBehaviour
         GameObject rosterPanel = Instantiate(stdGUICon.rosterUnitPrefab);
 
         rosterPanel.transform.Find("TextValues").Find("Name").GetComponent<Text>().text = rosterMember.GetName();
-        rosterPanel.transform.Find("TextValues").Find("Class").GetComponent<Text>().text = rosterMember.GetClassName();
+        rosterPanel.transform.Find("TextValues").Find("Class").GetComponent<Text>().text = rosterMember.GetClassName().Substring(3);
         rosterPanel.transform.Find("TextValues").Find("Level").Find("LevelValue").GetComponent<Text>().text = rosterMember.GetLevel().ToString();
 
+        rosterPanel.transform.Find("Text").GetComponent<Text>().text = i.ToString();
 
+        myDelegate = stdGUICon.RosterUnitSelected;
+        rosterPanel.transform.Find("Button").GetComponent<Button>().onClick.AddListener(delegate { stdGUICon.RosterUnitSelected(i); });
 
         return rosterPanel;
     }
