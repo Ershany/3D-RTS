@@ -20,10 +20,13 @@ public class StandardGUIController : MonoBehaviour
     public static GameObject buildingStatusPanel;
     public static GameObject itemInfoPanel;
 
+    public GameObject currentActivePanel;
+
     public GameObject minimap;
     public GameObject selectedUnitInformationPanel;
 
     public GuildHallGUIUtil guildGUI;
+    public GameObject guildGUIPanel;
 
     public GameObject rosterUnitPrefab;
 
@@ -45,6 +48,7 @@ public class StandardGUIController : MonoBehaviour
         unitInfoPanel = groupInfoPanel.transform.Find("StatusWindow").gameObject;
         groupMembers = new List<GameObject>();
         buttonsGroupMembers = new List<UnityEngine.UI.Button>();
+        guildGUIPanel = GameObject.FindGameObjectWithTag("GuildHallGUIPanel");
         for (int i = 0; i < 4; i++)
         {
             groupMembers.Add(groupInfoPanel.transform.Find("GroupMembers").Find("GroupMember" + (i + 1)).gameObject);
@@ -64,12 +68,12 @@ public class StandardGUIController : MonoBehaviour
         partyCreationWindowMemberClicked = -1;
         buildingInfoPanel = new GameObject();
 
-        if (GameObject.FindGameObjectWithTag("GuildHall") != null)
-            guildGUI = new GuildHallGUIUtil(GameObject.FindGameObjectWithTag("GuildHallGUIPanel"), GameObject.FindGameObjectWithTag("GuildHall").GetComponent<GuildHallController>(), this);
-        else
-            guildGUI = null;
+        guildGUI = new GuildHallGUIUtil(GameObject.FindGameObjectWithTag("GuildHallGUIPanel"), this);
+        guildGUIPanel.SetActive(false);
 
         standardGUIPanel = GameObject.FindGameObjectWithTag("StandardGUIPanel");
+
+        currentActivePanel = standardGUIPanel;
 
         //buildingInfoPanel = GameObject.FindGameObjectWithTag("BuildingInformationPanel");
 
@@ -79,11 +83,13 @@ public class StandardGUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (guildGUI == null)
+        if (guildGUI.guildCon == null)
         {
             if (GameObject.FindGameObjectWithTag("GuildHall") != null)
-                guildGUI = new GuildHallGUIUtil(GameObject.FindGameObjectWithTag("GuildHallGUIPanel"), GameObject.FindGameObjectWithTag("GuildHall").GetComponent<GuildHallController>(), this);
+            {
+                guildGUI.guildCon = GameObject.FindGameObjectWithTag("GuildHall").GetComponent<GuildHallController>();
 
+            }
         }
 
 
@@ -126,7 +132,20 @@ public class StandardGUIController : MonoBehaviour
 
         else if (playerController.buildingSelected != null)
         {
+            if(playerController.buildingSelected.name == "GuildHall")
+            {
+                guildGUIPanel.SetActive(true);
+                currentActivePanel.SetActive(false);
 
+                
+                guildGUI.UpdatePartyCreationPanel();
+                guildGUI.UpdateRosterUnitsPanel();
+
+                if (guildGUI.recruitStatusWindow.activeSelf)
+                    guildGUI.UpdateRecruitPanel();
+
+
+            }
         }
     }
 
@@ -145,6 +164,24 @@ public class StandardGUIController : MonoBehaviour
 
     }
 
+    public void RecruitUnitSelected(int i)
+    {
+
+        if (guildGUI != null)
+        {
+            guildGUI.RecruitUnitSelected(i);
+        }
+
+    }
+    public void RecruitSelectedUnit()
+    {
+
+        if (guildGUI != null)
+        {
+            guildGUI.RecruitSelectedUnit();
+        }
+
+    }
 
 
 

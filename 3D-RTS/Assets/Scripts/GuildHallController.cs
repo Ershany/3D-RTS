@@ -16,6 +16,11 @@ public class GuildHallController : MonoBehaviour
     public List<DynamicUnit> roster;
     public List<DynamicUnit> unitsToBeDeployed;
 
+    public List<DynamicUnit> defaultUnits;
+
+    public int selectedUnitNum;
+
+
     void Awake()
     {
         //setup members 
@@ -24,9 +29,23 @@ public class GuildHallController : MonoBehaviour
         roster = new List<DynamicUnit>();
         unitsToBeDeployed = new List<DynamicUnit>();
 
+
         //Reference game Controller
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
+
+        defaultUnits = new List<DynamicUnit>();
+        defaultUnits.Add(gameController.CreatePlayerWarrior());
+        defaultUnits.Add(gameController.CreatePlayerArcher());
+        defaultUnits.Add(gameController.CreatePlayerMage());
+
+        for (int i = 0; i < defaultUnits.Count; i++)
+        {
+            defaultUnits[i].GetTransform().position = new Vector3(-30 + i * 6, -30, -30);
+        }
+
+        selectedUnitNum = -1;
+
     }
 
     //Add a unit to the roster
@@ -37,16 +56,40 @@ public class GuildHallController : MonoBehaviour
 
         if (unitNum == 1)
         {
-            roster.Add(gameController.CreatePlayerArcher());
+            roster.Add(gameController.CreatePlayerWarrior());
         }
         else if (unitNum == 2)
         {
-            roster.Add(gameController.CreatePlayerWarrior());
+            roster.Add(gameController.CreatePlayerArcher());
         }
         else if (unitNum == 3)
         {
             roster.Add(gameController.CreatePlayerMage());
         }
+    }
+
+    public void CreateUnit()
+    {
+        //will have to check which type of unit we are attempting to create
+        //setActive of game Object to false first
+
+        if (selectedUnitNum == 1)
+        {
+            roster.Add(gameController.CreatePlayerArcher());
+        }
+        else if (selectedUnitNum == 2)
+        {
+            roster.Add(gameController.CreatePlayerWarrior());
+        }
+        else if (selectedUnitNum == 3)
+        {
+            roster.Add(gameController.CreatePlayerMage());
+        }
+    }
+
+    public void SetSelectedUnitNum(int i)
+    {
+        selectedUnitNum = i;
     }
 
     //add units to be deployed

@@ -40,12 +40,11 @@ public class GuildHallGUIUtil : MonoBehaviour
     public StandardGUIController stdGUICon;
 
 
-    public GuildHallGUIUtil(GameObject gui, GuildHallController gh, StandardGUIController sGC)
+    public GuildHallGUIUtil(GameObject gui,StandardGUIController sGC)
     {
         gameObject = gui;
-        guildCon = gh;
         stdGUICon = sGC;
-
+        guildCon = null;
         deployButton = gui.transform.Find("DeploymentPanel").Find("GroupCreation").Find("PartyCreationButtons").Find("DeployButton").gameObject;
 
         groupMembers = new List<GameObject>();
@@ -58,8 +57,8 @@ public class GuildHallGUIUtil : MonoBehaviour
             groupMembersButtons.Add(groupMembers[i].transform.Find("Button").GetComponent<Button>());
         }
 
-        rosterUnitsPanel = gui.transform.Find("DeploymentPanel").Find("GroupCreation").Find("RosterInformationPanel").Find("Roster").Find("RosterUnits").Find("Viewport").Find("Content").gameObject;
-        rosterStatusWindow = gui.transform.Find("DeploymentPanel").Find("GroupCreation").Find("RosterInformationPanel").Find("StatusWindow").gameObject;
+        rosterUnitsPanel = gui.transform.Find("DeploymentPanel").Find("RosterInformationPanel").Find("Roster").Find("RosterUnits").Find("Viewport").Find("Content").gameObject;
+        rosterStatusWindow = gui.transform.Find("DeploymentPanel").Find("RosterInformationPanel").Find("StatusWindow").gameObject;
         recruitStatusWindow = gui.transform.Find("RecruitPanel").Find("PreviewPanel").Find("StatusWindow").gameObject;
 
         recruitUnitButton = gui.transform.Find("EnlistUnitButtonPanel").Find("Button").gameObject;
@@ -79,7 +78,19 @@ public class GuildHallGUIUtil : MonoBehaviour
     {
         guildCon.RemoveFromDeployedUnits(i);
     }
+    public void RecruitUnitSelected(int i)
+    {
 
+        guildCon.SetSelectedUnitNum(i);
+
+    }
+    public void RecruitSelectedUnit()
+    {
+        if (guildCon.selectedUnitNum != -1)
+        {
+            guildCon.CreateUnit();
+        }
+    }
 
 
     public void UpdateRosterUnitsPanel()
@@ -132,6 +143,14 @@ public class GuildHallGUIUtil : MonoBehaviour
 
         }
 
+    }
+
+    public void UpdateRecruitPanel()
+    {
+        if (guildCon.selectedUnitNum > 0 && guildCon.selectedUnitNum < guildCon.defaultUnits.Count)
+        {
+            stdGUICon.PopulateStatusWindow(guildCon.defaultUnits[guildCon.selectedUnitNum], recruitStatusWindow);
+        }
     }
 
 
