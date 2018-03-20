@@ -100,6 +100,7 @@ public class Building
             Rigidbody rb = this.GameObject.AddComponent(typeof(Rigidbody)) as Rigidbody;
             rb.isKinematic = true;
             SetHighlightPower(0.0f);
+            this.GameObject.layer = 0;
 
             return true;
         }
