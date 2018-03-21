@@ -52,21 +52,22 @@ public class GuildHallController : MonoBehaviour
         //will have to check which type of unit we are attempting to create
         //setActive of game Object to false first
 
+        //NEEDS CHANGESSSSS!!!!
         if (unitNum == 1)
         {
-            FactionUnit tempUnit = gameController.CreatePlayerWarrior();
+            FactionUnit tempUnit = gameController.CreatePlayerWarrior(new Vector3());
             tempUnit.GetGameObject().SetActive(false);
             roster.Add(tempUnit);
         }
         else if (unitNum == 2)
         {
-            FactionUnit tempUnit = gameController.CreatePlayerArcher();
+            FactionUnit tempUnit = gameController.CreatePlayerArcher(new Vector3());
             tempUnit.GetGameObject().SetActive(false);
             roster.Add(tempUnit);
         }
         else if (unitNum == 3)
         {
-            FactionUnit tempUnit = gameController.CreatePlayerMage();
+            FactionUnit tempUnit = gameController.CreatePlayerMage(new Vector3());
             tempUnit.GetGameObject().SetActive(false);
             roster.Add(tempUnit);
         }
@@ -77,21 +78,22 @@ public class GuildHallController : MonoBehaviour
         //will have to check which type of unit we are attempting to create
         //setActive of game Object to false first
 
+        //NEEDS CHANGING
         if (selectedNewUnitNum == 1)
         {
-            FactionUnit tempUnit = gameController.CreatePlayerWarrior();
+            FactionUnit tempUnit = gameController.CreatePlayerWarrior(new Vector3());
             tempUnit.GetGameObject().SetActive(false);
             roster.Add(tempUnit);
         }
         else if (selectedNewUnitNum == 2)
         {
-            FactionUnit tempUnit = gameController.CreatePlayerArcher();
+            FactionUnit tempUnit = gameController.CreatePlayerArcher(new Vector3());
             tempUnit.GetGameObject().SetActive(false);
             roster.Add(tempUnit);
         }
         else if (selectedNewUnitNum == 3)
         {
-            FactionUnit tempUnit = gameController.CreatePlayerMage();
+            FactionUnit tempUnit = gameController.CreatePlayerMage(new Vector3());
             tempUnit.GetGameObject().SetActive(false);
             roster.Add(tempUnit);
         }

@@ -7,7 +7,8 @@ using UnityEngine;
 //Add a string array for names
 //Work on guild hall
 //Play with unit creation 
-
+//
+//
 public class GameController : MonoBehaviour
 {
     /* Prefabs */
@@ -34,12 +35,40 @@ public class GameController : MonoBehaviour
 
         List<DynamicUnit> myUnits;
         myUnits = new List<DynamicUnit>();
-        myUnits.Add(CreatePlayerArcher());
-        myUnits.Add(CreatePlayerWarrior());
-        myUnits.Add(CreatePlayerMage());
+        myUnits.Add(CreatePlayerArcher(new Vector3(20, 0, 20)));
+        myUnits.Add(CreatePlayerWarrior(new Vector3(20, 0, 20)));
+        myUnits.Add(CreatePlayerMage(new Vector3(20, 0, 20)));
 
         // add some player units
         AddFactionGroup(myUnits, new Vector3(20, 0, 20), true);
+
+        myUnits.Add(CreatePlayerArcher(new Vector3(80, 0, 30)));
+        myUnits.Add(CreatePlayerWarrior(new Vector3(80, 0, 30)));
+        myUnits.Add(CreatePlayerMage(new Vector3(80, 0, 30)));
+
+        // add some player units
+        AddFactionGroup(myUnits, new Vector3(80, 0, 30), true);
+
+        myUnits.Add(CreatePlayerArcher(new Vector3(120, 0, 60)));
+        myUnits.Add(CreatePlayerWarrior(new Vector3(120, 0, 60)));
+        myUnits.Add(CreatePlayerMage(new Vector3(120, 0, 60)));
+
+        // add some player units
+        AddFactionGroup(myUnits, new Vector3(120, 0, 60), true);
+
+        myUnits.Add(CreatePlayerArcher(new Vector3(160, 0, 40)));
+        myUnits.Add(CreatePlayerWarrior(new Vector3(160, 0, 40)));
+        myUnits.Add(CreatePlayerMage(new Vector3(160, 0, 40)));
+
+        // add some player units
+        AddFactionGroup(myUnits, new Vector3(160, 0, 40), true);
+
+        myUnits.Add(CreatePlayerArcher(new Vector3(200, 0, 20)));
+        myUnits.Add(CreatePlayerWarrior(new Vector3(200, 0, 20)));
+        myUnits.Add(CreatePlayerMage(new Vector3(200, 0, 20)));
+
+        // add some player units
+        AddFactionGroup(myUnits, new Vector3(200, 0, 20), true);
     }
 
     void Update()
@@ -48,17 +77,17 @@ public class GameController : MonoBehaviour
     }
 
     //Archer creation
-    public FactionUnit CreatePlayerArcher() { return Instantiate(roguePrefab, new Vector3(30.0f, 2.0f, 30.0f), Quaternion.identity).GetComponent<RogueController>().unit; }
+    public FactionUnit CreatePlayerArcher(Vector3 position) { return Instantiate(roguePrefab, position, Quaternion.identity).GetComponent<RogueController>().unit; }
     //Warrior creation
-    public FactionUnit CreatePlayerWarrior() { return Instantiate(warriorPrefab, new Vector3(30.0f, 2.0f, 30.0f), Quaternion.identity).GetComponent<WarriorController>().unit; }
+    public FactionUnit CreatePlayerWarrior(Vector3 position) { return Instantiate(warriorPrefab, position, Quaternion.identity).GetComponent<WarriorController>().unit; }
     //mage creation
-    public FactionUnit CreatePlayerMage() { return Instantiate(magePrefab, new Vector3(30.0f, 2.0f, 30.0f), Quaternion.identity).GetComponent<MageController>().unit; }
+    public FactionUnit CreatePlayerMage(Vector3 position) { return Instantiate(magePrefab, position, Quaternion.identity).GetComponent<MageController>().unit; }
     //Enemy Archer creation
-    public FactionUnit CreateEnemyArcher() { return Instantiate(enemyArcherPrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<EnemyArcherController>().demonUnit; }
+    public FactionUnit CreateEnemyArcher(Vector3 position) { return Instantiate(enemyArcherPrefab, position, Quaternion.identity).GetComponent<EnemyArcherController>().demonUnit; }
     //Enemy Infantry creation
-    public FactionUnit CreateEnemyWarrior() { return Instantiate(enemyInfantryPrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<EnemyInfantryController>().demonUnit; }
+    public FactionUnit CreateEnemyWarrior(Vector3 position) { return Instantiate(enemyInfantryPrefab, position, Quaternion.identity).GetComponent<EnemyInfantryController>().demonUnit; }
     //Enemy mage creation
-    public FactionUnit CreateEnemyMage() { return Instantiate(enemyMagePrefab, new Vector3(15.0f, 2.0f, 15.0f), Quaternion.identity).GetComponent<EnemyMageController>().demonUnit; }
+    public FactionUnit CreateEnemyMage(Vector3 position) { return Instantiate(enemyMagePrefab, position, Quaternion.identity).GetComponent<EnemyMageController>().demonUnit; }
 
     //Adding to a faction's grps
     public void AddFactionGroup(List<DynamicUnit> factionUnits, Vector3 position, bool isPlayer)
@@ -73,6 +102,8 @@ public class GameController : MonoBehaviour
         // Add either to player or enemy
         if (isPlayer) { playerController.groups.Add(grp); }
         else { enemyController.enemyGroups.Add(grp); }
+
+        factionUnits.Clear();
     }
 
     //Check for a battle instance 

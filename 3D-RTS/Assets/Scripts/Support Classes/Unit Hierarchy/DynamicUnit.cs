@@ -9,6 +9,7 @@ public abstract class DynamicUnit : Unit
     public bool IsPlayerControlled { get; protected set; }
     protected NavMeshAgent agent;
     protected Animator anim;
+    protected Rigidbody rb;
 
     protected int dexterity;
     protected int strength;
@@ -31,10 +32,13 @@ public abstract class DynamicUnit : Unit
         IsPlayerControlled = playerControlled;
         agent = gameObject.GetComponent<NavMeshAgent>();
         anim = gameObject.GetComponent<Animator>();
+        rb = gameObject.GetComponent<Rigidbody>();
         IsAttacking = false;
         IsInBattle = false;
         this.className = className;
     }
+
+    //these are probably for the useless units that are used for gui
     public DynamicUnit(string className)
     {
         IsPlayerControlled = false;
@@ -49,6 +53,10 @@ public abstract class DynamicUnit : Unit
         this.className = "WK_" + className;
     }
 
+    public Rigidbody GetRigidbody()
+    {
+        return rb;
+    }
 
     public GameObject GetGameObject()
     {

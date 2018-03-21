@@ -46,6 +46,8 @@ public class PlayerController : MonoBehaviour
         Vector3 intersectPoint = ray.GetPoint(aa);
         Physics.Raycast(ray, out hit);
 
+        BehaviorUtil.Flock(groups);
+
         if (intersectPoint.x > 0 && intersectPoint.x < 500 &&
             intersectPoint.z > 0 && intersectPoint.z < 500 && intersectPoint.y == 0)
         {
