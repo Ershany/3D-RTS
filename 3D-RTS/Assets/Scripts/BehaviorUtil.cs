@@ -206,21 +206,75 @@ public class BehaviorUtil
     }
 
     // implement a wander function according to notes
-    public static Vector3 Wander()
+    public static void Wander(List<Group> group)
     {
-        Vector3 steer = new Vector3();
+        //30 degrees angle maybe
+        float angle = 30;
+        float radius = 5.0f;
+        float displacement = 3.0f;
 
-        return steer;
+        for (int i = 0; i < group.Count; i++)
+        {
+            //set up movement for entire group to keep cohesion between the units of the group
+
+            //get a theta from the movement range
+            float theta = Random.Range(-angle, angle);
+
+            //move along xz plane (COS ???? SINNNN ????)
+            Vector3 target = new Vector3(radius * Mathf.Cos(theta), 0, radius * Mathf.Sin(theta));
+
+            for (int j = 0; j < group[i].GetUnits().Count; j++)
+            {
+                //Rotate the unit to align to this new movement
+                Vector3 center = group[i].GetUnits()[j].GetAgent().velocity * displacement;
+                target += center;
+
+                //what is player_center
+                target += group[i].GetUnits()[j].GetGameObject().transform.position;
+
+                //set it to be the velocity
+                group[i].GetUnits()[j].GetAgent().velocity = target;
+            }
+        }
+    }
+
+    //lerp function with ease in and ease out 
+    //delta time calculation should be done before given into the function 
+    public Vector3 Lerp(Vector3 start , Vector3 end , float t)
+    {
+        //dunno if this true or not
+        float easedT = Ease(t);
+
+        //regular linear interpolation
+        return (1 - easedT) * start + easedT * end;
+    }
+
+    //Ease function that determines whether we are in ease in or ease out 
+    public static float Ease(float t)
+    {
+        //t is between 0 and 1 (it should be that value)
+        if (t < 0.5)
+        {
+            return EaseIn(t);
+        }
+        else
+        {
+            return EaseOut(t);
+        }
     }
 
     //Ease in linear interpolation
-    public static void EaseIn()
+    static float EaseIn(float t)
     {
+        // t^2
+        return t * t;
     }
 
     //Ease out linear interpolation
-    public static void EaseOut()
+    static float EaseOut(float t)
     {
+        // 1 - (1 - t) ^ 2
+        return 1 - ((1 - t) * (1 - t));
     }
 
     public void patrol()
