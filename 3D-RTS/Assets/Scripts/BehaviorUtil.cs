@@ -7,16 +7,17 @@ public class BehaviorUtil
     // util class that holds behavior functions it would probably setup the destination of groups 
 
     //gonna need some max force and max speed here 
-    public static void Flock(List<Group> group)
+    public void Flock(List<Group> group)
     {
         //Some hardcoded values for speed and etc...
-        float maxForce = 2.0f;
-        float maxSpeed = 5.0f;
+        float maxForce = 0.5f;
+        float maxSpeed = 0.5f;
         float neighborDistance = 100.0f;
+        float separationDistance = 2.0f;
 
         //hardcoded separation atm almost a separation array alignment array and cohesion array
-        List<Vector3> separation = Separation(group , neighborDistance , maxForce , maxSpeed);
-        List<Vector3> alignment = Alignment(group ,neighborDistance ,maxForce , maxSpeed);
+        List<Vector3> separation = Separation(group , separationDistance , maxForce , maxSpeed);
+        List<Vector3> alignment = Alignment(group , neighborDistance , maxForce , maxSpeed);
         List<Vector3> cohesion = Cohesion(group , neighborDistance , maxSpeed , maxForce);
         int count = 0;
 
@@ -25,10 +26,17 @@ public class BehaviorUtil
         {
             for (int j = 0; j < group[i].GetUnits().Count; j++)
             {
-                Rigidbody rb = group[i].GetUnits()[j].GetRigidbody();
-                rb.AddForce(separation[count]);
-                rb.AddForce(alignment[count]);
-                rb.AddForce(cohesion[count]);
+                
+                //Rigidbody rb = group[i].GetUnits()[j].GetRigidbody();
+                //rb.AddForce(separation[count]);
+                //rb.AddForce(alignment[count]);
+                //rb.AddForce(5 * cohesion[count]);
+                
+                group[i].GetUnits()[j].GetAgent().velocity += separation[count].normalized;
+                //group[i].GetUnits()[j].GetAgent().velocity += alignment[count];
+                //group[i].GetUnits()[j].GetAgent().velocity += cohesion[count];
+                //group[i].GetUnits()[j].GetAgent().velocity = group[i].GetUnits()[j].GetAgent().velocity.normalized * group[i].GetUnits()[j].GetAgent().speed;
+
                 count++;
             }
         }
@@ -36,7 +44,7 @@ public class BehaviorUtil
 
     //Calculates steering vector for units so that they can separate from each other
     //Separation between units in a flock
-    static List<Vector3> Separation(List<Group> group , float separation , float maxForce , float maxSpeed)
+    List<Vector3> Separation(List<Group> group , float separation , float maxForce , float maxSpeed)
     {
         List<Vector3> steer = new List<Vector3>();
         int count = 0;
@@ -52,6 +60,7 @@ public class BehaviorUtil
                     if (j == k) continue;
 
                     float distance = Vector3.Distance(group[i].GetUnits()[j].GetTransform().position, group[i].GetUnits()[k].GetTransform().position);
+                    Debug.Log(distance);
 
                     //these 2 units are 2 close steer them away
                     if ( distance < separation)
@@ -62,7 +71,6 @@ public class BehaviorUtil
                         steer[j] += difference;
                         count++;
                     }
-
                 }
 
                 //average the steering for each unit
@@ -94,7 +102,7 @@ public class BehaviorUtil
     }
 
     //Alignment of units in a flock
-    static List<Vector3> Alignment(List<Group> group , float neighborDistance , float maxForce , float maxSpeed)
+    List<Vector3> Alignment(List<Group> group , float neighborDistance , float maxForce , float maxSpeed)
     {
         List<Vector3> steer = new List<Vector3>();
         int count = 0;
@@ -147,7 +155,7 @@ public class BehaviorUtil
     }
 
     //Cohesion between units of a flock
-    static List<Vector3> Cohesion(List<Group> group, float neighborDistance , float maxSpeed , float maxForce)
+    List<Vector3> Cohesion(List<Group> group, float neighborDistance , float maxSpeed , float maxForce)
     {
         List<Vector3> steer = new List<Vector3>();
         int count = 0;
@@ -187,62 +195,84 @@ public class BehaviorUtil
         return steer;
     }
 
+
+
+
+
     //Seek function
-    public static Vector3 Seek(DynamicUnit unit , Vector3 seekPosition , float maxSpeed , float maxForce)
+    public Vector3 Seek(DynamicUnit unit , Vector3 seekPosition , float maxSpeed , float maxForce)
     {
-        // get direction vector to the target position
+        //get direction vector to the target position
         Vector3 desired = -unit.GetGameObject().transform.position + seekPosition;
         desired = desired.normalized * maxSpeed;
 
         //Reynolds steering
         Vector3 steeringVector = desired - unit.GetAgent().velocity;
 
+        //setup threshold for the maxForce you can apply
         if (steeringVector.magnitude > maxForce)
         {
             steeringVector = steeringVector.normalized * maxForce;
         }
 
+        //return the vector needed to steer to 
         return steeringVector;
     }
 
     // implement a wander function according to notes
-    public static void Wander(List<Group> group)
+    public void Wander(List<Group> group)
     {
-        //30 degrees angle maybe
-        float angle = 30;
+        float angle = 5.0f;
         float radius = 5.0f;
-        float displacement = 3.0f;
+        float displacement = 30.0f; // no idea
 
         for (int i = 0; i < group.Count; i++)
         {
             //set up movement for entire group to keep cohesion between the units of the group
-
-            //get a theta from the movement range
+            //get a random theta from the movement range
             float theta = Random.Range(-angle, angle);
 
-            //move along xz plane (COS ???? SINNNN ????)
-            Vector3 target = new Vector3(radius * Mathf.Cos(theta), 0, radius * Mathf.Sin(theta));
+            Debug.Log(theta);
+            //find target position + the radius
+            Vector3 target = new Vector3(radius * Mathf.Cos(theta) , 0.0f , radius * Mathf.Sin(theta));
 
             for (int j = 0; j < group[i].GetUnits().Count; j++)
             {
-                //Rotate the unit to align to this new movement
-                Vector3 center = group[i].GetUnits()[j].GetAgent().velocity * displacement;
-                target += center;
+                //Quaternion rotation = Quaternion.AngleAxis(theta, new Vector3(1 , 0 , 1));
+                //Debug.Log("my rotation: " + rotation);
 
-                //what is player_center
-                target += group[i].GetUnits()[j].GetGameObject().transform.position;
+                //Vector3 newForward = rotation * group[i].GetUnits()[0].GetAgent().velocity;
+
+                //Debug.Log("new velocity: " + newForward);
+                //group[i].GetUnits()[j].GetTransform().Rotate(newForward);
+
+                //group[i].GetUnits()[j].GetAgent().velocity = newForward.normalized * 5.0f;
+
+                //hardcoded speed 
+                group[i].GetUnits()[j].GetAgent().velocity =  (target + group[i].GetUnits()[j].GetAgent().velocity).normalized * 500.0f * Time.deltaTime;
+
+                //Rotate the unit to align to this new movement
+                //Vector3 center = group[i].GetUnits()[j].GetAgent().velocity.normalized * displacement;
+                //target += center;
+
+                //what is player_center ????
+                //target += group[i].GetUnits()[j].GetGameObject().transform.position;
+
+                //threshold movement
+                //target = target.normalized * 3.0f;
 
                 //set it to be the velocity
-                group[i].GetUnits()[j].GetAgent().velocity = target;
+                //group[i].GetUnits()[j].GetRigidbody().AddForce(target);
+                //group[i].GetUnits()[j].GetAgent().velocity = target;
             }
         }
     }
 
     //lerp function with ease in and ease out 
     //delta time calculation should be done before given into the function 
-    public Vector3 Lerp(Vector3 start , Vector3 end , float t)
+    public  Vector3 Lerp(Vector3 start , Vector3 end , float t)
     {
-        //dunno if this true or not
+        //ease t parameter for ease in and ease out lerping
         float easedT = Ease(t);
 
         //regular linear interpolation
@@ -250,7 +280,7 @@ public class BehaviorUtil
     }
 
     //Ease function that determines whether we are in ease in or ease out 
-    public static float Ease(float t)
+    public float Ease(float t)
     {
         //t is between 0 and 1 (it should be that value)
         if (t < 0.5)
@@ -277,7 +307,7 @@ public class BehaviorUtil
         return 1 - ((1 - t) * (1 - t));
     }
 
-    public void patrol()
+    public void Patrol()
     {
     }
 
