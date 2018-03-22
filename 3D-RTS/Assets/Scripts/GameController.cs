@@ -29,8 +29,11 @@ public class GameController : MonoBehaviour
     private PlayerController playerController;
     private EnemyController enemyController;
 
+    public GuildHallController guildHall;
+
     void Awake()
     {
+        guildHall = null;
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
         enemyController = GameObject.FindGameObjectWithTag("EnemyController").GetComponent<EnemyController>();
 
@@ -122,6 +125,20 @@ public class GameController : MonoBehaviour
 
                 for (int k = 0; k < playerController.groups[i].GetUnits().Count; k++)
                 {
+                    if (guildHall != null)
+                    {
+                        Debug.Log("GHR1");
+                        //Change from destination to the actual player's mouse click
+                        if (DestinationWithinTarget(playerController.groups[i].GetUnits()[k].GetAgent().destination, guildHall.gameObject))
+                        {
+                            Debug.Log("GHR2");
+                            if (guildHall.gameObject.GetComponent<BoxCollider>().bounds.SqrDistance(playerController.groups[i].GetUnits()[i].GetTransform().position) < 4)
+                            {
+                                Debug.Log("GHR3");
+                                guildHall.ReturnUnit(playerController.groups[i], k);
+                            }
+                        }
+                    }
                     for (int l = 0; l < enemyController.enemyGroups[j].GetUnits().Count; l++)
                     {
                         if (Vector3.Distance(playerController.groups[i].GetUnits()[k].GetTransform().position, enemyController.enemyGroups[j].GetUnits()[l].GetTransform().position) < 4)
@@ -142,6 +159,11 @@ public class GameController : MonoBehaviour
                 }
             }
         }
+    }
+    
+    public bool DestinationWithinTarget(Vector3 destination, GameObject target)
+    {
+        return target.GetComponent<BoxCollider>().bounds.Contains(destination);
     } 
 
 }

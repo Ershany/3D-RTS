@@ -146,9 +146,11 @@ public class GuildHallController : MonoBehaviour
 
             for(int i = 0; i < unitsToBeDeployed.Count; i++)
             {
+                unitsToBeDeployed[i].GetTransform().position = transform.position + new Vector3(-4 + i, 0, -6);
                 unitsToBeDeployed[i].GetGameObject().SetActive(true);
             }
-            gameController.AddFactionGroup(unitsToBeDeployed, transform.position + new Vector3(5, 0, 5), true);
+            Debug.Log(transform.position);
+            gameController.AddFactionGroup(unitsToBeDeployed, transform.position + new Vector3(-4, 0, -6), true);
             unitsToBeDeployed.Clear();
 
             Debug.Log("Deployed group");
@@ -156,7 +158,7 @@ public class GuildHallController : MonoBehaviour
     }
 
     //return units back to roster
-    void ReturnUnits(Group myUnits)
+    public void ReturnGroup(Group myUnits)
     {
         for (int i = 0; i < myUnits.GetUnits().Count; i++)
         {
@@ -175,31 +177,14 @@ public class GuildHallController : MonoBehaviour
         Debug.Log("Returned units back to roster");
     }
 
-    //MORE OF A UI THING MAYBE ADD IT TO UICONTROLLER 
-    void PopulateRoster()
+    public void ReturnUnit(Group myGroup, int i)
     {
-        //destroy previous ui buttons
-        //get the panel responsible and destroy its children
+        roster.Add(myGroup.GetUnits()[i]);
+        myGroup.GetUnits()[i].GetGameObject().SetActive(false);
+        myGroup.GetUnits().RemoveAt(i);
 
-        //recreate new ones with the ones specified
-        for (int i = 0; i < roster.Count; i++)
-        {
-            //create a new button for each of them
-            //HOW DO WE CHECK THEIR TYPE
-            if (roster[i].GetClassName() == "WK_ARCHER")
-            {
-                //we have an archer setup archer info
-            }
-            else if (roster[i].GetClassName() == "WK_WARRIOR")
-            {
-                //we have a warrior setup warrior info
-            }
-            else if (roster[i].GetClassName() == "WK_MAGE")
-            {
-                //we have a mage setup mage info
-            }
-        }
     }
+
 
     void Update()
     {
@@ -229,5 +214,10 @@ public class GuildHallController : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         building.OnTriggerExit();
+    }
+
+    public void GuildHallPlaced()
+    {
+        gameController.guildHall = this;
     }
 }

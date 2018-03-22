@@ -45,9 +45,9 @@ public class PlayerController : MonoBehaviour
 
         Vector3 intersectPoint = ray.GetPoint(aa);
         Physics.Raycast(ray, out hit);
-
-        BehaviorUtil.Flock(groups);
-
+        /*
+            BehaviorUtil.Flock(groups);
+        */
         if (intersectPoint.x > 0 && intersectPoint.x < 500 &&
             intersectPoint.z > 0 && intersectPoint.z < 500 && intersectPoint.y == 0)
         {
@@ -182,6 +182,7 @@ public class PlayerController : MonoBehaviour
                 // Place the building on the terrain
                 if (buildingToBeBuilt.PlaceBuildingOnTerrain())
                 {
+                    buildingToBeBuilt.GameObject.GetComponent<GuildHallController>().GuildHallPlaced();
                     guildHallBuilt = true;
                     buildingToBeBuilt = null;
                     Debug.Log("Building Placed");

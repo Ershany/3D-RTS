@@ -121,8 +121,12 @@ public class GuildHallGUIUtil : MonoBehaviour
     {
         Debug.Log(guildCon.roster.Count);
         Debug.Log(guildCon.selectedRosterUnitNum);
-        if ((guildCon.selectedRosterUnitNum - 1) < guildCon.roster.Count && guildCon.roster.Count > 0)
+        if ((guildCon.selectedRosterUnitNum - 1) < guildCon.roster.Count && guildCon.roster.Count > 0 && guildCon.unitsToBeDeployed.Count < 4)
+        {
+            Destroy(rosterPanels[guildCon.selectedRosterUnitNum]);
+            rosterPanels.RemoveAt(guildCon.selectedRosterUnitNum);
             guildCon.AddToDeployedUnits(guildCon.selectedRosterUnitNum);
+        }
     }
 
     public void DeployNewGroup()
@@ -148,11 +152,13 @@ public class GuildHallGUIUtil : MonoBehaviour
                 if (rosterPanels[i].transform.Find("TextValues").Find("Name").GetComponent<Text>().text != guildCon.roster[i].GetName() ||
                     rosterPanels[i].transform.Find("Text").GetComponent<Text>().text != (i.ToString())) 
                 {
+
                     rosterUpdated = true;
                     GameObject temp = rosterPanels[i];
                     rosterPanels[i] = RosterPanelConstructor(guildCon.roster[i], i);
                     rosterPanels[i].transform.SetParent(rosterUnitsPanel.transform, false);
                     Destroy(temp);
+
                 }
             }
             else

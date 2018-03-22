@@ -142,7 +142,7 @@ public class TurnBasedBattleController {
                         Debug.Log("Check3");
                         returningToStartingPosition = true;
 
-                        attackingUnit.GetAgent().stoppingDistance = 0.1f;
+                        attackingUnit.GetAgent().stoppingDistance = 0.5f;
                         attackingUnit.SetDestination(returnPos);
                         Debug.Log("Returning to " + returnPos.ToString());
                     }
