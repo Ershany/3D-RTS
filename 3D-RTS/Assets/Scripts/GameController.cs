@@ -73,11 +73,15 @@ public class GameController : MonoBehaviour
 
         // add some player units
         AddFactionGroup(myUnits, new Vector3(200, 0, 20), true);
+
+
+
     }
 
     void Update()
     {
         BattleCheck();
+        GuildHallReturnCheck();
     }
 
     //Archer creation
@@ -125,20 +129,6 @@ public class GameController : MonoBehaviour
 
                 for (int k = 0; k < playerController.groups[i].GetUnits().Count; k++)
                 {
-                    if (guildHall != null)
-                    {
-                        Debug.Log("GHR1");
-                        //Change from destination to the actual player's mouse click
-                        if (DestinationWithinTarget(playerController.groups[i].GetUnits()[k].GetAgent().destination, guildHall.gameObject))
-                        {
-                            Debug.Log("GHR2");
-                            if (guildHall.gameObject.GetComponent<BoxCollider>().bounds.SqrDistance(playerController.groups[i].GetUnits()[i].GetTransform().position) < 4)
-                            {
-                                Debug.Log("GHR3");
-                                guildHall.ReturnUnit(playerController.groups[i], k);
-                            }
-                        }
-                    }
                     for (int l = 0; l < enemyController.enemyGroups[j].GetUnits().Count; l++)
                     {
                         if (Vector3.Distance(playerController.groups[i].GetUnits()[k].GetTransform().position, enemyController.enemyGroups[j].GetUnits()[l].GetTransform().position) < 4)
@@ -160,10 +150,60 @@ public class GameController : MonoBehaviour
             }
         }
     }
-    
+
+
+    void GuildHallReturnCheck()
+    {
+        if (guildHall != null)
+        {
+            for (int i = 0; i < playerController.groups.Count; i++)
+            {
+                //Change from destination to the actual player's mouse click
+                if (guildHall.gameObject.GetComponent<BoxCollider>().bounds.Contains(playerController.groups[i].rawDestination))
+                {
+                    playerController.groups[i].returningToGuildHall = true;
+                    playerController.groups[i].DisableCollisionsWithCollider(guildHall.gameObject.GetComponent<BoxCollider>());
+                    playerController.groups[i].ResetGroupDestination();
+                    for (int j = 0; j < playerController.groups[i].GetUnits().Count; j++)
+                    {
+                        if (guildHall.gameObject.GetComponent<BoxCollider>().bounds.SqrDistance(playerController.groups[i].GetUnits()[j].GetTransform().position) < 6)
+                        {
+                            playerController.groups[i].RemoveBumperCars();
+                            playerController.groups[i].ResetGroupDestination();
+
+                            if (guildHall.gameObject.GetComponent<BoxCollider>().bounds.SqrDistance(playerController.groups[i].GetUnits()[j].GetTransform().position) < 3)
+                            {
+                                playerController.groups[i].GetUnits()[j].GetAgent().areaMask = 5;
+                                guildHall.ReturnUnit(playerController.groups[i], j);
+                                if (playerController.groups[i].GetUnits().Count == 0)
+                                {
+                                    playerController.groups.RemoveAt(i);
+                                    i--;
+                                }
+                                else
+                                {
+                                    playerController.groups[i].ResetGroupDestination();
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (!playerController.groups[i].returningToGuildHall)
+                {
+                    playerController.groups[i].ReInitializeBumperCars();
+                    playerController.groups[i].EnableCollisionsWithCollider(guildHall.gameObject.GetComponent<BoxCollider>());
+                    playerController.groups[i].returningToGuildHall = false;
+                }
+            }
+        }
+    }
+
+
     public bool DestinationWithinTarget(Vector3 destination, GameObject target)
     {
         return target.GetComponent<BoxCollider>().bounds.Contains(destination);
     } 
+
+   
 
 }

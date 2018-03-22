@@ -112,24 +112,24 @@ public class StandardGUIController : MonoBehaviour
                 guildGUIPanel.SetActive(false);
                 //buildingInfoPanel.SetActive(false);
 
-                for (int i = 0; i < 4; i++)
-                {
-                    if (i < currentGroup.GetUnits().Count)
-                    {
-                        groupMembers[i].SetActive(true);
-                        PopulateMemberInfoPanel(groupMembers[i], currentGroup.GetUnits()[i]);
-                    }
-                    else
-                    {
-                        groupMembers[i].SetActive(false);
-                    }
-                }
             }
 
             if (currentGroup != null)
             {
                 if (activeMemberPanel != activeMember && activeMember < currentGroup.GetUnits().Count)
                 {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (i < currentGroup.GetUnits().Count)
+                        {
+                            groupMembers[i].SetActive(true);
+                            PopulateMemberInfoPanel(groupMembers[i], currentGroup.GetUnits()[i]);
+                        }
+                        else
+                        {
+                            groupMembers[i].SetActive(false);
+                        }
+                    }
                     PopulateStatusWindow(currentGroup.GetUnits()[activeMember], unitInfoPanel);
                     activeMemberPanel = activeMember;
                 }

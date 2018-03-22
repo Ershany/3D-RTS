@@ -26,6 +26,8 @@ public class GuildHallController : MonoBehaviour
     {
         //setup members 
         building = new Building(gameObject, buildingHealth);
+
+
         building.name = "GuildHall";
         roster = new List<DynamicUnit>();
         unitsToBeDeployed = new List<DynamicUnit>();
@@ -182,6 +184,7 @@ public class GuildHallController : MonoBehaviour
         roster.Add(myGroup.GetUnits()[i]);
         myGroup.GetUnits()[i].GetGameObject().SetActive(false);
         myGroup.GetUnits().RemoveAt(i);
+        
 
     }
 
@@ -189,7 +192,6 @@ public class GuildHallController : MonoBehaviour
     void Update()
     {
         //check gui here 
-
         // Update building
         building.Update();
     }

@@ -21,14 +21,22 @@ public class PlayerController : MonoBehaviour
     public List<TurnBasedBattleController> battles { get; private set; }
     public List<Building> playerBuildings;
 
+    public GameObject selectionPanel;
+
     bool guildHallBuilt;
+
+    Vector2 selectionBoxPosition;
+
+    public Vector3 markerPoint;
 
     void Awake()
     {
+        selectionPanel = GameObject.FindGameObjectWithTag("BoxSelectPanel");
         guildHallBuilt = false;
         battles = new List<TurnBasedBattleController>();
         groups = new List<Group>();
         selectedGroup = null;
+        markerPoint = new Vector3(-1, 0, 0);
     }
 
     void Update()
@@ -36,6 +44,7 @@ public class PlayerController : MonoBehaviour
         // do input checks here
         // Shoot a raycast at the mouse position
         RaycastHit hit;
+        RaycastHit moveHit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         //Physics.Raycast(ray, out hit, float.MaxValue, terrainMask);
 
@@ -44,6 +53,7 @@ public class PlayerController : MonoBehaviour
         p.Raycast(ray, out aa);
 
         Vector3 intersectPoint = ray.GetPoint(aa);
+        Physics.Raycast(ray, out moveHit, 400.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
         Physics.Raycast(ray, out hit);
         /*
             BehaviorUtil.Flock(groups);
@@ -57,11 +67,11 @@ public class PlayerController : MonoBehaviour
             // Move building with cursor if a building is currently selected (keep it on the terrain)
             if (buildingToBeBuilt != null)
             {
-                buildingToBeBuilt.MoveBuilding(hit.point);
+                buildingToBeBuilt.MoveBuilding(moveHit.point);
             }
 
             //check for input
-            InputCheck(hit);
+            InputCheck(moveHit, hit);
 
         }
         //check for battles
@@ -149,8 +159,9 @@ public class PlayerController : MonoBehaviour
     }
 
     //Check player Input
-    void InputCheck(RaycastHit hit)
+    void InputCheck(RaycastHit hit, RaycastHit moveHit)
     {
+
         //CHANGE HEREEEEEEEEEE
         // TEMP Building Selection Code
         if (Input.GetKeyDown("1") && guildHallBuilt == false)
@@ -163,7 +174,7 @@ public class PlayerController : MonoBehaviour
             }
 
             buildingToBeBuilt = Instantiate(guildHallPrefab, Vector3.zero, Quaternion.Euler(-90.0f, 0.0f, 0.0f)).GetComponent<GuildHallController>().building;
-            buildingToBeBuilt.MoveBuilding(hit.point);
+            buildingToBeBuilt.MoveBuilding(moveHit.point);
         }
 
         // some group selection code
@@ -241,9 +252,9 @@ public class PlayerController : MonoBehaviour
             else if (selectedGroup != null && !selectedGroup.GetUnits()[0].IsInBattle)
             {
                 // Move a group to a position 
-                Transform objectHit = hit.transform;
-                selectedGroup.SetGroupDestination(hit.point);
-                Debug.Log("Group is moving to " + hit.point.ToString());
+                selectedGroup.SetGroupDestination(moveHit.point);
+                
+                Debug.Log("Group is moving to " + moveHit.point.ToString());
             }
         }
     }

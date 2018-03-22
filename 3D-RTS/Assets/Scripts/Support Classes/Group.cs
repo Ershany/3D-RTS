@@ -5,7 +5,8 @@ using UnityEngine;
 public class Group : MonoBehaviour {
 
     private List<DynamicUnit> units;
-
+    public bool returningToGuildHall;
+    public Vector3 rawDestination;
     void Awake()
     {
         units = new List<DynamicUnit>();
@@ -35,11 +36,50 @@ public class Group : MonoBehaviour {
 
     public void SetGroupDestination(Vector3 dest)
     {
+        rawDestination = dest;
         foreach(DynamicUnit unit in units)
         {
             unit.SetDestination(dest);
         }
     }
+    public void ResetGroupDestination()
+    {
+        foreach (DynamicUnit unit in units)
+        {
+            unit.SetDestination(rawDestination);
+        }
+    }
+
+    public void RemoveBumperCars()
+    {
+        foreach (DynamicUnit unit in units)
+        {
+            unit.GetAgent().radius = 0.0f;
+        }
+    }
+    public void ReInitializeBumperCars()
+    {
+        foreach (DynamicUnit unit in units)
+        {
+            unit.GetAgent().radius = 0.5f;
+        }
+    }
+    public void DisableCollisionsWithCollider(Collider col)
+    {
+        foreach(DynamicUnit unit in units)
+        {
+            Physics.IgnoreCollision(unit.GetGameObject().GetComponent<Collider>(), col, true);
+        }
+    }
+
+    public void EnableCollisionsWithCollider(Collider col)
+    {
+        foreach (DynamicUnit unit in units)
+        {
+            Physics.IgnoreCollision(unit.GetGameObject().GetComponent<Collider>(), col, false);
+        }
+    }
+
 
     public void StopGroupMovement()
     {
