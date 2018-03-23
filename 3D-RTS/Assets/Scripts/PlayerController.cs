@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 
     //selected group of units
     public Group selectedGroup { get; private set; }
+    public List<Group> selectedGroups { get; private set; }
 
     //players groups 
     public List<Group> groups { get; private set; }
@@ -51,11 +52,13 @@ public class PlayerController : MonoBehaviour
         p.Raycast(ray, out aa);
 
         Vector3 intersectPoint = ray.GetPoint(aa);
-        Physics.Raycast(ray, out hit, 800.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
-        Physics.Raycast(ray, out moveHit, 800.0f, 1 << 0);
+        Physics.Raycast(ray, out moveHit, 800.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
+        Physics.Raycast(ray, out hit, 800.0f, 1 << 0);
+
         /*
             BehaviorUtil.Flock(groups);
         */
+
         if (intersectPoint.x > 0 && intersectPoint.x < 500 &&
             intersectPoint.z > 0 && intersectPoint.z < 500 && intersectPoint.y == 0)
         {
@@ -69,7 +72,7 @@ public class PlayerController : MonoBehaviour
             }
 
             //check for input
-            InputCheck(moveHit, hit);
+            InputCheck(hit, moveHit);
 
         }
         //check for battles
@@ -260,6 +263,44 @@ public class PlayerController : MonoBehaviour
                 selectedGroup.SetGroupDestination(moveHit.point);
                 
                 Debug.Log("Group is moving to " + moveHit.point.ToString());
+            }
+        }
+    }
+
+
+    public void SelectOnRect(Vector2 v1, Vector2 v2)
+    {
+        RaycastHit hit1;
+        RaycastHit hit2;
+        Ray ray1 = Camera.main.ScreenPointToRay(v1);
+        Ray ray2 = Camera.main.ScreenPointToRay(v2);
+
+
+        Physics.Raycast(ray1, out hit1, 200.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
+        Physics.Raycast(ray2, out hit2, 200.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
+
+        if (hit1.point != null && hit2.point != null) {
+            float minX = Mathf.Min(hit1.point.x, hit2.point.x);
+            float maxX = Mathf.Max(hit1.point.x, hit2.point.x);
+            float minY = Mathf.Min(hit1.point.y, hit2.point.y);
+            float maxY = Mathf.Max(hit1.point.y, hit2.point.y);
+
+            for (int i = 0; i < groups.Count; i++)
+            {
+                List<DynamicUnit> _units = groups[i].GetUnits();
+                for (int j = 0; j < _units.Count; j++)
+                {
+                    Vector3 unitPos = _units[j].GetTransform().position;
+                    if (unitPos.x > minX &&
+                        unitPos.x < maxX &&
+                        unitPos.y > minY &&
+                        unitPos.y < maxY)
+                    {
+                        selectedGroups.Add(groups[i]);
+                        j = _units.Count;
+                    }
+
+                }
             }
         }
     }
