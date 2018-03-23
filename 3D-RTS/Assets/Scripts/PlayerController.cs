@@ -25,13 +25,11 @@ public class PlayerController : MonoBehaviour
 
     bool guildHallBuilt;
 
-    Vector2 selectionBoxPosition;
 
     public Vector3 markerPoint;
 
     void Awake()
     {
-        selectionPanel = GameObject.FindGameObjectWithTag("BoxSelectPanel");
         guildHallBuilt = false;
         battles = new List<TurnBasedBattleController>();
         groups = new List<Group>();
@@ -53,8 +51,8 @@ public class PlayerController : MonoBehaviour
         p.Raycast(ray, out aa);
 
         Vector3 intersectPoint = ray.GetPoint(aa);
-        Physics.Raycast(ray, out moveHit, 400.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
-        Physics.Raycast(ray, out hit);
+        Physics.Raycast(ray, out hit, 800.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
+        Physics.Raycast(ray, out moveHit, 800.0f, 1 << 0);
         /*
             BehaviorUtil.Flock(groups);
         */
@@ -188,6 +186,7 @@ public class PlayerController : MonoBehaviour
         // Check if the player issued a command by clicking and act accordingly
         if (Input.GetMouseButtonDown(0))
         {
+            Debug.Log("Check1");
             if (buildingToBeBuilt != null)
             {
                 // Place the building on the terrain
@@ -216,14 +215,20 @@ public class PlayerController : MonoBehaviour
                 //check if we are clicking this group so check any of the units being selected 
                 for (int i = 0; i < groups.Count; i++)
                 {
+                    Debug.Log("Check2");
                     for (int j = 0; j < groups[i].GetUnits().Count; j++)
                     {
-                        
-                        if (hit.collider.gameObject == groups[i].GetUnits()[j].GetGameObject())
+
+                        Debug.Log("Check3");
+                        if (hit.collider != null)
                         {
-                            selectedGroup = groups[i];
-                            Debug.Log("selected a group");
-                            break;
+                            if (hit.collider.gameObject == groups[i].GetUnits()[j].GetGameObject())
+                            {
+                                Debug.Log("Check4");
+                                selectedGroup = groups[i];
+                                Debug.Log("selected a group");
+                                break;
+                            }
                         }
                     }
                 }

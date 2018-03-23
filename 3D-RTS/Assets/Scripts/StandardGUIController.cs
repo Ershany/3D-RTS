@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class StandardGUIController : MonoBehaviour
 {
+
+
     public PlayerController playerController;
     public GameObject standardGUIPanel;
 
@@ -33,7 +35,32 @@ public class StandardGUIController : MonoBehaviour
     private int activeMember;
     private int activeMemberPanel;
     public int partyCreationWindowMemberClicked;
+    
 
+
+    [ColorUsageAttribute(true, true, 0, 1, 0, 1, order = 0)]
+    public Color selectionRectFillColor;
+
+
+    [ColorUsageAttribute(true, true, 0, 1, 0, 1, order = 0)]
+    public Color selectionRectBorderColor;
+
+
+
+    private class MouseData
+    {
+        public bool mouse_1;
+        public Vector2 mouse_1_StartPos;
+
+        public MouseData()
+        {
+            mouse_1 = false;
+            mouse_1_StartPos = new Vector2();
+        }
+
+    }
+    
+    private MouseData mouseData;
 
     void Awake()
     {
@@ -43,6 +70,7 @@ public class StandardGUIController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        mouseData = new MouseData();
         currentSelectionType = "null";
         groupInfoPanel = GameObject.FindGameObjectWithTag("GroupInformationPanel");
         unitInfoPanel = groupInfoPanel.transform.Find("StatusWindow").gameObject;
@@ -79,10 +107,11 @@ public class StandardGUIController : MonoBehaviour
 
     }
 
-
     // Update is called once per frame
     void Update()
     {
+        UpdateGUIInputs();
+
         if (guildGUI.guildCon == null)
         {
             if (GameObject.FindGameObjectWithTag("GuildHall") != null)
@@ -94,7 +123,6 @@ public class StandardGUIController : MonoBehaviour
                 }
             }
         }
-
 
         if (playerController.selectedGroup != null)
         {
@@ -157,13 +185,36 @@ public class StandardGUIController : MonoBehaviour
         }
     }
 
+    void OnGUI()
+    {
+        if (mouseData.mouse_1)
+        {
+            if (Vector2.Distance(mouseData.mouse_1_StartPos,Input.mousePosition) > 10)
+            {
+                // Create a rect from both mouse positions
+                Rect rect = GUIUtility.GetScreenRect(mouseData.mouse_1_StartPos, Input.mousePosition);
+                GUIUtility.DrawSelectionRect(rect, selectionRectFillColor);
+                GUIUtility.DrawSelectionRectBorder(rect, 2, selectionRectBorderColor);
+            }
+        }
+    }
+
+    void UpdateGUIInputs()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            mouseData.mouse_1 = true;
+            mouseData.mouse_1_StartPos = Input.mousePosition;
+        }
+        if (Input.GetMouseButtonUp(0))
+            mouseData.mouse_1 = false;
+    }
+
     public void SetActiveMember(int i)
     {
         Debug.Log(i);
         activeMember = i;
     }
-
-
 
     public void PartyCreationWindowMemberClicked(int i)
     {
@@ -198,10 +249,7 @@ public class StandardGUIController : MonoBehaviour
         Debug.Log("DeployNewGroup function called");
         guildGUI.DeployNewGroup();
     }
-
-
-
-
+    
     public void PopulateMemberInfoPanel(GameObject panel,  DynamicUnit member)
     {
         int str = 0;
