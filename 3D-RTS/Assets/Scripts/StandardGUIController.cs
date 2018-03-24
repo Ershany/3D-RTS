@@ -124,16 +124,17 @@ public class StandardGUIController : MonoBehaviour
             }
         }
 
-        if (playerController.selectedGroup != null)
+        //fix that shit julian!!!!!!
+        if (playerController.selectedGroups.Count > 0)
         {
             if (currentGroup == null)
-                currentGroup = playerController.selectedGroup;
+                currentGroup = playerController.selectedGroups[0];
 
            
 
-            if (playerController.selectedGroup != currentGroup || currentSelectionType != "group" || !standardGUIPanel.activeSelf)
+            if (playerController.selectedGroups[0] != currentGroup || currentSelectionType != "group" || !standardGUIPanel.activeSelf)
             {
-                currentGroup = playerController.selectedGroup;
+                currentGroup = playerController.selectedGroups[0];
                 currentSelectionType = "group";
 
                 standardGUIPanel.SetActive(true);

@@ -8,7 +8,8 @@ public class PlayerController : MonoBehaviour
     public GameObject arenaPrefab;
 
     //selected group of units
-    public Group selectedGroup { get; private set; }
+    //public Group selectedGroup { get; private set; }
+    public List<Group> selectedGroups;
 
     //players groups 
     public List<Group> groups { get; private set; }
@@ -37,11 +38,12 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
+        selectedGroups = new List<Group>();
         behavior = new BehaviorUtil();
         guildHallBuilt = false;
         battles = new List<TurnBasedBattleController>();
         groups = new List<Group>();
-        selectedGroup = null;
+        //selectedGroup = null;
         markerPoint = new Vector3(-1, 0, 0);
     }
 
@@ -60,18 +62,6 @@ public class PlayerController : MonoBehaviour
         Physics.Raycast(ray, out terrainHit, float.MaxValue, terrainMask);
         Physics.Raycast(ray, out hit);
 
-        //???????????????
-        Plane p = new Plane(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 500.0f));
-        float aa;
-        p.Raycast(ray, out aa);
-
-        Vector3 intersectPoint = ray.GetPoint(aa);
-
-        //Physics.Raycast(ray, out moveHit, 800.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
-        //Physics.Raycast(ray, out hit, 800.0f, 1 << 0);
-
-        //Behaviors();
-
         if (hit.collider != null)
         {
             // Move building with cursor if a building is currently selected (keep it on the terrain)
@@ -82,31 +72,11 @@ public class PlayerController : MonoBehaviour
 
             //check for input
             InputCheck(hit, terrainHit);
-
         }
 
         //check for battles
         BattleUpdate();
     }
-
-        /*
-        if (intersectPoint.x > 0 && intersectPoint.x < 500 &&
-            intersectPoint.z > 0 && intersectPoint.z < 500 && intersectPoint.y == 0)
-        {
-            // Move building with cursor if a building is currently selected (keep it on the terrain)
-            if (buildingToBeBuilt != null)
-            {
-                buildingToBeBuilt.MoveBuilding(terrainHit.point);
-            }
-
-            //check for input
-            InputCheck(hit, terrainHit);
-
-        }
-        //check for battles
-        BattleUpdate();
-    }
-    */
 
     void Behaviors()
     {
@@ -209,8 +179,10 @@ public class PlayerController : MonoBehaviour
             myGroup.GetUnits()[i].GetSelectionObject().setActive(true);
         }
         */
+        selectedGroups.Clear();
+        selectedGroups.Add(myGroup);
 
-        selectedGroup = myGroup;
+        //selectedGroup = myGroup;
     }
 
     //deselect all units buildings etc...
@@ -218,7 +190,7 @@ public class PlayerController : MonoBehaviour
     {
         //deselect everything
 
-        if (selectedGroup != null)
+        if (selectedGroups.Count > 0)
         {
             //Deactivate the selection gameObject
             /*
@@ -228,15 +200,11 @@ public class PlayerController : MonoBehaviour
             }
             */
 
-            selectedGroup = null;
+            selectedGroups.Clear();
         }
 
-        if (buildingSelected != null)
-        {
-            //deactivate selection gameObject
-            buildingSelected = null;
-        }
-
+        //deactivate selection gameObject
+        buildingSelected = null;
         buildingToBeBuilt = null;
     }
 
@@ -267,7 +235,12 @@ public class PlayerController : MonoBehaviour
         */
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if (groups.Count > 0) { selectedGroup = groups[(groups.IndexOf(selectedGroup) + 1) % groups.Count]; }
+            if (groups.Count > 0)
+            {
+                //selectedGroups
+                //selectedGroups.Clear();
+                //selectedGroups = groups[(groups.IndexOf(selectedGroup) + 1) % groups.Count];
+            }
         }
         
         /*
@@ -275,6 +248,7 @@ public class PlayerController : MonoBehaviour
             *Place buildings
             *Select Units
             *Select Building ????
+            *Deselect all things 
         */
         if (Input.GetMouseButtonDown(0))
         {
@@ -292,33 +266,35 @@ public class PlayerController : MonoBehaviour
 
                 //Just in case
                 buildingSelected = null;
-                selectedGroup = null;
+                selectedGroups.Clear();
             }
-            //else if (hit.collider.gameObject.name == "Terrain")
-            //{
-            //   selectedGroup = null;
-            //   buildingSelected = null;
-            //   buildingToBeSelected = null;
-            //   Debug.Log("clicked terrain deselect everything");
-            //}
+            else if (hit.collider.gameObject.name == "Terrain")
+            {
+                selectedGroups.Clear();
+                buildingSelected = null;
+                buildingToBeBuilt = null;
+                Debug.Log("clicked terrain deselect everything");
+            }
             else
             {
                 //check if we are clicking this group so check any of the units being selected 
                 for (int i = 0; i < groups.Count; i++)
                 {
                     Debug.Log("started searching groups");
+
                     for (int j = 0; j < groups[i].GetUnits().Count; j++)
                     {
                         Debug.Log("searching units of group " + i);
-                        if (hit.collider != null)
-                        {
-                            if (hit.collider.gameObject == groups[i].GetUnits()[j].GetGameObject())
-                            {
-                                Debug.Log("found the selected group");
-                                selectedGroup = groups[i];
-                                buildingSelected = null;
-                                break;
-                            }
+
+                        if (hit.collider.gameObject == groups[i].GetUnits()[j].GetGameObject())
+                        {                       
+                            selectedGroups.Clear();
+                            selectedGroups.Add(groups[i]);
+
+                            buildingSelected = null;
+                            buildingToBeBuilt = null;
+                            Debug.Log("found the selected group");
+                            break;
                         }
                     }
                 }
@@ -348,10 +324,16 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("Cancelling building related selection");
                 }
             }
-            else if (selectedGroup != null && !selectedGroup.GetUnits()[0].IsInBattle)
+            else if (selectedGroups.Count > 0)
             {
-                //Move a group to a position 
-                selectedGroup.SetGroupDestination(terrainHit.point);
+                //Move a groups to a position 
+                for (int i = 0; i < selectedGroups.Count; i++)
+                {
+                    if (!selectedGroups[i].GetFirstUnit().IsInBattle)
+                    {
+                        selectedGroups[i].SetGroupDestination(terrainHit.point);
+                    }
+                }   
                 
                 Debug.Log("Group is moving to " + terrainHit.point.ToString());
             }

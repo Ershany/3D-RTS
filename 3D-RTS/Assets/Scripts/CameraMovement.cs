@@ -27,9 +27,9 @@ public class CameraMovement : MonoBehaviour
         if (Input.GetKeyDown("space"))
         {
             //check if there is a selected group
-            if (player.selectedGroup != null)
+            if (player.selectedGroups.Count > 0)
             {
-                cameraTarget = cameraTarget == null ? player.selectedGroup.GetFirstUnit().GetTransform() : null;
+                cameraTarget = cameraTarget == null ? player.selectedGroups[0].GetFirstUnit().GetTransform() : null;
             }
         }
 
