@@ -316,7 +316,7 @@ public class PlayerController : MonoBehaviour
                             {
                                 Debug.Log("found the selected group");
                                 selectedGroup = groups[i];
-                                Debug.Log("selected a group");
+                                buildingSelected = null;
                                 break;
                             }
                         }

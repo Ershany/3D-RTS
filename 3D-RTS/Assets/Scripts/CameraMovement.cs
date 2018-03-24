@@ -19,7 +19,7 @@ public class CameraMovement : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
         maxCameraFOV = cameraFOV = Camera.main.fieldOfView;
-        cameraOffset = new Vector3(0.0f, transform.position.y, -20.0f); // Used for camera targeting
+        cameraOffset = new Vector3(0.0f, transform.position.y, -35.0f); // Used for camera targeting
     }
 
     void Update()
@@ -58,11 +58,15 @@ public class CameraMovement : MonoBehaviour
 
     void ProcessMouseScroll()
     {
-        float deltaScroll = Input.GetAxis("Mouse ScrollWheel"); // Zoom out = negative      Zoom in = positive
-        cameraFOV += -(deltaScroll * cameraZoomSpeed * Time.deltaTime);
-        if (cameraFOV > maxCameraFOV) cameraFOV = maxCameraFOV;
-        else if (cameraFOV < minCameraFOV) cameraFOV = minCameraFOV;
-        Camera.main.fieldOfView = cameraFOV;
+        // If UI is selected, don't process mouse scroll because the UI should be processing the mouse scrolling
+        if (player.buildingSelected == null)
+        {
+            float deltaScroll = Input.GetAxis("Mouse ScrollWheel"); // Zoom out = negative      Zoom in = positive
+            cameraFOV += -(deltaScroll * cameraZoomSpeed * Time.deltaTime);
+            if (cameraFOV > maxCameraFOV) cameraFOV = maxCameraFOV;
+            else if (cameraFOV < minCameraFOV) cameraFOV = minCameraFOV;
+            Camera.main.fieldOfView = cameraFOV;
+        }
     }
 
     float CheckHorizontalMouse()
