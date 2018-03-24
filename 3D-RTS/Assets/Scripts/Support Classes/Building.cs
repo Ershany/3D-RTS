@@ -12,7 +12,6 @@ public class Building
     private List<Renderer> renderers;
     private int containingColliderCount;
 
-
     public string name;
 
     public Building(GameObject obj, float health)
@@ -21,6 +20,7 @@ public class Building
         renderers = new List<Renderer>();
         boxCollider = GameObject.GetComponent<BoxCollider>();
         renderers.Add(this.GameObject.GetComponent<Renderer>());
+
         foreach(Transform child in this.GameObject.transform)
         {
             if (!child.CompareTag("HeightCheck"))
@@ -28,6 +28,7 @@ public class Building
                 renderers.Add(child.gameObject.GetComponent<Renderer>());
             }
         }
+
         SetHighlightPower(0.5f);
         containingColliderCount = 0;
         maxHealth = currentHealth = health;
@@ -35,6 +36,7 @@ public class Building
         IsPlaced = false;
         name = "Building";
     }
+
 
     public void Update()
     {
@@ -45,6 +47,7 @@ public class Building
         }
     }
 
+    //damage building
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
@@ -55,6 +58,7 @@ public class Building
         }
     }
 
+    //repair building
     public void RepairDamage(float repairAmount)
     {
         currentHealth += repairAmount;
@@ -65,6 +69,7 @@ public class Building
         }
     }
 
+    //move building to a certain position (before placing on terrain)
     public void MoveBuilding(Vector3 newPos)
     {
         GameObject.transform.position = newPos;
@@ -109,16 +114,19 @@ public class Building
         return false;
     }
 
+    //Entering collision detection 
     public void OnTriggerEnter()
     {
         ++containingColliderCount;
     }
 
+    //Exiting collision detection
     public void OnTriggerExit()
     {
         --containingColliderCount;
     }
 
+    //Set the color of the highlight before placing the building down
     private void SetHighlightColor(Color highlightColor)
     {
         foreach (Renderer renderer in renderers)

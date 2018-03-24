@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TurnBasedBattleController {
-
-
+public class TurnBasedBattleController
+{
     public Group playerGroup;
     public Group enemyGroup;
     //public List<Unit> combatants;
@@ -64,7 +63,8 @@ public class TurnBasedBattleController {
 
 
 
-    public void Update() {
+    public void Update()
+    {
         float deltaTime = Time.deltaTime;
         delayTime += deltaTime;
 
@@ -109,7 +109,8 @@ public class TurnBasedBattleController {
         {
             battleOver = true;
         }
-        if (attackQueue.Count > 0) {
+        if (attackQueue.Count > 0)
+        {
 
             if (attackingUnit == null)
             {
@@ -128,7 +129,7 @@ public class TurnBasedBattleController {
         }
 
 
-        if(attackingUnit != null && !ResolvedAttack())
+        if (attackingUnit != null && !ResolvedAttack())
         {
 
             if (!attackingUnit.IsAttacking && !delaying)
@@ -160,7 +161,7 @@ public class TurnBasedBattleController {
                         delayTime = 0;
                     }
                 }
-                
+
             }
         }
 
@@ -176,8 +177,8 @@ public class TurnBasedBattleController {
             }
         }
     }
-    
-    
+
+
 
     public bool ResolvedAttack()
     {

@@ -27,15 +27,15 @@ public class BehaviorUtil
             for (int j = 0; j < group[i].GetUnits().Count; j++)
             {
                 
-                //Rigidbody rb = group[i].GetUnits()[j].GetRigidbody();
-                //rb.AddForce(separation[count]);
-                //rb.AddForce(alignment[count]);
-                //rb.AddForce(5 * cohesion[count]);
+                Rigidbody rb = group[i].GetUnits()[j].GetRigidbody();
+                rb.AddForce(separation[count]);
+                rb.AddForce(alignment[count]);
+                rb.AddForce(5 * cohesion[count]);
                 
                 group[i].GetUnits()[j].GetAgent().velocity += separation[count].normalized;
-                //group[i].GetUnits()[j].GetAgent().velocity += alignment[count];
-                //group[i].GetUnits()[j].GetAgent().velocity += cohesion[count];
-                //group[i].GetUnits()[j].GetAgent().velocity = group[i].GetUnits()[j].GetAgent().velocity.normalized * group[i].GetUnits()[j].GetAgent().speed;
+                group[i].GetUnits()[j].GetAgent().velocity += alignment[count];
+                group[i].GetUnits()[j].GetAgent().velocity += cohesion[count];
+                group[i].GetUnits()[j].GetAgent().velocity = group[i].GetUnits()[j].GetAgent().velocity.normalized * group[i].GetUnits()[j].GetAgent().speed;
 
                 count++;
             }
@@ -60,7 +60,7 @@ public class BehaviorUtil
                     if (j == k) continue;
 
                     float distance = Vector3.Distance(group[i].GetUnits()[j].GetTransform().position, group[i].GetUnits()[k].GetTransform().position);
-                    Debug.Log(distance);
+                    //Debug.Log(distance);
 
                     //these 2 units are 2 close steer them away
                     if ( distance < separation)
@@ -282,15 +282,7 @@ public class BehaviorUtil
     //Ease function that determines whether we are in ease in or ease out 
     public float Ease(float t)
     {
-        //t is between 0 and 1 (it should be that value)
-        if (t < 0.5)
-        {
-            return EaseIn(t);
-        }
-        else
-        {
-            return EaseOut(t);
-        }
+        return (Mathf.Sin(t * Mathf.PI - Mathf.PI / 2.0f) + 1.0f) / 2.0f;
     }
 
     //Ease in linear interpolation

@@ -27,6 +27,9 @@ public abstract class DynamicUnit : Unit
     protected DynamicUnit targetUnit;
     protected List<DynamicUnit> opponents;
 
+    //used for now 
+    public Vector3 destination;
+
     public DynamicUnit(GameObject obj, float health, bool playerControlled , string className) : base(obj, health)
     {
         IsPlayerControlled = playerControlled;
@@ -169,6 +172,7 @@ public abstract class DynamicUnit : Unit
         lvl = GetLevel();
         
     }
+
     public string GetName()
     {
        return name;
@@ -186,7 +190,6 @@ public abstract class DynamicUnit : Unit
 
     public int GetExperienceRequired()
     {
-
         return level * 100;
     }
 

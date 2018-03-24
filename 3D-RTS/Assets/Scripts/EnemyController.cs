@@ -12,7 +12,7 @@ public class EnemyController : MonoBehaviour
     public GameObject groupPrefab;
 
     //enemy units
-    public List<Group> enemyGroups { get; private set; }
+    public List<Group> enemyGroups;
     public Group selectedGroup { get; set; }
 
     //game controller
@@ -26,21 +26,6 @@ public class EnemyController : MonoBehaviour
 
         //Reference Game Controller
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-
-        //do this in a function !!!! in game controller 
-        EnemyArcherController archer = Instantiate(enemyArcherPrefab, Vector3.zero, Quaternion.identity, gameObject.transform).GetComponent<EnemyArcherController>();
-        EnemyInfantryController infantry = Instantiate(enemyInfantryPrefab, Vector3.zero, Quaternion.identity, gameObject.transform).GetComponent<EnemyInfantryController>();
-        EnemyMageController mage = Instantiate(enemyMagePrefab, Vector3.zero, Quaternion.identity, gameObject.transform).GetComponent<EnemyMageController>();
-
-        //make a group of enemies
-        Group enemyGroup = Instantiate(groupPrefab, Vector3.zero, Quaternion.identity, gameObject.transform).GetComponent<Group>();
-        enemyGroup.AddUnit(archer.demonUnit);
-        enemyGroup.AddUnit(infantry.demonUnit);
-        enemyGroup.AddUnit(mage.demonUnit);
-
-        //add this group to the array 
-        enemyGroups.Add(enemyGroup);
-        enemyGroups[0].SetGroupDestination(new Vector3(20, 0, 50));
     }
 
     // Update is called once per frame

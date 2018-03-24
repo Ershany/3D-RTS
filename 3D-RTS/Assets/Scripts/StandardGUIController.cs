@@ -6,22 +6,12 @@ public class StandardGUIController : MonoBehaviour
 {
 
 
-    delegate void MyDelegate(int num);
-    MyDelegate myDelegate;
-
-    //Prefabs
-    public GameObject rosterUnitPrefab;
-    public GameObject multipleSelectionPrefab;
-    public GameObject unitLetterIconPrefab;
-
     public PlayerController playerController;
     public GameObject standardGUIPanel;
 
     public Group currentGroup;
     public Building currentBuilding;
     public List<Group> selectedGroups;
-    public GameObject selectedGroupsPanel;
-    public List<GameObject> selectedGroupsPanels;
     public string currentSelectionType;
 
     public static GameObject groupInfoPanel;
@@ -40,13 +30,12 @@ public class StandardGUIController : MonoBehaviour
     public GuildHallGUIUtil guildGUI;
     public GameObject guildGUIPanel;
 
+    public GameObject rosterUnitPrefab;
 
     private int activeMember;
     private int activeMemberPanel;
     public int partyCreationWindowMemberClicked;
-    public int groupSelectedToPreview;
-
-
+    
 
 
     [ColorUsageAttribute(true, true, 0, 1, 0, 1, order = 0)]
@@ -81,18 +70,13 @@ public class StandardGUIController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        groupSelectedToPreview = 0;
         mouseData = new MouseData();
         currentSelectionType = "null";
         groupInfoPanel = GameObject.FindGameObjectWithTag("GroupInformationPanel");
-        selectedGroupsPanel = groupInfoPanel.transform.Find("SelectedGroups").gameObject;
-        selectedGroupsPanel.SetActive(false);
-        selectedGroupsPanels = new List<GameObject>();
         unitInfoPanel = groupInfoPanel.transform.Find("StatusWindow").gameObject;
         groupMembers = new List<GameObject>();
         buttonsGroupMembers = new List<UnityEngine.UI.Button>();
         guildGUIPanel = GameObject.FindGameObjectWithTag("GuildHallGUIPanel");
-
         for (int i = 0; i < 4; i++)
         {
             groupMembers.Add(groupInfoPanel.transform.Find("GroupMembers").Find("GroupMember" + (i + 1)).gameObject);
@@ -142,51 +126,40 @@ public class StandardGUIController : MonoBehaviour
 
         if (playerController.selectedGroup != null)
         {
-            if (playerController.selectedGroups != null && playerController.selectedGroups.Count > 1)
+            if (currentGroup == null)
+                currentGroup = playerController.selectedGroup;
+
+           
+
+            if (playerController.selectedGroup != currentGroup || currentSelectionType != "group" || !standardGUIPanel.activeSelf)
             {
-                unitInfoPanel.SetActive(false);
-                GroupsPanelsConstructor(playerController.selectedGroups);
+                currentGroup = playerController.selectedGroup;
+                currentSelectionType = "group";
+
+                standardGUIPanel.SetActive(true);
+                guildGUIPanel.SetActive(false);
+                //buildingInfoPanel.SetActive(false);
+
             }
-            else {
-                if (!unitInfoPanel.activeSelf)
+
+            if (currentGroup != null)
+            {
+                if (activeMemberPanel != activeMember && activeMember < currentGroup.GetUnits().Count)
                 {
-
-                }
-                if (currentGroup == null)
-                    currentGroup = playerController.selectedGroup;
-
-
-
-                if (playerController.selectedGroup != currentGroup || currentSelectionType != "group" || !standardGUIPanel.activeSelf)
-                {
-                    currentGroup = playerController.selectedGroup;
-                    currentSelectionType = "group";
-
-                    standardGUIPanel.SetActive(true);
-                    guildGUIPanel.SetActive(false);
-                    //buildingInfoPanel.SetActive(false);
-
-                }
-
-                if (currentGroup != null)
-                {
-                    if (activeMemberPanel != activeMember && activeMember < currentGroup.GetUnits().Count)
+                    for (int i = 0; i < 4; i++)
                     {
-                        for (int i = 0; i < 4; i++)
+                        if (i < currentGroup.GetUnits().Count)
                         {
-                            if (i < currentGroup.GetUnits().Count)
-                            {
-                                groupMembers[i].SetActive(true);
-                                PopulateMemberInfoPanel(groupMembers[i], currentGroup.GetUnits()[i]);
-                            }
-                            else
-                            {
-                                groupMembers[i].SetActive(false);
-                            }
+                            groupMembers[i].SetActive(true);
+                            PopulateMemberInfoPanel(groupMembers[i], currentGroup.GetUnits()[i]);
                         }
-                        PopulateStatusWindow(currentGroup.GetUnits()[activeMember], unitInfoPanel);
-                        activeMemberPanel = activeMember;
+                        else
+                        {
+                            groupMembers[i].SetActive(false);
+                        }
                     }
+                    PopulateStatusWindow(currentGroup.GetUnits()[activeMember], unitInfoPanel);
+                    activeMemberPanel = activeMember;
                 }
             }
         }
@@ -222,8 +195,6 @@ public class StandardGUIController : MonoBehaviour
                 Rect rect = GUIUtility.GetScreenRect(mouseData.mouse_1_StartPos, Input.mousePosition);
                 GUIUtility.DrawSelectionRect(rect, selectionRectFillColor);
                 GUIUtility.DrawSelectionRectBorder(rect, 2, selectionRectBorderColor);
-
-                playerController.SelectOnRect(mouseData.mouse_1_StartPos, Input.mousePosition);
             }
         }
     }
@@ -267,10 +238,6 @@ public class StandardGUIController : MonoBehaviour
     public void RosterUnitSelected(int i)
     {
         guildGUI.RosterUnitSelected(i);
-    }
-    public void GroupPreviewSelected(int i)
-    {
-        
     }
 
     public void RosterUnitSubmitted()
@@ -346,43 +313,5 @@ public class StandardGUIController : MonoBehaviour
 
     }
 
-    public void GroupsPanelsConstructor(List<Group> groups)
-    {
-        selectedGroupsPanel.SetActive(true);
 
-        if(selectedGroupsPanels.Count > 0)
-        {
-            for (int i = 0; i < selectedGroupsPanels.Count; i++)
-            {
-                Destroy(selectedGroupsPanels[i]);
-            }
-        }
-
-        for (int i = 0; i < groups.Count; i++)
-        {
-            selectedGroupsPanels.Add(GroupPanelConstructor(groups[i], i));
-            selectedGroupsPanels[i].transform.SetParent(selectedGroupsPanel.transform);
-        }
-        
-
-    }
-
-
-    public GameObject GroupPanelConstructor(Group group, int index)
-    {
-
-        GameObject groupPanel = Instantiate(multipleSelectionPrefab);
-
-        for(int i = 0; i < group.GetUnits().Count; i++)
-        {
-            GameObject unitIconPanel = Instantiate(unitLetterIconPrefab);
-            unitIconPanel.transform.Find("Text").GetComponent<UnityEngine.UI.Text>().text = group.GetUnits()[i].GetClassName().Substring(3,1);
-            unitIconPanel.transform.SetParent(groupPanel.transform,false);
-        }
-
-        myDelegate = GroupPreviewSelected;
-        groupPanel.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { GroupPreviewSelected(index); });
-
-        return groupPanel;
-    }
 }

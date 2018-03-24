@@ -7,7 +7,7 @@ using UnityEngine;
 //Add a string array for names
 //Work on guild hall
 //Play with unit creation 
-//
+//Maybe add  a marker for when we right click and we want to move units
 //
 
 public class GameController : MonoBehaviour
@@ -28,8 +28,9 @@ public class GameController : MonoBehaviour
     /* References */
     private PlayerController playerController;
     private EnemyController enemyController;
-
     public GuildHallController guildHall;
+
+    public string[] unitNames;
 
     void Awake()
     {
@@ -37,6 +38,10 @@ public class GameController : MonoBehaviour
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
         enemyController = GameObject.FindGameObjectWithTag("EnemyController").GetComponent<EnemyController>();
 
+        //SOME RANDOM NAMES JUST FOR THE FUN OF IT 
+        unitNames = new string[] {" " , "" , "" , "" , "" , "" , "" , "" , "" , "" , "" , "" , "" , ""};
+
+        /* Create some player units */
         List<DynamicUnit> myUnits;
         myUnits = new List<DynamicUnit>();
         myUnits.Add(CreatePlayerArcher(new Vector3(20, 0, 20)));
@@ -53,34 +58,28 @@ public class GameController : MonoBehaviour
         // add some player units
         AddFactionGroup(myUnits, new Vector3(80, 0, 30), true);
 
-        myUnits.Add(CreatePlayerArcher(new Vector3(120, 0, 60)));
-        myUnits.Add(CreatePlayerWarrior(new Vector3(120, 0, 60)));
-        myUnits.Add(CreatePlayerMage(new Vector3(120, 0, 60)));
 
-        // add some player units
-        AddFactionGroup(myUnits, new Vector3(120, 0, 60), true);
+        /* Create some enemy units */
+        EnemyArcherController archer = Instantiate(enemyArcherPrefab, new Vector3(5.0f, 0.0f, 40.0f), Quaternion.identity, gameObject.transform).GetComponent<EnemyArcherController>();
+        EnemyInfantryController infantry = Instantiate(enemyInfantryPrefab, new Vector3(5.0f, 0.0f, 40.0f), Quaternion.identity, gameObject.transform).GetComponent<EnemyInfantryController>();
+        EnemyMageController mage = Instantiate(enemyMagePrefab, new Vector3(5.0f, 0.0f, 40.0f), Quaternion.identity, gameObject.transform).GetComponent<EnemyMageController>();
 
-        myUnits.Add(CreatePlayerArcher(new Vector3(160, 0, 40)));
-        myUnits.Add(CreatePlayerWarrior(new Vector3(160, 0, 40)));
-        myUnits.Add(CreatePlayerMage(new Vector3(160, 0, 40)));
+        List<DynamicUnit> enemyUnits = new List<DynamicUnit>();
+        enemyUnits.Add(archer.demonUnit);
+        enemyUnits.Add(infantry.demonUnit);
+        enemyUnits.Add(mage.demonUnit);
 
-        // add some player units
-        AddFactionGroup(myUnits, new Vector3(160, 0, 40), true);
-
-        myUnits.Add(CreatePlayerArcher(new Vector3(200, 0, 20)));
-        myUnits.Add(CreatePlayerWarrior(new Vector3(200, 0, 20)));
-        myUnits.Add(CreatePlayerMage(new Vector3(200, 0, 20)));
-
-        // add some player units
-        AddFactionGroup(myUnits, new Vector3(200, 0, 20), true);
-
-
+        //Debug.Log("enemy groups: " + enemyController.enemyGroups.Count); 
+        AddFactionGroup(enemyUnits, new Vector3(5.0f, 0.0f, 40.0f), false);
 
     }
 
     void Update()
     {
+        //check for battles between units
         BattleCheck();
+
+        //check for units returning back to guild hall
         GuildHallReturnCheck();
     }
 
@@ -104,6 +103,15 @@ public class GameController : MonoBehaviour
 
         for (int i = 0; i < factionUnits.Count; i++)
         {
+            if (i != 0)
+            {
+                factionUnits[i].GetTransform().position = factionUnits[i - 1].GetTransform().position + new Vector3(4.0f, 0, 0);
+            }
+            else
+            {
+                factionUnits[0].GetTransform().position += new Vector3(4.0f, 0, -0.0f);
+            }
+
             grp.AddUnit(factionUnits[i]);
         }
 
@@ -151,7 +159,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-
+    //checking for units that want to return to the guild hall
     void GuildHallReturnCheck()
     {
         if (guildHall != null)
@@ -198,12 +206,10 @@ public class GameController : MonoBehaviour
         }
     }
 
-
+    // ????
     public bool DestinationWithinTarget(Vector3 destination, GameObject target)
     {
         return target.GetComponent<BoxCollider>().bounds.Contains(destination);
     } 
-
-   
 
 }
