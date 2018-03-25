@@ -196,17 +196,7 @@ public class GuildHallController : MonoBehaviour
         building.Update();
     }
 
-    void OnMouseDown()
-    {
-        if (playerController.buildingToBeBuilt != null) return;
 
-        //deselect everything
-        playerController.Deselect();
-
-        //select the building
-        playerController.buildingSelected = building;
-        Debug.Log("Building selected " + gameObject.name);
-    }
 
     void OnTriggerEnter(Collider other)
     {

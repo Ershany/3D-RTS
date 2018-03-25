@@ -213,12 +213,12 @@ public class PlayerController : MonoBehaviour
             }
             */
 
-            selectedGroups.Clear();
+            //selectedGroups.Clear();
         }
 
         //deactivate selection gameObject
-        buildingSelected = null;
-        buildingToBeBuilt = null;
+        //buildingSelected = null;
+        //buildingToBeBuilt = null;
     }
 
     //Check player Input
@@ -283,7 +283,6 @@ public class PlayerController : MonoBehaviour
             }
             else if (hit.collider.gameObject.name == "Terrain")
             {
-                selectedGroups.Clear();
                 buildingSelected = null;
                 buildingToBeBuilt = null;
                 Debug.Log("clicked terrain deselect everything");
@@ -294,6 +293,8 @@ public class PlayerController : MonoBehaviour
                 {
                     buildingSelected = hit.collider.gameObject.GetComponent<GuildHallController>().building;
                     selectedGroups = null;
+                    playerSelectedSingleGroup = false;
+                    playerSelectedGroups = false;
                     playerSelectedGuildHall = true;
                 }
                 else
