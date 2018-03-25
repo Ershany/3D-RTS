@@ -4,14 +4,22 @@ using UnityEngine;
 
 public class StandardGUIController : MonoBehaviour
 {
+     delegate void MyDelegate(int num);
+    MyDelegate myDelegate;
 
+    //Prefabs
+    public GameObject rosterUnitPrefab;
+    public GameObject multipleSelectionPrefab;
+    public GameObject unitLetterIconPrefab;
 
-    public PlayerController playerController;
+    public PlayerController _playerController;
     public GameObject standardGUIPanel;
 
     public Group currentGroup;
     public Building currentBuilding;
     public List<Group> selectedGroups;
+    public GameObject selectedGroupsPanel;
+    public List<GameObject> selectedGroupsPanels;
     public string currentSelectionType;
 
     public static GameObject groupInfoPanel;
@@ -30,12 +38,11 @@ public class StandardGUIController : MonoBehaviour
     public GuildHallGUIUtil guildGUI;
     public GameObject guildGUIPanel;
 
-    public GameObject rosterUnitPrefab;
-
     private int activeMember;
     private int activeMemberPanel;
     public int partyCreationWindowMemberClicked;
-    
+    public int groupSelectedToPreview;
+
 
 
     [ColorUsageAttribute(true, true, 0, 1, 0, 1, order = 0)]
@@ -45,12 +52,15 @@ public class StandardGUIController : MonoBehaviour
     [ColorUsageAttribute(true, true, 0, 1, 0, 1, order = 0)]
     public Color selectionRectBorderColor;
 
+    Rect rect;
 
+    private float updateTimer;
 
     private class MouseData
     {
         public bool mouse_1;
         public Vector2 mouse_1_StartPos;
+        public Vector2 mouse_1_EndPos;
 
         public MouseData()
         {
@@ -64,15 +74,20 @@ public class StandardGUIController : MonoBehaviour
 
     void Awake()
     {
-        playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
+        _playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
 
     }
     // Use this for initialization
     void Start()
     {
+        updateTimer = 0.0f;
         mouseData = new MouseData();
         currentSelectionType = "null";
+        groupSelectedToPreview = 0;
         groupInfoPanel = GameObject.FindGameObjectWithTag("GroupInformationPanel");
+        selectedGroupsPanel = groupInfoPanel.transform.Find("SelectedGroups").gameObject;
+        selectedGroupsPanel.SetActive(false);
+        selectedGroupsPanels = new List<GameObject>();
         unitInfoPanel = groupInfoPanel.transform.Find("StatusWindow").gameObject;
         groupMembers = new List<GameObject>();
         buttonsGroupMembers = new List<UnityEngine.UI.Button>();
@@ -110,7 +125,9 @@ public class StandardGUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        updateTimer += Time.deltaTime;
         UpdateGUIInputs();
+
 
         if (guildGUI.guildCon == null)
         {
@@ -125,63 +142,99 @@ public class StandardGUIController : MonoBehaviour
         }
 
         //fix that shit julian!!!!!!
-        if (playerController.selectedGroups.Count > 0)
+        if (_playerController.selectedGroups != null && _playerController.selectedGroups.Count > 0)
         {
-            if (currentGroup == null)
-                currentGroup = playerController.selectedGroups[0];
-
-           
-
-            if (playerController.selectedGroups[0] != currentGroup || currentSelectionType != "group" || !standardGUIPanel.activeSelf)
+            if (_playerController.selectedGroups.Count == 1)
             {
-                currentGroup = playerController.selectedGroups[0];
-                currentSelectionType = "group";
+                if (currentGroup == null)
+                    currentGroup = _playerController.selectedGroups[0];
 
-                standardGUIPanel.SetActive(true);
-                guildGUIPanel.SetActive(false);
-                //buildingInfoPanel.SetActive(false);
 
-            }
 
-            if (currentGroup != null)
-            {
-                if (activeMemberPanel != activeMember && activeMember < currentGroup.GetUnits().Count)
+                if (_playerController.playerSelectedSingleGroup)
                 {
-                    for (int i = 0; i < 4; i++)
+                    currentGroup = _playerController.selectedGroups[0];
+                    currentSelectionType = "group";
+
+                    unitInfoPanel.SetActive(true);
+                    GroupsPanelsDestructor();
+                    standardGUIPanel.SetActive(true);
+                    guildGUIPanel.SetActive(false);
+                    _playerController.playerSelectedSingleGroup = false;
+                    activeMemberPanel = -1;
+                    activeMember = 0;
+                    //buildingInfoPanel.SetActive(false);
+
+                }
+
+                if (activeMemberPanel != activeMember || updateTimer > 0.5f)
+                {
+                    updateTimer = 0.0f;
+                    if (activeMemberPanel != activeMember && activeMember < currentGroup.GetUnits().Count)
                     {
-                        if (i < currentGroup.GetUnits().Count)
+                        for (int i = 0; i < 4; i++)
                         {
-                            groupMembers[i].SetActive(true);
-                            PopulateMemberInfoPanel(groupMembers[i], currentGroup.GetUnits()[i]);
+                            if (i < currentGroup.GetUnits().Count)
+                            {
+                                groupMembers[i].SetActive(true);
+                                PopulateMemberInfoPanel(groupMembers[i], currentGroup.GetUnits()[i]);
+                            }
+                            else
+                            {
+                                groupMembers[i].SetActive(false);
+                            }
                         }
-                        else
-                        {
-                            groupMembers[i].SetActive(false);
-                        }
+                        PopulateStatusWindow(currentGroup.GetUnits()[activeMember], unitInfoPanel);
+                        activeMemberPanel = activeMember;
                     }
-                    PopulateStatusWindow(currentGroup.GetUnits()[activeMember], unitInfoPanel);
-                    activeMemberPanel = activeMember;
                 }
             }
+            else if (_playerController.selectedGroups.Count > 1)
+            {
+                if (_playerController.playerSelectedGroups)
+                {
+                    _playerController.playerSelectedGroups = false;
+                    currentSelectionType = "groups";
+                    unitInfoPanel.SetActive(false);
+                    GroupsPanelsConstructor(_playerController.selectedGroups);
+
+                }
+                currentGroup = _playerController.selectedGroups[groupSelectedToPreview];
+                for (int i = 0; i < 4; i++)
+                {
+                    if (i < currentGroup.GetUnits().Count)
+                    {
+                        groupMembers[i].SetActive(true);
+                        PopulateMemberInfoPanel(groupMembers[i], currentGroup.GetUnits()[i]);
+                    }
+                    else
+                    {
+                        groupMembers[i].SetActive(false);
+                    }
+                }
+            }
+
         }
 
-        else if (playerController.buildingSelected != null)
+        else if (_playerController.buildingSelected != null)
         {
-            if(playerController.buildingSelected.name == "GuildHall")
+            if (_playerController.buildingSelected.name == "GuildHall")
             {
 
-                if (currentSelectionType != "GuildHall" || !guildGUIPanel.activeSelf)
+                if (currentSelectionType != "GuildHall" || !guildGUIPanel.activeSelf || _playerController.playerSelectedGuildHall)
                 {
                     currentSelectionType = "GuildHall";
                     guildGUIPanel.SetActive(true);
                     standardGUIPanel.SetActive(false);
                     guildGUI.recruitPanel.SetActive(false);
+                    if (selectedGroupsPanel.activeSelf)
+                    {
+                        GroupsPanelsDestructor();
+                    }
+                    _playerController.playerSelectedGuildHall = false;
                 }
-
-
                 guildGUI.UpdatePartyCreationPanel();
                 guildGUI.UpdateRosterUnitsPanel();
-
             }
         }
     }
@@ -192,8 +245,9 @@ public class StandardGUIController : MonoBehaviour
         {
             if (Vector2.Distance(mouseData.mouse_1_StartPos,Input.mousePosition) > 10)
             {
+                mouseData.mouse_1_EndPos = Input.mousePosition;
                 // Create a rect from both mouse positions
-                Rect rect = GUIUtility.GetScreenRect(mouseData.mouse_1_StartPos, Input.mousePosition);
+                rect = GUIUtility.GetScreenRect(mouseData.mouse_1_StartPos, mouseData.mouse_1_EndPos);
                 GUIUtility.DrawSelectionRect(rect, selectionRectFillColor);
                 GUIUtility.DrawSelectionRectBorder(rect, 2, selectionRectBorderColor);
             }
@@ -208,7 +262,13 @@ public class StandardGUIController : MonoBehaviour
             mouseData.mouse_1_StartPos = Input.mousePosition;
         }
         if (Input.GetMouseButtonUp(0))
+        {
             mouseData.mouse_1 = false;
+            if (Vector2.Distance(mouseData.mouse_1_StartPos, mouseData.mouse_1_EndPos) > 10)
+            {
+                _playerController.SelectOnRect(mouseData.mouse_1_StartPos, mouseData.mouse_1_EndPos);
+            }
+        }
     }
 
     public void SetActiveMember(int i)
@@ -245,10 +305,27 @@ public class StandardGUIController : MonoBehaviour
     {
         guildGUI.RosterUnitSubmitted();
     }
+
     public void DeployNewGroup()
     {
         Debug.Log("DeployNewGroup function called");
         guildGUI.DeployNewGroup();
+    }
+
+    public void GroupPreviewSelected(int i)
+    {
+        Debug.Log(i);
+        if (i == groupSelectedToPreview)
+        {
+            Group temp = _playerController.selectedGroups[groupSelectedToPreview];
+            _playerController.selectedGroups = new List<Group>();
+            _playerController.selectedGroups.Add(temp);
+            _playerController.playerSelectedSingleGroup = true;
+        }
+        else
+        {
+            groupSelectedToPreview = i;
+        }
     }
     
     public void PopulateMemberInfoPanel(GameObject panel,  DynamicUnit member)
@@ -314,5 +391,59 @@ public class StandardGUIController : MonoBehaviour
 
     }
 
+    public void GroupsPanelsConstructor(List<Group> groups)
+    {
+        selectedGroupsPanel.SetActive(true);
 
+        if (selectedGroupsPanels.Count > 0)
+        {
+            for (int i = 0; i < selectedGroupsPanels.Count; i++)
+            {
+                Destroy(selectedGroupsPanels[i]);
+            }
+            selectedGroupsPanels = new List<GameObject>();
+        }
+
+        for (int i = 0; i < groups.Count; i++)
+        {
+            selectedGroupsPanels.Add(GroupPanelConstructor(groups[i], i));
+            selectedGroupsPanels[i].transform.SetParent(selectedGroupsPanel.transform, false);
+        }
+
+
+    }
+
+
+    public GameObject GroupPanelConstructor(Group group, int index)
+    {
+
+        GameObject groupPanel = Instantiate(multipleSelectionPrefab);
+
+        for (int i = 0; i < group.GetUnits().Count; i++)
+        {
+            GameObject unitIconPanel = Instantiate(unitLetterIconPrefab);
+            unitIconPanel.transform.Find("Text").GetComponent<UnityEngine.UI.Text>().text = group.GetUnits()[i].GetClassName().Substring(3, 1);
+            unitIconPanel.transform.SetParent(groupPanel.transform, false);
+        }
+
+        myDelegate = GroupPreviewSelected;
+        groupPanel.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { GroupPreviewSelected(index); });
+
+        return groupPanel;
+    }
+
+    public void GroupsPanelsDestructor()
+    {
+        selectedGroupsPanel.SetActive(true);
+
+        if (selectedGroupsPanels.Count > 0)
+        {
+            for (int i = 0; i < selectedGroupsPanels.Count; i++)
+            {
+                Destroy(selectedGroupsPanels[i]);
+            }
+        }
+
+        selectedGroupsPanel.SetActive(false);
+    }
 }
