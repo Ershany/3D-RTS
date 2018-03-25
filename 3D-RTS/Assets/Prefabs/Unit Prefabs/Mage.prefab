@@ -340,7 +340,7 @@ GameObject:
   - component: {fileID: 23839192029940138}
   m_Layer: 0
   m_Name: HighlightQuad
-  m_TagString: Untagged
+  m_TagString: HighlightQuad
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

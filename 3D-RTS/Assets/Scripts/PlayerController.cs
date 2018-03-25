@@ -93,53 +93,7 @@ public class PlayerController : MonoBehaviour
 
     void Behaviors()
     {
-        //lerping with ease in ease out
-        /*
-        if (selectedGroup != null)
-        {
-            //fix t parameter for lerp function
-            //t += (float) 0.1 * Time.deltaTime;
-
-            for (int i = 0; i < selectedGroup.GetUnits().Count; i++)
-            {
-               
-                //
-                //Debug.Log("Destination: " + selectedGroup.GetUnits()[i].destination);
-                //Debug.Log("Lerp result: " + BehaviorUtil.Lerp(selectedGroup.GetUnits()[i].GetTransform().position, selectedGroup.GetUnits()[i].destination, t));
-
-                //selectedGroup.GetUnits()[i].GetAgent().velocity = BehaviorUtil.Lerp(selectedGroup.GetUnits()[i].GetTransform().position , selectedGroup.GetUnits()[i].destination , t) - selectedGroup.GetUnits()[i].GetTransform().position;                
-            }
-
-            if (t >= 1) t = 0;
-        }
-        */
-
-        //seeking behavior Needs to be implemented here 
-        /*
-        if (selectedGroup != null)
-        {
-            //fix t parameter for lerp function
-            //t += (float) 0.1 * Time.deltaTime;
-
-            for (int i = 0; i < selectedGroup.GetUnits().Count; i++)
-            {
-
-                //
-                //Debug.Log("Destination: " + selectedGroup.GetUnits()[i].destination);
-                //Debug.Log("Lerp result: " + BehaviorUtil.Lerp(selectedGroup.GetUnits()[i].GetTransform().position, selectedGroup.GetUnits()[i].destination, t));
-
-                //selectedGroup.GetUnits()[i].GetAgent().velocity = BehaviorUtil.Lerp(selectedGroup.GetUnits()[i].GetTransform().position , selectedGroup.GetUnits()[i].destination , t) - selectedGroup.GetUnits()[i].GetTransform().position;                
-            }
-
-            if (t >= 1) t = 0;
-        }
-        */
-
-        //Wander behavior very wonky .....
-        //behavior.Wander(groups);
-
-        //flocking behavior
-        //behavior.Flock(groups);
+        
     }
 
     //Check for battles
@@ -217,7 +171,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //deactivate selection gameObject
-        //buildingSelected = null;
+        //DeselectBuilding();
         //buildingToBeBuilt = null;
     }
 
@@ -272,27 +226,25 @@ public class PlayerController : MonoBehaviour
                 if (buildingToBeBuilt.PlaceBuildingOnTerrain())
                 {
                     buildingToBeBuilt.GameObject.GetComponent<GuildHallController>().GuildHallPlaced();
+                    SelectBuilding(buildingToBeBuilt);
                     guildHallBuilt = true;
                     buildingToBeBuilt = null;
                     Debug.Log("Building Placed");
                 }
 
-                //Just in case
-                buildingSelected = null;
-                selectedGroups.Clear();
+                DeselectGroups();
             }
             else if (hit.collider.gameObject.name == "Terrain")
             {
-                buildingSelected = null;
                 buildingToBeBuilt = null;
-                Debug.Log("clicked terrain deselect everything");
+                Debug.Log("clicked terrain deselect buildingToBeBuilt");
             }
             else if (hit.collider.gameObject != null)
             {
                 if (hit.collider.gameObject.GetComponent<GuildHallController>() != null)
                 {
-                    buildingSelected = hit.collider.gameObject.GetComponent<GuildHallController>().building;
-                    selectedGroups = null;
+                    SelectBuilding(hit.collider.gameObject.GetComponent<GuildHallController>().building);
+                    DeselectGroups();
                     playerSelectedSingleGroup = false;
                     playerSelectedGroups = false;
                     playerSelectedGuildHall = true;
@@ -309,12 +261,12 @@ public class PlayerController : MonoBehaviour
 
                             if (hit.collider.gameObject == groups[i].GetUnits()[j].GetGameObject())
                             {
-                                Group temp = groups[i];
-                                selectedGroups = new List<Group>();
-                                selectedGroups.Add(temp);
+                                DeselectGroups();
+                                selectedGroups.Add(groups[i]);
+                                SelectGroups();
                                 playerSelectedSingleGroup = true;
 
-                                buildingSelected = null;
+                                DeselectBuilding();
                                 buildingToBeBuilt = null;
                                 Debug.Log("found the selected group");
                                 break;
@@ -344,7 +296,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-                    buildingSelected = null;
+                    DeselectBuilding();
                     Debug.Log("Cancelling building related selection");
                 }
             }
@@ -407,7 +359,11 @@ public class PlayerController : MonoBehaviour
 
             if (newSelectedGroups.Count > 0)
             {
+                DeselectGroups();
                 selectedGroups = newSelectedGroups;
+                SelectGroups();
+
+                DeselectBuilding();
                 if (selectedGroups.Count == 1)
                 {
                     Debug.Log("HereSingle");
@@ -420,6 +376,65 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
+        }
+    }
+
+    public void SelectBuilding(Building building)
+    {
+        buildingSelected = building;
+        HighlightBuilding(building, true);
+    }
+
+    void SelectGroups()
+    {
+        foreach (Group group in selectedGroups)
+        {
+            HighlightGroup(group, true);
+        }
+    }
+
+    void DeselectGroups()
+    {
+        foreach (Group group in selectedGroups)
+        {
+            HighlightGroup(group, false);
+        }
+        selectedGroups.Clear();
+    }
+
+    void DeselectBuilding()
+    {
+        if (buildingSelected != null)
+        {
+            HighlightBuilding(buildingSelected, false);
+            buildingSelected = null;
+        }
+    }
+
+    void HighlightGroup(Group group, bool shouldHighlight)
+    {
+        // Loop through the group and activate/deactivate the highlight quad for each unit
+        for (int i = 0; i < group.GetUnits().Count; ++i)
+        {
+            GameObject gameObj = group.GetUnits()[i].GetGameObject();
+            foreach (Transform child in gameObj.transform)
+            {
+                if (child.CompareTag("HighlightQuad"))
+                {
+                    child.gameObject.SetActive(shouldHighlight);
+                }
+            }
+        }
+    }
+
+    void HighlightBuilding(Building building, bool shouldHighlight)
+    {
+        foreach (Transform child in building.GameObject.transform)
+        {
+            if (child.CompareTag("HighlightQuad"))
+            {
+                child.gameObject.SetActive(shouldHighlight);
+            }
         }
     }
 
