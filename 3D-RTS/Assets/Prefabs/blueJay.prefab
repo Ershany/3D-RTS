@@ -1887,7 +1887,7 @@ Animator:
   m_GameObject: {fileID: 1531154860327494}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 9e8e96d31d222394087dd09880b9a261, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: af0b90995f55045419a5236a623d1a87, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -1907,6 +1907,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 15
+  flock: []
+  seekPosition: {x: 0, y: 0, z: 0}
 --- !u!137 &137935479881109444
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

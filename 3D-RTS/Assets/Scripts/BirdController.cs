@@ -18,16 +18,8 @@ public class BirdController : MonoBehaviour {
         // Wander birds
         for (int i = 0; i < 10; ++i)
         {
-            Bird obj = Instantiate(birdPrefab, new Vector3(i * 3, birdHeight, i * 3), Quaternion.identity).GetComponent<Bird>();
+            Bird obj = Instantiate(birdPrefab, new Vector3(i * 3, birdHeight, i * 3), Quaternion.identity, this.gameObject.transform).GetComponent<Bird>();
             obj.BeginWander(Bird.RandomWanderPos());
-        }
-
-        // Flocking Birds
-        for (int i = 0; i < 10; ++i)
-        {
-            Bird obj = Instantiate(birdPrefab, new Vector3(i * 3, birdHeight, 0.0f), Quaternion.identity).GetComponent<Bird>();
-            birds.Add(obj);
-            obj.flock = birds;
         }
     }
 	
