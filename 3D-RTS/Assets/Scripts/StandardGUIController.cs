@@ -11,6 +11,8 @@ public class StandardGUIController : MonoBehaviour
     public GameObject rosterUnitPrefab;
     public GameObject multipleSelectionPrefab;
     public GameObject unitLetterIconPrefab;
+    public GameObject guildhallGUIColliderPrefab;
+    public GameObject standardGUIColliderPrefab;
 
     public PlayerController _playerController;
     public GameObject standardGUIPanel;
@@ -43,7 +45,8 @@ public class StandardGUIController : MonoBehaviour
     public int partyCreationWindowMemberClicked;
     public int groupSelectedToPreview;
 
-
+    public GameObject guildhallGUICollider;
+    public GameObject standardGUICollider;
 
     [ColorUsageAttribute(true, true, 0, 1, 0, 1, order = 0)]
     public Color selectionRectFillColor;
@@ -118,6 +121,14 @@ public class StandardGUIController : MonoBehaviour
 
         currentActivePanel = standardGUIPanel;
 
+
+        GameObject mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        guildhallGUICollider = Instantiate(guildhallGUIColliderPrefab);
+        guildhallGUICollider.transform.SetParent(mainCamera.transform, false);
+        guildhallGUICollider.SetActive(false);
+        standardGUICollider = Instantiate(standardGUIColliderPrefab);
+        standardGUICollider.transform.SetParent(mainCamera.transform, false);
+
         //buildingInfoPanel = GameObject.FindGameObjectWithTag("BuildingInformationPanel");
 
     }
@@ -127,6 +138,7 @@ public class StandardGUIController : MonoBehaviour
     {
         updateTimer += Time.deltaTime;
         UpdateGUIInputs();
+        
 
 
         if (guildGUI.guildCon == null)
@@ -237,6 +249,8 @@ public class StandardGUIController : MonoBehaviour
                 guildGUI.UpdateRosterUnitsPanel();
             }
         }
+
+        UpdateColliders();
     }
 
     void OnGUI()
@@ -271,6 +285,11 @@ public class StandardGUIController : MonoBehaviour
         }
     }
 
+    void UpdateColliders()
+    {
+        guildhallGUICollider.SetActive(guildGUIPanel.activeSelf);
+        standardGUICollider.SetActive(standardGUIPanel.activeSelf);
+    }
     public void SetActiveMember(int i)
     {
         Debug.Log(i);
