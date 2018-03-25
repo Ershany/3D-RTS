@@ -1195,6 +1195,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224759924145696204}
+  - component: {fileID: 223133451783840986}
+  - component: {fileID: 114452111953427906}
+  - component: {fileID: 114194670238610940}
   m_Layer: 5
   m_Name: GuildHallGUI
   m_TagString: GuildHallGUIPanel
@@ -6790,7 +6793,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114464667751736498}
   m_HandleRect: {fileID: 224725282651820802}
   m_Direction: 2
-  m_Value: 0.00000021711428
+  m_Value: 0
   m_Size: 0.121500105
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -8045,6 +8048,27 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114194670238610940
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1205308525278044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 0
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
 --- !u!114 &114196019543428342
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10599,8 +10623,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114301098467810380}
   m_HandleRect: {fileID: 224277538247365870}
   m_Direction: 2
-  m_Value: 0.6521073
-  m_Size: 0.15041587
+  m_Value: 0.59051436
+  m_Size: 0.15041585
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -11086,6 +11110,22 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 0.4
   m_Text: HP
+--- !u!114 &114452111953427906
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1205308525278044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1301386320, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &114452749155048186
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -12051,7 +12091,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 224171518231044722}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.21011129
+  m_Size: 0.21011126
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -15997,7 +16037,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 224525339166781462}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.15036859
+  m_Size: 0.15036856
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -19475,6 +19515,26 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1382756077674992}
+--- !u!223 &223133451783840986
+Canvas:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1205308525278044}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 1
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 1
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!223 &223639898934468644
 Canvas:
   m_ObjectHideFlags: 1
@@ -19483,7 +19543,7 @@ Canvas:
   m_GameObject: {fileID: 1591514128423082}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 20
   m_PixelPerfect: 1
@@ -20842,7 +20902,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 88.66925}
+  m_AnchoredPosition: {x: 0, y: 104.36778}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224220428490164908
@@ -21535,7 +21595,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.044463784}
   m_AnchorMax: {x: 1, y: 0.13335659}
-  m_AnchoredPosition: {x: 34.93643, y: -11.816177}
+  m_AnchoredPosition: {x: 34.93643, y: -11.816193}
   m_SizeDelta: {x: -72.06528, y: -8.004711}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224331071779005112
@@ -22230,7 +22290,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 268.4833}
+  m_AnchoredPosition: {x: 0, y: 268.48328}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224464430841538366
@@ -23523,7 +23583,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 263.54993}
+  m_AnchoredPosition: {x: 0, y: 263.55}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224661540725297664
@@ -25372,7 +25432,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 254.88945}
+  m_AnchoredPosition: {x: 0, y: 254.8894}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224933640748666508
