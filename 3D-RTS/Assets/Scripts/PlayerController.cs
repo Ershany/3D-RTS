@@ -74,9 +74,13 @@ public class PlayerController : MonoBehaviour
         //raycasts here
         Physics.Raycast(ray, out terrainHit, float.MaxValue, terrainMask);
         Physics.Raycast(ray, out hit);
+        Plane p = new Plane(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 500.0f));
+        float aa;
+        p.Raycast(ray, out aa);
+        Vector3 intersectPoint = ray.GetPoint(aa);
 
-        //if we didn't hit anything then there won't be a collider for it so we don't input check or do anything that uses the mouse
-        if (hit.collider != null)
+        if (intersectPoint.x > 0 && intersectPoint.x < 500 &&
+            intersectPoint.z > 0 && intersectPoint.z < 500)
         {
             // Move building with cursor if a building is currently selected (keep it on the terrain)
             if (buildingToBeBuilt != null)
