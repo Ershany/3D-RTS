@@ -8,7 +8,6 @@ public class PlayerController : MonoBehaviour
     public GameObject arenaPrefab;
 
     //selected group of units
-    //public Group selectedGroup { get; private set; }
     public List<Group> selectedGroups;
 
     //players groups 
@@ -20,6 +19,8 @@ public class PlayerController : MonoBehaviour
 
     //number of battles occuring
     public List<TurnBasedBattleController> battles { get; private set; }
+
+    //player buildings
     public List<Building> playerBuildings;
     
     //box selection
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour
     //check whether a guild hall is built
     public bool guildHallBuilt;    //I think we are only allowed to have one guild hall 
 
+    //booleans for player selection state 
     public bool playerSelectedGroups;
     public bool playerSelectedSingleGroup;
     public bool playerSelectedGuildHall;
@@ -38,6 +40,11 @@ public class PlayerController : MonoBehaviour
     //???
     public Vector3 markerPoint;
 
+    //marker for unit destination
+    public GameObject markerPrefab;
+    public MarkerController destinationMarker;
+
+    //used for terrain movements and selections
     int terrainMask;
 
     void Awake()
@@ -50,14 +57,13 @@ public class PlayerController : MonoBehaviour
         guildHallBuilt = false;
         battles = new List<TurnBasedBattleController>();
         groups = new List<Group>();
-        //selectedGroup = null;
         markerPoint = new Vector3(-1, 0, 0);
+        destinationMarker = Instantiate(markerPrefab , Vector3.zero , Quaternion.identity).GetComponent<MarkerController>();
     }
 
     void Update()
     {
-        // do input checks here
-        // Shoot a raycast at the mouse position
+        // Shoot raycasts at the mouse position
         RaycastHit hit;
         RaycastHit terrainHit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -69,13 +75,8 @@ public class PlayerController : MonoBehaviour
         Physics.Raycast(ray, out terrainHit, float.MaxValue, terrainMask);
         Physics.Raycast(ray, out hit);
 
-        Plane p = new Plane(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 500.0f));
-        float aa;
-        p.Raycast(ray, out aa);
-        Vector3 intersectPoint = ray.GetPoint(aa);
-
-        if (intersectPoint.x > 0 && intersectPoint.x < 500 &&
-            intersectPoint.z > 0 && intersectPoint.z < 500)
+        //if we didn't hit anything then there won't be a collider for it so we don't input check or do anything that uses the mouse
+        if (hit.collider != null)
         {
             // Move building with cursor if a building is currently selected (keep it on the terrain)
             if (buildingToBeBuilt != null)
@@ -136,45 +137,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //selecting deselecting a group
-    void SelectGroup(Group myGroup)
-    {
-        //activate the selection gameObject
-        /*
-        for (int i = 0; i < myGroup.GetUnits().Count; i++)
-        {
-            myGroup.GetUnits()[i].GetSelectionObject().setActive(true);
-        }
-        */
-        selectedGroups.Clear();
-        selectedGroups.Add(myGroup);
-
-        //selectedGroup = myGroup;
-    }
-
-    //deselect all units buildings etc...
-    public void Deselect()
-    {
-        //deselect everything
-
-        if (selectedGroups.Count > 0)
-        {
-            //Deactivate the selection gameObject
-            /*
-            for (int i = 0; i < selectedGroup.GetUnits().Count; i++)
-            {
-                selectedGroup.GetUnits()[i].GetSelectionObject().setActive(false);
-            }
-            */
-
-            //selectedGroups.Clear();
-        }
-
-        //deactivate selection gameObject
-        //DeselectBuilding();
-        //buildingToBeBuilt = null;
-    }
-
     //Check player Input
     void InputCheck(RaycastHit hit, RaycastHit terrainHit)
     {
@@ -198,7 +160,7 @@ public class PlayerController : MonoBehaviour
         }
 
         /*
-            *Hotkey for selecting units (TabKey)
+            *HOTKEY FOR SELECTING UNITS (TabKey)
         */
         if (Input.GetKeyDown(KeyCode.Tab))
         {
@@ -211,11 +173,11 @@ public class PlayerController : MonoBehaviour
         }
         
         /*
-            Left mouse click:
+            LEFT MOUSE CLICK:
             *Place buildings
             *Select Units
             *Select Building ????
-            *Deselect all things 
+            *Deselect all things when we click on terrain
         */
         if (Input.GetMouseButtonDown(0))
         {
@@ -236,7 +198,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (hit.collider.gameObject.name == "Terrain")
             {
-                buildingToBeBuilt = null;
+                Deselect();
                 Debug.Log("clicked terrain deselect buildingToBeBuilt");
             }
             else if (hit.collider.gameObject != null)
@@ -278,7 +240,7 @@ public class PlayerController : MonoBehaviour
         }
 
         /*
-            Right Click:
+            RIGHT CLICK:
            *Select a destination for a selected group/s to go to 
            *Cancel a building selection
         */
@@ -296,6 +258,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
+                    // no need for this anymore
                     DeselectBuilding();
                     Debug.Log("Cancelling building related selection");
                 }
@@ -309,8 +272,13 @@ public class PlayerController : MonoBehaviour
                     {
                         selectedGroups[i].SetGroupDestination(terrainHit.point);
                     }
-                }   
-                
+                }
+
+                Vector3 destination = terrainHit.point + new Vector3(0, 1.0f, 0);
+
+                //do destination marker code here (might need some animation etc...)
+                destinationMarker.ActivateMarker(destination);
+
                 Debug.Log("Group is moving to " + terrainHit.point.ToString());
             }
         }
@@ -323,7 +291,6 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit2;
         Ray ray1 = Camera.main.ScreenPointToRay(v1);
         Ray ray2 = Camera.main.ScreenPointToRay(v2);
-
 
         Physics.Raycast(ray1, out hit1, 200.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
         Physics.Raycast(ray2, out hit2, 200.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
@@ -352,8 +319,7 @@ public class PlayerController : MonoBehaviour
                         Debug.Log("Here3");
                         newSelectedGroups.Add(groups[i]);
                         j = _units.Count;
-                    }
-                    
+                    }             
                 }
             }
 
@@ -375,16 +341,17 @@ public class PlayerController : MonoBehaviour
                     playerSelectedGroups = true;
                 }
             }
-
         }
     }
 
+    //selects a building
     public void SelectBuilding(Building building)
     {
         buildingSelected = building;
         HighlightBuilding(building, true);
     }
 
+    //selects a group
     void SelectGroups()
     {
         foreach (Group group in selectedGroups)
@@ -393,6 +360,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //deslects all groups
     void DeselectGroups()
     {
         foreach (Group group in selectedGroups)
@@ -402,6 +370,7 @@ public class PlayerController : MonoBehaviour
         selectedGroups.Clear();
     }
 
+    //deslect buildings
     void DeselectBuilding()
     {
         if (buildingSelected != null)
@@ -411,6 +380,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //hightlight code for groups
     void HighlightGroup(Group group, bool shouldHighlight)
     {
         // Loop through the group and activate/deactivate the highlight quad for each unit
@@ -427,6 +397,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //hightlight code for buildings
     void HighlightBuilding(Building building, bool shouldHighlight)
     {
         foreach (Transform child in building.GameObject.transform)
@@ -438,4 +409,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //deselect everything
+    public void Deselect()
+    {
+        DeselectBuilding();
+        DeselectGroups();
+    }
 }

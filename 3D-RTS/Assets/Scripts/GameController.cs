@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //TO DO LIST:
-//Get Selection GameObject
 //Add a string array for names
 //Work on guild hall
 //Play with unit creation 
 //Maybe add  a marker for when we right click and we want to move units
+//Add Particle systems (slash and whatever effects)
 //
 
 public class GameController : MonoBehaviour

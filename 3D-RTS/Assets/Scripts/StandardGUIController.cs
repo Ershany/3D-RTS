@@ -153,7 +153,6 @@ public class StandardGUIController : MonoBehaviour
             }
         }
 
-        //fix that shit julian!!!!!!
         if (_playerController.selectedGroups != null && _playerController.selectedGroups.Count > 0)
         {
             if (_playerController.selectedGroups.Count == 1)
@@ -249,6 +248,17 @@ public class StandardGUIController : MonoBehaviour
                 guildGUI.UpdateRosterUnitsPanel();
             }
         }
+
+        /*
+        //added stuff here TAKE A LOOK AT IT should be commented here 
+        if (_playerController.selectedGroups.Count == 0 && _playerController.buildingSelected == null)
+        {
+            //I have deselected everything go back to usual unit info panel 
+            guildGUIPanel.SetActive(false);
+            standardGUIPanel.SetActive(true);
+            unitInfoPanel.SetActive(true);
+        }
+        */
 
         UpdateColliders();
     }
