@@ -49,13 +49,15 @@ public class PlayerController : MonoBehaviour
     public MarkerController unitHit;
     public MarkerController destinationMarker;
 
-
+    private string activeCommand;
+    private Vector3 patrolStartPoint;
 
     //used for terrain movements and selections
     int terrainMask;
 
     void Awake()
     {
+        patrolStartPoint = new Vector3(-1, -1, -1);
         playerSelectedGroups = false;
         playerSelectedSingleGroup = false;
         playerSelectedGuildHall = false;
@@ -210,45 +212,95 @@ public class PlayerController : MonoBehaviour
             }
             else if (hit.collider.gameObject.name == "Terrain")
             {
-                Deselect();
-                Debug.Log("clicked terrain deselect buildingToBeBuilt");
+                switch (activeCommand)
+                {
+                    case "Move":
+                        if (selectedGroups.Count > 0)
+                            SetSelectedUnitsDestination(terrainHit.point, null);
+                        break;
+                    case "Attack":
+
+                        break;
+                    case "Patrol":
+                        if (patrolStartPoint.x != -1)
+                        {
+                            SetSelectedUnitsPatrol(patrolStartPoint, terrainHit.point);
+                        }
+                        else
+                        {
+                            patrolStartPoint = terrainHit.point;
+                        }
+                        break;
+
+                    default:
+                        Deselect();
+                        Debug.Log("clicked terrain deselect buildingToBeBuilt");
+                        break;
+                }
+
             }
             else if (hit.collider.gameObject != null)
             {
-                if (hit.collider.gameObject.GetComponent<GuildHallController>() != null)
-                {
-                    SelectBuilding(hit.collider.gameObject.GetComponent<GuildHallController>().building);
-                    DeselectGroups();
-                    playerSelectedSingleGroup = false;
-                    playerSelectedGroups = false;
-                    playerSelectedGuildHall = true;
-                }
-                else
-                {
-                    for (int i = 0; i < groups.Count; i++)
-                    {
-                        Debug.Log("started searching groups");
 
-                        for (int j = 0; j < groups[i].GetUnits().Count; j++)
+                switch (activeCommand)
+                {
+                    case "Move":
+                        if (selectedGroups.Count > 0)
+                            SetSelectedUnitsDestination(terrainHit.point, hit.collider.gameObject.transform);
+                        break;
+                    case "Attack":
+
+                        break;
+                    case "Patrol":
+                        if (patrolStartPoint.x != -1)
                         {
-                            Debug.Log("searching units of group " + i);
+                            SetSelectedUnitsPatrol(patrolStartPoint, terrainHit.point);
+                        }
+                        else
+                        {
+                            patrolStartPoint = terrainHit.point;
+                        }
+                        break;
 
-                            if (hit.collider.gameObject == groups[i].GetUnits()[j].GetGameObject())
+                    default:
+                        if (hit.collider.gameObject.GetComponent<GuildHallController>() != null)
+                        {
+                            SelectBuilding(hit.collider.gameObject.GetComponent<GuildHallController>().building);
+                            DeselectGroups();
+                            playerSelectedSingleGroup = false;
+                            playerSelectedGroups = false;
+                            playerSelectedGuildHall = true;
+                        }
+                        else
+                        {
+                            for (int i = 0; i < groups.Count; i++)
                             {
-                                DeselectGroups();
-                                selectedGroups.Add(groups[i]);
-                                SelectGroups();
-                                playerSelectedSingleGroup = true;
+                                Debug.Log("started searching groups");
 
-                                DeselectBuilding();
-                                buildingToBeBuilt = null;
-                                Debug.Log("found the selected group");
-                                break;
+                                for (int j = 0; j < groups[i].GetUnits().Count; j++)
+                                {
+                                    Debug.Log("searching units of group " + i);
+
+                                    if (hit.collider.gameObject == groups[i].GetUnits()[j].GetGameObject())
+                                    {
+                                        DeselectGroups();
+                                        selectedGroups.Add(groups[i]);
+                                        SelectGroups();
+                                        playerSelectedSingleGroup = true;
+                                        DeselectBuilding();
+                                        buildingToBeBuilt = null;
+                                        Debug.Log("found the selected group");
+                                        break;
+                                    }
+                                }
                             }
                         }
-                    }
+                        break;
                 }
+
             }
+
+
         }
 
         /*
@@ -278,15 +330,9 @@ public class PlayerController : MonoBehaviour
             else if (selectedGroups.Count > 0)
             {
                 //Move a groups to a position 
-                for (int i = 0; i < selectedGroups.Count; i++)
-                {
-                    if (!selectedGroups[i].GetFirstUnit().IsInBattle)
-                    {
-                        selectedGroups[i].SetGroupDestination(terrainHit.point);
-                    }
-                }
 
-                Vector3 destination = terrainHit.point + new Vector3(0, selectedGroups[0].GetFirstUnit().GetTransform().position.y + 5.0f, 0);
+
+                SetSelectedUnitsDestination(terrainHit.point, null);
 
                 //do destination marker code here (might need some animation etc...)
                 //destinationMarker.ActivateMarker(destination);
@@ -299,7 +345,32 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
+
+
+    private void SetSelectedUnitsDestination(Vector3 destination, Transform dynamicDestination)
+    {
+        for (int i = 0; i < selectedGroups.Count; i++)
+        {
+            if (!selectedGroups[i].GetFirstUnit().IsInBattle)
+            {
+                selectedGroups[i].SetGroupDestination(destination, dynamicDestination);
+            }
+        }
+        patrolStartPoint = new Vector3(-1, -1, -1);
+    }
+    private void SetSelectedUnitsPatrol(Vector3 destination1, Vector3 destination2)
+    {
+        for (int i = 0; i < selectedGroups.Count; i++)
+        {
+            if (!selectedGroups[i].GetFirstUnit().IsInBattle)
+            {
+                selectedGroups[i].SetGroupPatrol(destination1, destination2);
+            }
+        }
+        patrolStartPoint = new Vector3(-1, -1, -1);
+    }
+
+
     public void SelectOnRect(Vector2 v1, Vector2 v2)
     {
 		Vector3 point1, point2;
@@ -564,6 +635,7 @@ public class PlayerController : MonoBehaviour
             HighlightGroup(group, false);
         }
         selectedGroups.Clear();
+        patrolStartPoint = new Vector3(-1, -1, -1);
     }
 
     //deslect buildings
@@ -574,6 +646,16 @@ public class PlayerController : MonoBehaviour
             HighlightBuilding(buildingSelected, false);
             buildingSelected = null;
         }
+    }
+
+    public void SetActiveCommand(string command)
+    {
+        activeCommand = command;
+    }
+
+    public string GetActiveCommand()
+    {
+        return activeCommand;
     }
 
     //hightlight code for groups

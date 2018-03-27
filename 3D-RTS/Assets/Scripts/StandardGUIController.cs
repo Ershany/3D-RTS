@@ -17,6 +17,8 @@ public class StandardGUIController : MonoBehaviour
     public PlayerController _playerController;
     public GameObject standardGUIPanel;
 
+    public GameObject groupActionsPanel;
+
     public Group currentGroup;
     public Building currentBuilding;
     public List<Group> selectedGroups;
@@ -78,7 +80,7 @@ public class StandardGUIController : MonoBehaviour
     void Awake()
     {
         _playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
-
+        standardGUIPanel = GameObject.FindGameObjectWithTag("StandardGUIPanel");
     }
     // Use this for initialization
     void Start()
@@ -95,6 +97,16 @@ public class StandardGUIController : MonoBehaviour
         groupMembers = new List<GameObject>();
         buttonsGroupMembers = new List<UnityEngine.UI.Button>();
         guildGUIPanel = GameObject.FindGameObjectWithTag("GuildHallGUIPanel");
+
+
+        groupActionsPanel = standardGUIPanel.transform.Find("AvailableActions").Find("GroupActions").gameObject;
+
+        groupActionsPanel.transform.Find("Move").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { MoveCommand(); });
+        groupActionsPanel.transform.Find("Stop").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { StopCommand(); });
+        groupActionsPanel.transform.Find("Attack").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { AttackCommand(); });
+        groupActionsPanel.transform.Find("Patrol").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { PatrolCommand(); });
+        groupActionsPanel.transform.Find("HoldPosition").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { HoldPositionCommand(); });
+
         for (int i = 0; i < 4; i++)
         {
             groupMembers.Add(groupInfoPanel.transform.Find("GroupMembers").Find("GroupMember" + (i + 1)).gameObject);
@@ -117,7 +129,6 @@ public class StandardGUIController : MonoBehaviour
         guildGUI = new GuildHallGUIUtil(GameObject.FindGameObjectWithTag("GuildHallGUIPanel"), this);
         guildGUIPanel.SetActive(false);
 
-        standardGUIPanel = GameObject.FindGameObjectWithTag("StandardGUIPanel");
 
         currentActivePanel = standardGUIPanel;
 
@@ -342,6 +353,28 @@ public class StandardGUIController : MonoBehaviour
     {
         Debug.Log("DeployNewGroup function called");
         guildGUI.DeployNewGroup();
+    }
+
+
+    public void MoveCommand()
+    {
+        _playerController.SetActiveCommand("Move");
+    }
+    public void StopCommand()
+    {
+        _playerController.SetActiveCommand("Stop");
+    }
+    public void AttackCommand()
+    {
+        _playerController.SetActiveCommand("Attack");
+    }
+    public void PatrolCommand()
+    {
+        _playerController.SetActiveCommand("Patrol");
+    }
+    public void HoldPositionCommand()
+    {
+        _playerController.SetActiveCommand("HoldPosition");
     }
 
     public void GroupPreviewSelected(int i)
