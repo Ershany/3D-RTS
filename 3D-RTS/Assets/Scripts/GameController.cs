@@ -117,7 +117,7 @@ public class GameController : MonoBehaviour
 
         // Add either to player or enemy
         if (isPlayer) { playerController.groups.Add(grp); }
-        else { enemyController.enemyGroups.Add(grp); }
+        else { enemyController.AddGroup(grp); }
 
         factionUnits.Clear();
     }

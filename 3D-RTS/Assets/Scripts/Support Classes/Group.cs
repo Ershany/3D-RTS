@@ -5,11 +5,13 @@ using UnityEngine;
 public class Group : MonoBehaviour {
 
     private List<DynamicUnit> units;
+    private bool isInBattle;
     public bool returningToGuildHall;
     public Vector3 rawDestination;
     void Awake()
     {
         units = new List<DynamicUnit>();
+        isInBattle = false;
     }
 
     public void AddUnit(DynamicUnit unit)
@@ -91,9 +93,9 @@ public class Group : MonoBehaviour {
 
     public void BattleStarted()
     {
+        isInBattle = true;
         foreach(DynamicUnit unit in units)
         {
-            
             unit.IsInBattle = true;
         }
     }
@@ -101,6 +103,7 @@ public class Group : MonoBehaviour {
 
     public void BattledEnded()
     {
+        isInBattle = false;
         foreach (DynamicUnit unit in units)
         {
             unit.IsInBattle = false;
