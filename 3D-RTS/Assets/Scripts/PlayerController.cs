@@ -49,6 +49,8 @@ public class PlayerController : MonoBehaviour
     public MarkerController unitHit;
     public MarkerController destinationMarker;
 
+
+
     //used for terrain movements and selections
     int terrainMask;
 
@@ -535,6 +537,8 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+        Destroy(polyColGameObject);
+
     }
     //selects a building
     public void SelectBuilding(Building building)

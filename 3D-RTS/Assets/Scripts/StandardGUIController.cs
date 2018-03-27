@@ -291,7 +291,10 @@ public class StandardGUIController : MonoBehaviour
             mouseData.mouse_1 = false;
             if (Vector2.Distance(mouseData.mouse_1_StartPos, Input.mousePosition) > 10)
             {
-                _playerController.SelectOnPoly(mouseData.mouse_1_StartPos, Input.mousePosition);
+                if (Camera.main.orthographic)
+                    _playerController.SelectOnRect(mouseData.mouse_1_StartPos, Input.mousePosition);
+                else
+                    _playerController.SelectOnPoly(mouseData.mouse_1_StartPos, Input.mousePosition);
             }
         }
     }
