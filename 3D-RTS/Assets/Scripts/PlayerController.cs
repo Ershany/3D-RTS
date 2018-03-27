@@ -159,7 +159,7 @@ public class PlayerController : MonoBehaviour
                 buildingToBeBuilt = null;
             }
 
-            buildingToBeBuilt = Instantiate(guildHallPrefab, Vector3.zero, Quaternion.Euler(-90.0f, 0.0f, 0.0f)).GetComponent<GuildHallController>().building;
+            buildingToBeBuilt = Instantiate(guildHallPrefab, Vector3.zero, Quaternion.Euler(-90.0f, -45.0f, 0.0f)).GetComponent<GuildHallController>().building;
             buildingToBeBuilt.MoveBuilding(terrainHit.point);
         }
 
@@ -290,6 +290,9 @@ public class PlayerController : MonoBehaviour
     
     public void SelectOnRect(Vector2 v1, Vector2 v2)
     {
+        Vector3 point1, point2;
+
+
         Debug.Log("Here1");
         RaycastHit hit1;
         RaycastHit hit2;
@@ -299,15 +302,53 @@ public class PlayerController : MonoBehaviour
         Physics.Raycast(ray1, out hit1, 200.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
         Physics.Raycast(ray2, out hit2, 200.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
 
-        if (hit1.point != null && hit2.point != null) {
-            float minX = Mathf.Min(hit1.point.x, hit2.point.x);
-            float maxX = Mathf.Max(hit1.point.x, hit2.point.x);
-            float minZ = Mathf.Min(hit1.point.z, hit2.point.z);
-            float maxZ = Mathf.Max(hit1.point.z, hit2.point.z);
+        Plane p = new Plane(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 500.0f));
+        float aa;
+
+        if (hit1.collider == null)
+        {
+            p.Raycast(ray1, out aa);
+            point1 = ray1.GetPoint(aa);
+        }
+        else
+        {
+            point1 = hit1.point;
+        }
+        if (hit2.collider == null)
+        {
+            p.Raycast(ray2, out aa);
+            point2 = ray2.GetPoint(aa);
+        }
+        else
+        {
+            point2 = hit2.point;
+        }
+
+        if (Input.GetKey(KeyCode.Semicolon))
+        {
+
+            if (GameObject.FindGameObjectsWithTag("tempTracker").Length > 0)
+                Destroy(GameObject.FindGameObjectWithTag("tempTracker"));
+
+            GameObject temp = Instantiate(arenaPrefab);
+
+            Vector3 center = point1 - ((Vector3.Distance(point1, point2) * 0.5f) * Vector3.Normalize((point1 - point2))) + new Vector3(0, 1, 0);
+
+            temp.tag = "tempTracker";
+
+            temp.transform.position = center;
+
+            temp.transform.localScale = new Vector3(Mathf.Abs(point1.x - point2.x), 1, Mathf.Abs(point1.z - point2.z));
+        }
+        
+        if (point1 != null && point2 != null) {
+            float minX = Mathf.Min(point1.x, point2.x);
+            float maxX = Mathf.Max(point1.x, point2.x);
+            float minZ = Mathf.Min(point1.z, point2.z);
+            float maxZ = Mathf.Max(point1.z, point2.z);
 
             List<Group> newSelectedGroups = new List<Group>();
 
-            Debug.Log("Here2");
             for (int i = 0; i<groups.Count; i++)
             {
                 List<DynamicUnit> _units = groups[i].GetUnits();
@@ -320,7 +361,6 @@ public class PlayerController : MonoBehaviour
                         unitPos.z > minZ &&
                         unitPos.z < maxZ)
                     {
-                        Debug.Log("Here3");
                         newSelectedGroups.Add(groups[i]);
                         j = _units.Count;
                     }             

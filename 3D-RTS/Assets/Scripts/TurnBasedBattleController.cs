@@ -18,6 +18,8 @@ public class TurnBasedBattleController
     private bool delaying;
     private float initialStoppingDistance;
 
+
+
     public TurnBasedBattleController(Vector3 pos, Group p, Group e, GameObject a)
     {
         this.playerGroup = p;
@@ -30,12 +32,17 @@ public class TurnBasedBattleController
         delaying = false;
         initialStoppingDistance = playerGroup.GetUnits()[0].GetAgent().stoppingDistance;
 
+        BoxCollider localCollider = arena.GetComponent<BoxCollider>();
+
         for (int i = 0; i < playerGroup.GetUnits().Count; i++)
         {
+            playerGroup.GetUnits()[i].GetTransform().localScale = new Vector3(1, 1, 1);
             playerGroup.GetUnits()[i].GetTransform().position = new Vector3(pos.x + 0.45f * arena.transform.localScale.x, pos.y, pos.z - 0.5f * arena.transform.localScale.z + arena.transform.localScale.z * (1.0f / (float)(playerGroup.GetUnits().Count + 1)) * (i + 1));
-
+            Physics.IgnoreCollision(localCollider, playerGroup.GetUnits()[i].GetGameObject().GetComponent<Collider>());
 
             playerGroup.GetUnits()[i].GetTransform().LookAt(new Vector3(pos.x, playerGroup.GetUnits()[i].GetTransform().position.y, playerGroup.GetUnits()[i].GetTransform().position.z));
+
+
 
             playerGroup.GetUnits()[i].attackTime = Mathf.Min((float)playerGroup.GetUnits()[i].GetDexterity() * (1.0f - ((float)playerGroup.GetUnits()[i].GetDexterity() / 10f)) * 3.0f, 75.0f) / 100.0f;
 
@@ -46,7 +53,9 @@ public class TurnBasedBattleController
 
         for (int i = 0; i < enemyGroup.GetUnits().Count; i++)
         {
+            enemyGroup.GetUnits()[i].GetTransform().localScale = new Vector3(1, 1, 1);
             enemyGroup.GetUnits()[i].GetTransform().position = new Vector3(pos.x - 0.45f * arena.transform.localScale.x, pos.y, pos.z - 0.5f * arena.transform.localScale.z + arena.transform.localScale.z * (1.0f / (float)(enemyGroup.GetUnits().Count + 1)) * (i + 1));
+            Physics.IgnoreCollision(localCollider, enemyGroup.GetUnits()[i].GetGameObject().GetComponent<Collider>());
 
             enemyGroup.GetUnits()[i].GetTransform().LookAt(new Vector3(pos.x, playerGroup.GetUnits()[i].GetTransform().position.y, playerGroup.GetUnits()[i].GetTransform().position.z));
 
@@ -143,7 +152,7 @@ public class TurnBasedBattleController
                         Debug.Log("Check3");
                         returningToStartingPosition = true;
 
-                        attackingUnit.GetAgent().stoppingDistance = 0.5f;
+                        attackingUnit.GetAgent().stoppingDistance = 0.1f;
                         attackingUnit.SetDestination(returnPos);
                         Debug.Log("Returning to " + returnPos.ToString());
                     }
@@ -169,10 +178,12 @@ public class TurnBasedBattleController
         {
             for (int i = 0; i < playerGroup.GetUnits().Count; i++)
             {
+                playerGroup.GetUnits()[i].GetTransform().localScale = new Vector3(4, 4, 4);
                 playerGroup.GetUnits()[i].GetAgent().stoppingDistance = initialStoppingDistance;
             }
             for (int i = 0; i < enemyGroup.GetUnits().Count; i++)
             {
+                playerGroup.GetUnits()[i].GetTransform().localScale = new Vector3(4, 4, 4);
                 enemyGroup.GetUnits()[i].GetAgent().stoppingDistance = initialStoppingDistance;
             }
         }
@@ -188,7 +199,6 @@ public class TurnBasedBattleController
             delaying = false;
             return true;
         }
-
 
         return false;
     }

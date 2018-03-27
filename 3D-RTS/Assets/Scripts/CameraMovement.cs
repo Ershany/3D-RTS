@@ -65,7 +65,12 @@ public class CameraMovement : MonoBehaviour
             cameraFOV += -(deltaScroll * cameraZoomSpeed * Time.deltaTime);
             if (cameraFOV > maxCameraFOV) cameraFOV = maxCameraFOV;
             else if (cameraFOV < minCameraFOV) cameraFOV = minCameraFOV;
-            Camera.main.fieldOfView = cameraFOV;
+            if (Camera.main.orthographic)
+            {
+                Camera.main.orthographicSize = cameraFOV;
+            }
+            else
+                Camera.main.fieldOfView = cameraFOV;
         }
     }
 

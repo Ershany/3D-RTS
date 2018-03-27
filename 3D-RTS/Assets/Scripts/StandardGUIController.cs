@@ -128,6 +128,7 @@ public class StandardGUIController : MonoBehaviour
         guildhallGUICollider.SetActive(false);
         standardGUICollider = Instantiate(standardGUIColliderPrefab);
         standardGUICollider.transform.SetParent(mainCamera.transform, false);
+        standardGUICollider.SetActive(standardGUIPanel.activeSelf);
 
         //buildingInfoPanel = GameObject.FindGameObjectWithTag("BuildingInformationPanel");
 
@@ -267,7 +268,7 @@ public class StandardGUIController : MonoBehaviour
     {
         if (mouseData.mouse_1)
         {
-            if (Vector2.Distance(mouseData.mouse_1_StartPos,Input.mousePosition) > 10)
+            if (Vector2.Distance(mouseData.mouse_1_StartPos,Input.mousePosition) > 10 && !MouseIsOnGUI(mouseData.mouse_1_StartPos))
             {
                 mouseData.mouse_1_EndPos = Input.mousePosition;
                 // Create a rect from both mouse positions
@@ -298,7 +299,6 @@ public class StandardGUIController : MonoBehaviour
     void UpdateColliders()
     {
         guildhallGUICollider.SetActive(guildGUIPanel.activeSelf);
-        standardGUICollider.SetActive(standardGUIPanel.activeSelf);
     }
     public void SetActiveMember(int i)
     {
@@ -474,5 +474,23 @@ public class StandardGUIController : MonoBehaviour
         }
 
         selectedGroupsPanel.SetActive(false);
+    }
+
+    public bool MouseIsOnGUI(Vector2 pos)
+    {
+
+        Ray ray = Camera.main.ScreenPointToRay(pos);
+        RaycastHit hit;
+        Physics.Raycast(ray, out hit);
+
+        if (hit.collider != null && guildhallGUICollider != null && standardGUICollider != null)
+        {
+            if(hit.collider.gameObject.name == guildhallGUICollider.name ||
+                hit.collider.gameObject.name == standardGUICollider.name)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
