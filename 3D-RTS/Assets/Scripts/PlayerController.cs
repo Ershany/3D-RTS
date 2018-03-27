@@ -37,12 +37,19 @@ public class PlayerController : MonoBehaviour
     //behavior util file
     public BehaviorUtil behavior;
 
-    //???
-    public Vector3 markerPoint;
-
     //marker for unit destination
     public GameObject markerPrefab;
     public MarkerController destinationMarker;
+
+    //particle systems for now here for testing purposes
+    public GameObject spellPrefab;
+    public GameObject slashPrefab;
+    public GameObject hitPrefab;
+
+    public SpellController magicSpell;
+    public MarkerController magicSpell1; //TEMP FOR DEBUGGING
+    public MarkerController swordSlash;
+    public MarkerController unitHit;
 
     //used for terrain movements and selections
     int terrainMask;
@@ -57,8 +64,10 @@ public class PlayerController : MonoBehaviour
         guildHallBuilt = false;
         battles = new List<TurnBasedBattleController>();
         groups = new List<Group>();
-        markerPoint = new Vector3(-1, 0, 0);
         destinationMarker = Instantiate(markerPrefab , Vector3.zero , Quaternion.identity).GetComponent<MarkerController>();
+        magicSpell1 = Instantiate(spellPrefab , Vector3.zero , Quaternion.identity).GetComponent<MarkerController>();
+        swordSlash = Instantiate(slashPrefab , Vector3.zero, Quaternion.identity).GetComponent<MarkerController>();
+        unitHit = Instantiate(hitPrefab , Vector3.zero , Quaternion.identity).GetComponent<MarkerController>();
     }
 
     void Update()
@@ -274,10 +283,13 @@ public class PlayerController : MonoBehaviour
                     }
                 }
 
-                Vector3 destination = terrainHit.point + new Vector3(0, 1.0f, 0);
+                Vector3 destination = terrainHit.point + new Vector3(0, selectedGroups[0].GetFirstUnit().GetTransform().position.y + 5.0f, 0);
 
                 //do destination marker code here (might need some animation etc...)
-                destinationMarker.ActivateMarker(destination);
+                //destinationMarker.ActivateMarker(destination);
+                //swordSlash.ActivateMarker(destination);
+                //magicSpell1.ActivateMarker(destination);
+                unitHit.ActivateMarker(destination);
 
                 Debug.Log("Group is moving to " + terrainHit.point.ToString());
             }
