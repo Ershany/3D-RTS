@@ -27,6 +27,7 @@ public static class GUIUtility {
 
     public static void DrawSelectionRect(Rect rect, Color color)
     {
+        GUI.depth = 0;
         GUI.color = color;
         GUI.DrawTexture(rect, SelectionRect);
         GUI.color = Color.white;

@@ -19,6 +19,13 @@ public abstract class DynamicUnit : Unit
     protected int level;
     protected int experience;
 
+    protected float health_growth;
+    protected float mana_growth;
+    protected float dexterity_growth;
+    protected float strength_growth;
+    protected float intelligence_growth;
+    
+
     protected string name;
     protected string className;
     public float attackTime { get; set; }
@@ -47,7 +54,8 @@ public abstract class DynamicUnit : Unit
         IsPlayerControlled = false;
         IsAttacking = false;
         IsInBattle = false;
-        StatKey.GetStats(className, ref maxHealth, ref maxMana, ref strength, ref intelligence, ref dexterity);
+        StatKey.GetStats(className, ref maxHealth, ref maxMana, ref strength, ref intelligence, ref dexterity,
+                         ref health_growth, ref mana_growth, ref strength_growth, ref intelligence_growth,  ref dexterity_growth);
         currentHealth = maxHealth;
         currentMana = maxMana;
         level = 1;
@@ -133,15 +141,15 @@ public abstract class DynamicUnit : Unit
 
     public int GetDexterity()
     {
-        return dexterity;
+        return dexterity + Mathf.FloorToInt(level * dexterity_growth);
     }
     public int GetStrength()
     {
-        return strength;
+        return strength + Mathf.FloorToInt(level * strength_growth);
     }
     public int GetIntelligence()
     {
-        return intelligence;
+        return intelligence + Mathf.FloorToInt(level * intelligence_growth);
     }
 
     public int GetLevel()
