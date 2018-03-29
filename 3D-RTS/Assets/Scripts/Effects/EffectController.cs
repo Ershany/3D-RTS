@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MarkerController : MonoBehaviour
+public class EffectController : MonoBehaviour
 {
-    //would need an animation to run first 
-
-    //hack way of doing things
     float timer;
     bool isActive;
 

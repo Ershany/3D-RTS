@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    //GET RID OF THAT SHIT
-    /* Prefabs */
-    public GameObject enemyArcherPrefab;
-    public GameObject enemyInfantryPrefab;
-    public GameObject enemyMagePrefab;
-    public GameObject groupPrefab;
-
     //enemy units
     public List<Group> enemyGroups;
     public Group selectedGroup { get; set; }
@@ -19,9 +12,11 @@ public class EnemyController : MonoBehaviour
     public GameController gameController;
 
     //maybe handle enemy units and buildings here
+    public List<Building> enemyBuildings;
 
     void Awake()
     {
+        enemyBuildings = new List<Building>();
         enemyGroups = new List<Group>();
 
         //Reference Game Controller

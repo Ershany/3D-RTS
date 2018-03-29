@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
-    public MarkerController explosion;
+    public EffectController explosion;
 
     private float speed;
     private float timer;

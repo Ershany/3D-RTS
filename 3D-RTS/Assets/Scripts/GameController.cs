@@ -4,11 +4,9 @@ using UnityEngine;
 
 //TO DO LIST:
 //Add a string array for names
-//Work on guild hall
-//Play with unit creation 
-//Maybe add  a marker for when we right click and we want to move units
-//Add Particle systems (slash and whatever effects)
-//
+//Buildings:
+//logic
+//UI
 
 public class GameController : MonoBehaviour
 {
@@ -22,24 +20,41 @@ public class GameController : MonoBehaviour
     public GameObject enemyArcherPrefab;
     public GameObject enemyInfantryPrefab;
     public GameObject enemyMagePrefab;
+
+    // UI stuff
     public GameObject groupPrefab;
     public GameObject arenaPrefab;
+
+    // buildings
+    public GameObject blacksmithPrefab;
+    public GameObject ArcheryRangePrefab;
+    public GameObject TempleOfMagiPrefab;
+    public GameObject GuildHallPrefab;
 
     /* References */
     private PlayerController playerController;
     private EnemyController enemyController;
     public GuildHallController guildHall;
 
+    //Dictionary
     public string[] unitNames;
+
+    //player and enemy resources
+    public int playerGold;
+    public int enemyGold;
 
     void Awake()
     {
+        //gold
+        playerGold = 200;
+        enemyGold = 200;
+
         guildHall = null;
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
         enemyController = GameObject.FindGameObjectWithTag("EnemyController").GetComponent<EnemyController>();
 
         //SOME RANDOM NAMES JUST FOR THE FUN OF IT 
-        unitNames = new string[] {" " , "" , "" , "" , "" , "" , "" , "" , "" , "" , "" , "" , "" , ""};
+        unitNames = new string[] { "" , "" , "" , "" , "" , "" , "" , "" , "" , "" , "" , "" , "" , ""};
 
         /* Create some player units */
         List<DynamicUnit> myUnits;
@@ -57,6 +72,7 @@ public class GameController : MonoBehaviour
 
         // add some player units
         AddFactionGroup(myUnits, new Vector3(80, 0, 30), true);
+
 
 
         /* Create some enemy units */
@@ -95,6 +111,75 @@ public class GameController : MonoBehaviour
     public FactionUnit CreateEnemyWarrior(Vector3 position) { return Instantiate(enemyInfantryPrefab, position, Quaternion.identity).GetComponent<EnemyInfantryController>().demonUnit; }
     //Enemy mage creation
     public FactionUnit CreateEnemyMage(Vector3 position) { return Instantiate(enemyMagePrefab, position, Quaternion.identity).GetComponent<EnemyMageController>().demonUnit; }
+
+    //I think this is a good place to add these or maybe in a util file
+
+    public Building CreateGuildHall(bool isPlayer)
+    {
+        //maybe??
+        return null;
+    }
+
+    //check if player's or enemy's
+    public Building CreateBlacksmith(bool isPlayer)
+    {
+        //instantiate blacksmith 
+        TechnologyBuildingController controller = Instantiate(blacksmithPrefab, Vector3.zero, Quaternion.identity).GetComponent<TechnologyBuildingController>();
+
+        List<string> blackSmithTechnologies = new List<string> { "Reinforced Armor" , "Courage" , "Spell Mastery" , "Education" , "Sword Mastery"};
+        List<int> blacksmithBuffs = new List<int> { 3 , 1 , 1 , 2 , 2};
+        string unitAffected = "Warrior"; //might need to be changed
+        float health = 200.0f;
+
+        controller.SetupBuilding(blackSmithTechnologies , blacksmithBuffs , unitAffected , health , "Blacksmith" , isPlayer);
+        Building building = controller.building;
+        
+        //add reference to player or enemy whichever one owns the building
+        if (isPlayer) { playerController.playerBuildings.Add(building); }
+        else { enemyController.enemyBuildings.Add(building); }
+
+        return building;
+    }
+
+    //check if player's or enemy's
+    public Building CreateArcheryRange(bool isPlayer)
+    {
+        TechnologyBuildingController controller = Instantiate(ArcheryRangePrefab, Vector3.zero, Quaternion.identity).GetComponent<TechnologyBuildingController>();
+
+        List<string> ArcheryRangeTechnologies = new List<string> { "Padding", "Resolve", "Spell Mastery", "Mental Strength", "Perception" };
+        List<int> ArcheryRangeBuffs = new List<int> { 2, 2, 1, 1, 3 };
+        string unitAffected = "Archer"; //might need to be changed
+        float health = 150.0f;
+
+        controller.SetupBuilding(ArcheryRangeTechnologies, ArcheryRangeBuffs, unitAffected, health , "ArcheryRange" , isPlayer);
+        Building building = controller.building;
+        //add reference to player or enemy whichever one owns the building
+
+        if (isPlayer) { playerController.playerBuildings.Add(building); }
+        else { enemyController.enemyBuildings.Add(building); }
+
+        return building;
+    }
+
+    //check if player's or enemy's
+    public Building CreateTempleOfMagi(bool isPlayer)
+    {
+        TechnologyBuildingController controller = Instantiate(TempleOfMagiPrefab, Vector3.zero, Quaternion.identity).GetComponent<TechnologyBuildingController>();
+
+        List<string> templeOfMagiTechnologies = new List<string> { "Armored Robes", "Mutations", "Mage Training", "Wisdom", "Contemplation" };
+        List<int> templeOfmagiBuffs = new List<int> { 0, 0, 0, 0, 0 };
+        string unitAffected = "Mage"; //might need to be changed
+        float health = 300.0f;
+
+        controller.SetupBuilding(templeOfMagiTechnologies, templeOfmagiBuffs, unitAffected, health , "TempleOfMagi" , isPlayer);
+        Building building = controller.building;
+
+        //add reference to player or enemy whichever one owns the building
+        if (isPlayer) { playerController.playerBuildings.Add(building); }
+        else { enemyController.enemyBuildings.Add(building); }
+
+        return building;
+    }
 
     //Adding to a faction's grps
     public void AddFactionGroup(List<DynamicUnit> factionUnits, Vector3 position, bool isPlayer)
@@ -211,5 +296,4 @@ public class GameController : MonoBehaviour
     {
         return target.GetComponent<BoxCollider>().bounds.Contains(destination);
     } 
-
 }

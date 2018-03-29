@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class StatKey {
+public static class StatKey
+{
 
     public static class Warrior
     {
@@ -67,6 +68,7 @@ public static class StatKey {
         switch (c)
         {
             case "Warrior":
+            case "EnemyWarrior":
                 hp = Warrior.HEALTH;
                 mp = Warrior.MANA;
                 str = Warrior.STRENGTH;
@@ -79,6 +81,7 @@ public static class StatKey {
                 dexGrowth = Warrior.Growth.DEXTERITY;
                 break;
             case "Archer":
+            case "EnemyArcher":
                 hp = Archer.HEALTH;
                 mp = Archer.MANA;
                 str = Archer.STRENGTH;
@@ -91,6 +94,7 @@ public static class StatKey {
                 dexGrowth = Archer.Growth.DEXTERITY;
                 break;
             case "Mage":
+            case "EnemyMage":
                 hp = Mage.HEALTH;
                 mp = Mage.MANA;
                 str = Mage.STRENGTH;

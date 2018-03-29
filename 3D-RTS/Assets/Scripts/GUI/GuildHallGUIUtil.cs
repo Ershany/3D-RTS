@@ -8,7 +8,6 @@ public class GuildHallGUIUtil : MonoBehaviour
     delegate void MyDelegate(int num);
     MyDelegate myDelegate;
 
-
     public GameObject gameObject;
 
     //Party Creation Window
@@ -23,8 +22,6 @@ public class GuildHallGUIUtil : MonoBehaviour
     public GameObject rosterStatusWindow;
     public GameObject addToPartyButton;
 
-
-
     public GameObject recruitPanel;
     public GameObject recruitStatusWindow;
     public GameObject recruitButton;
@@ -35,14 +32,11 @@ public class GuildHallGUIUtil : MonoBehaviour
     public GameObject newMageButton;
     public GameObject newArcherButton;
 
-
     public GameObject recruitUnitButton;
     public GameObject exitButton;
 
-
     public GuildHallController guildCon;
     public StandardGUIController stdGUICon;
-
 
     public GuildHallGUIUtil(GameObject gui,StandardGUIController sGC)
     {

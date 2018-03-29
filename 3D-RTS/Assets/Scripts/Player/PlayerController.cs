@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     public GameObject selectionPanel;
 
     //check whether a guild hall is built
-    public bool guildHallBuilt;    //I think we are only allowed to have one guild hall 
+    public bool guildHallBuilt;
 
     //booleans for player selection state 
     public bool playerSelectedGroups;
@@ -44,11 +44,13 @@ public class PlayerController : MonoBehaviour
     public GameObject slashPrefab;
     public GameObject hitPrefab;
 
+    //controllers for the particle systems
     public ProjectileController magicSpell;
-    public MarkerController swordSlash;
-    public MarkerController unitHit;
-    public MarkerController destinationMarker;
+    public EffectController swordSlash;
+    public EffectController unitHit;
+    public EffectController destinationMarker;
 
+    //not really sure
     private string activeCommand;
     private Vector3 patrolStartPoint;
 
@@ -61,15 +63,16 @@ public class PlayerController : MonoBehaviour
         playerSelectedGroups = false;
         playerSelectedSingleGroup = false;
         playerSelectedGuildHall = false;
-        selectedGroups = new List<Group>();
-        behavior = new BehaviorUtil();
         guildHallBuilt = false;
+        selectedGroups = new List<Group>();
         battles = new List<TurnBasedBattleController>();
         groups = new List<Group>();
-        destinationMarker = Instantiate(markerPrefab , Vector3.zero , Quaternion.identity).GetComponent<MarkerController>();
+        behavior = new BehaviorUtil();
+
+        destinationMarker = Instantiate(markerPrefab , Vector3.zero , Quaternion.identity).GetComponent<EffectController>();
         magicSpell = Instantiate(spellPrefab , Vector3.zero , Quaternion.identity).GetComponent<ProjectileController>();
-        swordSlash = Instantiate(slashPrefab , Vector3.zero, Quaternion.identity).GetComponent<MarkerController>();
-        unitHit = Instantiate(hitPrefab , Vector3.zero , Quaternion.identity).GetComponent<MarkerController>();
+        swordSlash = Instantiate(slashPrefab , Vector3.zero, Quaternion.identity).GetComponent<EffectController>();
+        unitHit = Instantiate(hitPrefab , Vector3.zero , Quaternion.identity).GetComponent<EffectController>();
 
         //set explosion reference
         magicSpell.explosion = unitHit;
@@ -89,6 +92,7 @@ public class PlayerController : MonoBehaviour
         Physics.Raycast(ray, out terrainHit, float.MaxValue, terrainMask);
         Physics.Raycast(ray, out hit);
 
+        
         Plane p = new Plane(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 500.0f));
         float aa;
         p.Raycast(ray, out aa);
@@ -106,6 +110,21 @@ public class PlayerController : MonoBehaviour
             //check for input
             InputCheck(hit, terrainHit);
         }
+        
+
+        /*
+        if (hit.collider)
+        {
+            // Move building with cursor if a building is currently selected (keep it on the terrain)
+            if (buildingToBeBuilt != null)
+            {
+                buildingToBeBuilt.MoveBuilding(terrainHit.point);
+            }
+
+            //check for input
+            InputCheck(hit, terrainHit);
+        }
+        */
 
         //check for battles
         BattleUpdate();
@@ -185,7 +204,7 @@ public class PlayerController : MonoBehaviour
                 //selectedGroups = groups[(groups.IndexOf(selectedGroup) + 1) % groups.Count];
             }
         }
-        
+
         /*
             LEFT MOUSE CLICK:
             *Place buildings
@@ -232,10 +251,9 @@ public class PlayerController : MonoBehaviour
                         }
                         break;
 
-                    default:
-                        Deselect();
-                        Debug.Log("clicked terrain deselect buildingToBeBuilt");
-                        break;
+                        //Deselect();
+                        //Debug.Log("clicked terrain deselect buildingToBeBuilt");
+                        //break;
                 }
 
             }
@@ -297,10 +315,7 @@ public class PlayerController : MonoBehaviour
                         }
                         break;
                 }
-
             }
-
-
         }
 
         /*
@@ -330,13 +345,12 @@ public class PlayerController : MonoBehaviour
             else if (selectedGroups.Count > 0)
             {
                 //Move a groups to a position 
-
-
                 SetSelectedUnitsDestination(terrainHit.point, null);
+
+                destinationMarker.ActivateMarker(selectedGroups[0].GetUnits()[0].GetAgent().destination + new Vector3 (0 , 0.5f, 0));
 
                 //do destination marker code here (might need some animation etc...)
                 //destinationMarker.ActivateMarker(destination);
-                destinationMarker.ActivateMarker(selectedGroups[0].GetUnits()[0].GetAgent().destination);
                 //swordSlash.ActivateMarker(destination);
                 //unitHit.ActivateMarker(destination);
                 //magicSpell.Activate(selectedGroups[0].GetFirstUnit().GetTransform().position + new Vector3 (0, 5.0f ,0) , destination);

@@ -302,11 +302,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91266c39c57eaa44a9ce367fcc5503a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyArcherPrefab: {fileID: 133574, guid: 73df584fd2872094198958e452adca03, type: 2}
-  enemyInfantryPrefab: {fileID: 197242, guid: 457fc7b325b5eb941a971b791fdb615e, type: 2}
-  enemyMagePrefab: {fileID: 199790, guid: 34f5c711ef6b97c4496fbd5618fea8a8, type: 2}
-  groupPrefab: {fileID: 1409932899419140, guid: 36fd7a8a6d25caa49bf1c4c7260dfa8e,
-    type: 2}
   enemyGroups: []
   gameController: {fileID: 0}
 --- !u!1 &813388356
@@ -422,8 +417,14 @@ MonoBehaviour:
     type: 2}
   arenaPrefab: {fileID: 1335127391431722, guid: cf81b553b53d6b54fa7f594ba3645a32,
     type: 2}
+  blacksmithPrefab: {fileID: 0}
+  ArcheryRangePrefab: {fileID: 0}
+  TempleOfMagiPrefab: {fileID: 0}
+  GuildHallPrefab: {fileID: 0}
   guildHall: {fileID: 0}
   unitNames: []
+  playerGold: 0
+  enemyGold: 0
 --- !u!1 &1377356340
 GameObject:
   m_ObjectHideFlags: 0
@@ -464,7 +465,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1572964990
 GameObject:
@@ -536,7 +537,7 @@ Transform:
   m_Children:
   - {fileID: 232580806}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1621277739
 GameObject:
@@ -566,7 +567,7 @@ Transform:
   m_Children:
   - {fileID: 429581056}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!191 &1621277741
 OffMeshLink:
@@ -1435,32 +1436,32 @@ Prefab:
     - target: {fileID: 224171518231044722, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0.790099
+      value: 0.7900407
       objectReference: {fileID: 0}
     - target: {fileID: 224171518231044722, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0.9999424
+      value: 0.99988407
       objectReference: {fileID: 0}
     - target: {fileID: 224525339166781462, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0.25812382
+      value: 0.25817272
       objectReference: {fileID: 0}
     - target: {fileID: 224525339166781462, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0.408331
+      value: 0.4083799
       objectReference: {fileID: 0}
     - target: {fileID: 224931675022599706, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 177.5007
+      value: 177.48605
       objectReference: {fileID: 0}
     - target: {fileID: 224461523077330656, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 31.493774
+      value: 31.511292
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a6741b7b18791d045902a32a7191189f, type: 2}

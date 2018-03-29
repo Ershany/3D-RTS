@@ -166,8 +166,8 @@ GameObject:
   - component: {fileID: 33116239133916978}
   - component: {fileID: 23479090128718612}
   - component: {fileID: 95732871387894932}
+  - component: {fileID: 114380502165034394}
   - component: {fileID: 65695207713528122}
-  - component: {fileID: 114134206842408672}
   m_Layer: 2
   m_Name: GuildHall
   m_TagString: GuildHall
@@ -732,7 +732,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114134206842408672
+--- !u!114 &114380502165034394
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}

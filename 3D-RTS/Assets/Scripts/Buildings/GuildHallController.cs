@@ -21,11 +21,11 @@ public class GuildHallController : MonoBehaviour
     public int selectedNewUnitNum;
     public int selectedRosterUnitNum;
 
-
     void Awake()
     {
         //setup members 
-        building = new Building(gameObject, buildingHealth);
+        //for now
+        building = new Building(gameObject, buildingHealth , "GuildHall" , true);
 
 
         building.name = "GuildHall";
