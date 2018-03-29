@@ -23,7 +23,7 @@ public class Group : MonoBehaviour {
     {
         if (dynamicDestination != null)
         {
-            SetGroupDestination(dynamicDestination.position, dynamicDestination);
+            SetGroupFollow(dynamicDestination.position, dynamicDestination);
         }
         if (patrolling)
         {
@@ -32,9 +32,9 @@ public class Group : MonoBehaviour {
                 if(Vector3.Distance(units[i].GetTransform().position, units[i].GetAgent().destination) < 5)
                 {
                     if (rawDestination == patrolPoint1)
-                        SetGroupDestination(patrolPoint2, null);
+                        SetGroupDestination(patrolPoint2);
                     else
-                        SetGroupDestination(patrolPoint1, null);
+                        SetGroupDestination(patrolPoint1);
                 }
             }
         }
@@ -62,7 +62,17 @@ public class Group : MonoBehaviour {
         }
     }
 
-    public void SetGroupDestination(Vector3 dest, Transform dynDest)
+    public void SetGroupDestination(Vector3 dest)
+    {
+        patrolling = false;
+        dynamicDestination = null;
+        rawDestination = dest;
+        foreach (DynamicUnit unit in units)
+        {
+            unit.SetDestination(dest);
+        }
+    }
+    public void SetGroupFollow(Vector3 dest, Transform dynDest)
     {
         patrolling = false;
         dynamicDestination = dynDest;
@@ -76,7 +86,7 @@ public class Group : MonoBehaviour {
     {
 
         patrolling = true;
-        SetGroupDestination(dest1, null);
+        SetGroupDestination(dest1);
         patrolPoint1 = dest1;
         patrolPoint2 = dest2;
 

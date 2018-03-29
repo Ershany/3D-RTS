@@ -240,16 +240,16 @@ public class PlayerController : MonoBehaviour
                     case "Attack":
 
                         break;
-                    case "Patrol":
-                        if (patrolStartPoint.x != -1)
-                        {
-                            SetSelectedUnitsPatrol(patrolStartPoint, terrainHit.point);
-                        }
-                        else
-                        {
-                            patrolStartPoint = terrainHit.point;
-                        }
-                        break;
+                    //case "Patrol":
+                    //    if (patrolStartPoint.x != -1)
+                    //    {
+                    //        SetSelectedUnitsPatrol(patrolStartPoint, terrainHit.point);
+                    //    }
+                    //    else
+                    //    {
+                    //        patrolStartPoint = terrainHit.point;
+                    //    }
+                    //    break;
 
                         //Deselect();
                         //Debug.Log("clicked terrain deselect buildingToBeBuilt");
@@ -316,6 +316,7 @@ public class PlayerController : MonoBehaviour
                         break;
                 }
             }
+            activeCommand = "";
         }
 
         /*
@@ -357,6 +358,7 @@ public class PlayerController : MonoBehaviour
 
                 Debug.Log("Group is moving to " + terrainHit.point.ToString());
             }
+            activeCommand = "";
         }
     }
 
@@ -367,10 +369,9 @@ public class PlayerController : MonoBehaviour
         {
             if (!selectedGroups[i].GetFirstUnit().IsInBattle)
             {
-                selectedGroups[i].SetGroupDestination(destination, dynamicDestination);
+                selectedGroups[i].SetGroupDestination(destination);
             }
         }
-        patrolStartPoint = new Vector3(-1, -1, -1);
     }
     private void SetSelectedUnitsPatrol(Vector3 destination1, Vector3 destination2)
     {
@@ -381,7 +382,6 @@ public class PlayerController : MonoBehaviour
                 selectedGroups[i].SetGroupPatrol(destination1, destination2);
             }
         }
-        patrolStartPoint = new Vector3(-1, -1, -1);
     }
 
 

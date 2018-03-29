@@ -277,10 +277,13 @@ public class StandardGUIController : MonoBehaviour
 
     void OnGUI()
     {
+        Debug.Log("!!1");
         if (mouseData.mouse_1)
         {
+            Debug.Log("!!2");
             if (Vector2.Distance(mouseData.mouse_1_StartPos,Input.mousePosition) > 10 && !MouseIsOnGUI(mouseData.mouse_1_StartPos))
             {
+                Debug.Log("!!3");
                 mouseData.mouse_1_EndPos = Input.mousePosition;
                 // Create a rect from both mouse positions
                 rect = GUIUtility.GetScreenRect(mouseData.mouse_1_StartPos, mouseData.mouse_1_EndPos);
