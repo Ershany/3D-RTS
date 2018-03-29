@@ -4,17 +4,18 @@ using UnityEngine.AI;
 
 public class Building
 {
-    private float maxHealth, currentHealth;
     public bool IsDestroyed { get; private set; }
     public bool IsPlaced { get; private set; }
+    public bool isPlayerBuilding;
     public GameObject GameObject { get; private set; }
+    public string name;
+
+    private float maxHealth, currentHealth;
     private BoxCollider boxCollider;
     private List<Renderer> renderers;
     private int containingColliderCount;
 
-    public string name;
-
-    public Building(GameObject obj, float health)
+    public Building(GameObject obj, float health , string buildingName , bool isPlayer)
     {
         GameObject = obj;
         renderers = new List<Renderer>();
@@ -34,9 +35,9 @@ public class Building
         maxHealth = currentHealth = health;
         IsDestroyed = false;
         IsPlaced = false;
-        name = "Building";
+        isPlayerBuilding = isPlayer;
+        name = buildingName;
     }
-
 
     public void Update()
     {

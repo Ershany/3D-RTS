@@ -531,7 +531,7 @@ GameObject:
   - component: {fileID: 54329667854335378}
   - component: {fileID: 195096145121077880}
   - component: {fileID: 136639779938024876}
-  - component: {fileID: 114329738910296586}
+  - component: {fileID: 114601238370898668}
   m_Layer: 0
   m_Name: EnemyInfantry
   m_TagString: Untagged
@@ -1430,7 +1430,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &114329738910296586
+--- !u!114 &114601238370898668
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -1438,12 +1438,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 197242}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f8d1b242e6a3124cb79dfe29cc32b3c, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e3041ff3c851b64d81e3eba8c8e788a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
   demonUnit:
-    deathAnimTriggered: 0
+    destination: {x: 0, y: 0, z: 0}
 --- !u!136 &136639779938024876
 CapsuleCollider:
   m_ObjectHideFlags: 1

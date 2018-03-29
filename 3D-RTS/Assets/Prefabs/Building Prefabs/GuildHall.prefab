@@ -166,8 +166,8 @@ GameObject:
   - component: {fileID: 33116239133916978}
   - component: {fileID: 23479090128718612}
   - component: {fileID: 95732871387894932}
+  - component: {fileID: 114938065796272192}
   - component: {fileID: 65695207713528122}
-  - component: {fileID: 114134206842408672}
   m_Layer: 2
   m_Name: GuildHall
   m_TagString: GuildHall
@@ -732,7 +732,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114134206842408672
+--- !u!114 &114938065796272192
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -740,7 +740,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1668168907793830}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1aeaaa037ecdf3d4382bd88eb33ad6c5, type: 3}
+  m_Script: {fileID: 11500000, guid: 5c3ad65bfa5bd8146ac18d7e0a237c4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   buildingHealth: 500

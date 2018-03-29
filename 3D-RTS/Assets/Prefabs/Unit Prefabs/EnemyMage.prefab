@@ -499,7 +499,7 @@ GameObject:
   - component: {fileID: 54219822472111752}
   - component: {fileID: 195816789574320032}
   - component: {fileID: 136488366640548834}
-  - component: {fileID: 114523548159490364}
+  - component: {fileID: 114382568946142290}
   m_Layer: 0
   m_Name: EnemyMage
   m_TagString: Untagged
@@ -1266,7 +1266,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &114523548159490364
+--- !u!114 &114382568946142290
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -1274,12 +1274,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 199790}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acf9e42b967a95d49834801ac32884d4, type: 3}
+  m_Script: {fileID: 11500000, guid: f3c965365aec85244a012a2d810892e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
   demonUnit:
-    deathAnimTriggered: 0
+    destination: {x: 0, y: 0, z: 0}
 --- !u!136 &136488366640548834
 CapsuleCollider:
   m_ObjectHideFlags: 1

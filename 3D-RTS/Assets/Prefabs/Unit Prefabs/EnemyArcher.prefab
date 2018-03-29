@@ -211,7 +211,7 @@ GameObject:
   - component: {fileID: 54891047049930954}
   - component: {fileID: 195941131978543432}
   - component: {fileID: 136052013981727636}
-  - component: {fileID: 114835312935227088}
+  - component: {fileID: 114795482919275478}
   m_Layer: 0
   m_Name: EnemyArcher
   m_TagString: Untagged
@@ -1357,7 +1357,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &114835312935227088
+--- !u!114 &114795482919275478
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -1365,12 +1365,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 133574}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01479a993409cf74c89e4a566afed102, type: 3}
+  m_Script: {fileID: 11500000, guid: 59a343388f785b449b4232355ffd894e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
   demonUnit:
-    deathAnimTriggered: 0
+    destination: {x: 0, y: 0, z: 0}
 --- !u!136 &136052013981727636
 CapsuleCollider:
   m_ObjectHideFlags: 1
