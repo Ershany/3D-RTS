@@ -26,6 +26,7 @@ public class Building
         {
             if (!child.CompareTag("HeightCheck"))
             {
+                Debug.Log("we have a renderer");
                 renderers.Add(child.gameObject.GetComponent<Renderer>());
             }
         }
@@ -119,12 +120,15 @@ public class Building
     public void OnTriggerEnter()
     {
         ++containingColliderCount;
+        Debug.Log(containingColliderCount);
     }
+
 
     //Exiting collision detection
     public void OnTriggerExit()
     {
         --containingColliderCount;
+        Debug.Log(containingColliderCount);
     }
 
     //Set the color of the highlight before placing the building down
@@ -141,7 +145,7 @@ public class Building
     {
         foreach (Renderer renderer in renderers)
         {
-            renderer.material.SetFloat("_HighlightPower", value);
+           // renderer.material.SetFloat("_HighlightPower", value);
         }
     }
 }

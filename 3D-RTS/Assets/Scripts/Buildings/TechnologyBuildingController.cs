@@ -241,4 +241,16 @@ public class TechnologyBuildingController : MonoBehaviour
         buildingHealth = health;
         building = new Building(gameObject , buildingHealth , name , isPlayer);
     }
+
+
+    //collision detection 
+    void OnTriggerEnter(Collider other)
+    {
+        building.OnTriggerEnter();
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        building.OnTriggerExit();
+    }
 }
