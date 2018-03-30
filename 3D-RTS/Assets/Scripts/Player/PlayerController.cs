@@ -6,6 +6,13 @@ public class PlayerController : MonoBehaviour
     //prefabs
     public GameObject guildHallPrefab;
     public GameObject arenaPrefab;
+    public GameObject markerPrefab;
+    public GameObject spellPrefab;
+    public GameObject slashPrefab;
+    public GameObject hitPrefab;
+
+    //references
+    public GameController gameController;
 
     //selected group of units
     public List<Group> selectedGroups;
@@ -37,13 +44,6 @@ public class PlayerController : MonoBehaviour
     //behavior util file
     public BehaviorUtil behavior;
 
-    //particle systems for now here for testing purposes
-    //marker for unit destination
-    public GameObject markerPrefab;
-    public GameObject spellPrefab;
-    public GameObject slashPrefab;
-    public GameObject hitPrefab;
-
     //controllers for the particle systems
     public ProjectileController magicSpell;
     public EffectController swordSlash;
@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
+        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         patrolStartPoint = new Vector3(-1, -1, -1);
         playerSelectedGroups = false;
         playerSelectedSingleGroup = false;
@@ -67,6 +68,7 @@ public class PlayerController : MonoBehaviour
         selectedGroups = new List<Group>();
         battles = new List<TurnBasedBattleController>();
         groups = new List<Group>();
+        playerBuildings = new List<Building>();
         behavior = new BehaviorUtil();
 
         destinationMarker = Instantiate(markerPrefab , Vector3.zero , Quaternion.identity).GetComponent<EffectController>();
@@ -189,6 +191,48 @@ public class PlayerController : MonoBehaviour
             }
 
             buildingToBeBuilt = Instantiate(guildHallPrefab, Vector3.zero, Quaternion.Euler(-90.0f, -45.0f, 0.0f)).GetComponent<GuildHallController>().building;
+            buildingToBeBuilt.MoveBuilding(terrainHit.point);
+        }
+
+        //build blacksmith
+        if (Input.GetKeyDown("2"))
+        {
+            if (buildingToBeBuilt != null)
+            {
+                //Replace buildings if we already have a building to build
+                Destroy(buildingToBeBuilt.GameObject);
+                buildingToBeBuilt = null;
+            }
+
+            buildingToBeBuilt = gameController.CreateBlacksmith(true);
+            buildingToBeBuilt.MoveBuilding(terrainHit.point);
+        }
+
+        //build Archery range
+        if (Input.GetKeyDown("3"))
+        {
+            if (buildingToBeBuilt != null)
+            {
+                //Replace buildings if we already have a building to build
+                Destroy(buildingToBeBuilt.GameObject);
+                buildingToBeBuilt = null;
+            }
+
+            buildingToBeBuilt = gameController.CreateArcheryRange(true);
+            buildingToBeBuilt.MoveBuilding(terrainHit.point);
+        }
+
+        //build temple of magi
+        if (Input.GetKeyDown("4"))
+        {
+            if (buildingToBeBuilt != null)
+            {
+                //Replace buildings if we already have a building to build
+                Destroy(buildingToBeBuilt.GameObject);
+                buildingToBeBuilt = null;
+            }
+
+            buildingToBeBuilt = gameController.CreateTempleOfMagi(true);
             buildingToBeBuilt.MoveBuilding(terrainHit.point);
         }
 
