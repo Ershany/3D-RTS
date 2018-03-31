@@ -25,7 +25,6 @@ public abstract class DynamicUnit : Unit
     protected float strength_growth;
     protected float intelligence_growth;
     
-
     protected string name;
     protected string className;
     public float attackTime { get; set; }

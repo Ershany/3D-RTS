@@ -36,6 +36,7 @@ public class GameController : MonoBehaviour
     private EnemyController enemyController;
     public GuildHallController guildHall;
 
+    private List<RandomEncounterController> randomEncounters;
     //Dictionary
     public string[] unitNames;
 
@@ -45,6 +46,17 @@ public class GameController : MonoBehaviour
 
     void Awake()
     {
+        //Get all the random encounters to check for their battles 
+        randomEncounters = new List<RandomEncounterController>();
+
+        GameObject[] encounters = GameObject.FindGameObjectsWithTag("RandomEncounter");
+
+        for (int i = 0; i < encounters.Length; i++)
+        {
+            randomEncounters.Add(encounters[i].GetComponent<RandomEncounterController>());
+        }
+
+
         //gold
         playerGold = 200;
         enemyGold = 200;
@@ -230,8 +242,6 @@ public class GameController : MonoBehaviour
 
                             //position of battle, 2 groups in conflict, and arena asset 
                             playerController.battles.Add(new TurnBasedBattleController(new Vector3(playerController.groups[i].GetUnits()[k].GetTransform().position.x, 0.0f, playerController.groups[i].GetUnits()[k].GetTransform().position.z), playerController.groups[i], enemyController.enemyGroups[j], arena));
-
-                            //i = 4;
 
                             //start battle for both units 
                             playerController.groups[i].BattleStarted();
