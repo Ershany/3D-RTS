@@ -144,7 +144,7 @@ public class GameController : MonoBehaviour
     //check if player's or enemy's
     public Building CreateArcheryRange(bool isPlayer)
     {
-        TechnologyBuildingController controller = Instantiate(ArcheryRangePrefab, Vector3.zero, Quaternion.Euler(0 , 90 , 0)).GetComponent<TechnologyBuildingController>();
+        TechnologyBuildingController controller = Instantiate(ArcheryRangePrefab, Vector3.zero, Quaternion.Euler(-90 , 180 , 0)).GetComponent<TechnologyBuildingController>();
 
         List<string> ArcheryRangeTechnologies = new List<string> { "Padding", "Resolve", "Spell Mastery", "Mental Strength", "Perception" };
         List<int> ArcheryRangeBuffs = new List<int> { 2, 2, 1, 1, 3 };
