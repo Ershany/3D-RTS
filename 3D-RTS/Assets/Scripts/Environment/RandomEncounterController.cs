@@ -3,51 +3,57 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public static class EnvironmentUnits
+public class EnvironmentUnits
 {
     //store prefabs for static units here
-    public static List<GameObject> staticUnits;
+    public static  List<GameObject> staticUnits;
 }
 
 public class RandomEncounterController : MonoBehaviour
 {
     public StaticUnitController staticUnit;
+    public bool battleEncountered;
 
 	// Use this for initialization
-	void Start () {
-		
+	void Start ()
+    {
+        battleEncountered = false;
 	}
 	
-	// Update is called once per frame
-	void Update ()
+	//LateUpdate just in case
+	void LateUpdate ()
     {
         //atm what i am gonna do is check it in update
-        if (staticUnit == null) return;
+        if (staticUnit == null)
+        {
+            battleEncountered = false;
+            return;
+        }
 
         //check if it is not in battle if it is not destroy the prefab
         //if the static unit won the battle remove it
         if (!staticUnit.unit.IsInBattle)
         {
+            battleEncountered = false;
             Destroy(staticUnit.unit.GetGameObject());
         }
     }
 
     //on collision check for random encounter
-    private void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
+        if (battleEncountered) return;
+
         int random = Random.Range(0, 7);
 
-        //50% chance of random encounter
-        if (random > 3)
+        //12.5% chance of random encounter (I think)
+        if (random > 1)
         {
-            //create the units at the position of the collision
-            FoeEncounter(collision.transform);
+            FoeEncounter(other.transform);
             Debug.Log("u have encountered an ememy unit");
+            battleEncountered = true;
         }
-        else
-        {
-            Debug.Log("u are fine u have survived this encounter");
-        }
+        else { Debug.Log("u are fine u have survived this encounter"); }
     }
 
     //setup a foe encounter
@@ -57,9 +63,7 @@ public class RandomEncounterController : MonoBehaviour
         int index = Random.Range(0 , EnvironmentUnits.staticUnits.Count - 1);
         GameObject unit = Instantiate(EnvironmentUnits.staticUnits[index], trans.position, Quaternion.identity);
 
-        //I think the look at stuff is done in the battle
-        //unit.transform.LookAt();
-
         staticUnit = unit.GetComponent<StaticUnitController>();
+        Debug.Log(staticUnit.name);
     }
 }

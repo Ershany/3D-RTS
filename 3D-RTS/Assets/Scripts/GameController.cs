@@ -8,6 +8,7 @@ using UnityEngine;
 //logic
 //UI
 //static units
+//fix battles completely 
 
 public class GameController : MonoBehaviour
 {
@@ -55,7 +56,6 @@ public class GameController : MonoBehaviour
     {
         //Get all the random encounters to check for their battles 
         randomEncounters = new List<RandomEncounterController>();
-
         GameObject[] encounters = GameObject.FindGameObjectsWithTag("RandomEncounter");
 
         for (int i = 0; i < encounters.Length; i++)
@@ -64,6 +64,7 @@ public class GameController : MonoBehaviour
         }
 
         //setting up static units prefabs for random encounters
+        EnvironmentUnits.staticUnits = new List<GameObject>();
         EnvironmentUnits.staticUnits.Add(trollPrefab);
         EnvironmentUnits.staticUnits.Add(wolfPrefab);
         //EnvironmentUnits.staticUnits.Add(spiderPrefab);
@@ -243,12 +244,12 @@ public class GameController : MonoBehaviour
             for (int w = 0; w < randomEncounters.Count; w++)
             {
                 //if we don't have a created unit or the unit is not in battle
-                if (randomEncounters[w].staticUnit || randomEncounters[w].staticUnit.unit.IsInBattle) continue;
+                if (randomEncounters[w].staticUnit == null || randomEncounters[w].staticUnit.unit.IsInBattle) continue;
 
-                if (Vector3.Distance(randomEncounters[w].staticUnit.transform.position, playerController.groups[i].GetFirstUnit().GetTransform().position) < 4)
+                if (Vector3.SqrMagnitude(randomEncounters[w].staticUnit.transform.position - playerController.groups[i].GetFirstUnit().GetTransform().position) < 25)
                 {
                     //battle with static unit
-                    GameObject arena = Instantiate(arenaPrefab , playerController.groups[i].GetFirstUnit().GetTransform().position , Quaternion.identity);
+                    //GameObject arena = Instantiate(arenaPrefab , playerController.groups[i].GetFirstUnit().GetTransform().position , Quaternion.identity);
 
                     //position of battle, 2 groups in conflict, and arena asset 
                     //playerController.battles.Add(new TurnBasedBattleController(new Vector3(playerController.groups[i].GetUnits()[k].GetTransform().position.x, 0.0f, playerController.groups[i].GetUnits()[k].GetTransform().position.z), playerController.groups[i], enemyController.enemyGroups[j], arena));
@@ -268,7 +269,7 @@ public class GameController : MonoBehaviour
                 {
                     for (int l = 0; l < enemyController.enemyGroups[j].GetUnits().Count; l++)
                     {
-                        if (Vector3.Distance(playerController.groups[i].GetUnits()[k].GetTransform().position, enemyController.enemyGroups[j].GetUnits()[l].GetTransform().position) < 4)
+                        if (Vector3.SqrMagnitude(playerController.groups[i].GetUnits()[k].GetTransform().position - enemyController.enemyGroups[j].GetUnits()[l].GetTransform().position) < 25)
                         {
                             GameObject arena = Instantiate(arenaPrefab, playerController.groups[i].GetUnits()[k].GetTransform().position, Quaternion.identity);
 

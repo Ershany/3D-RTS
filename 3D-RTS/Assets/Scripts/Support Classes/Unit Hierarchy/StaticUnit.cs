@@ -25,7 +25,7 @@ public class StaticUnit : Unit
 
     public GameObject GetGameObject()
     {
-        return this.gameObject;
+        return gameObject;
     }
 
     //Check animations here and check for death 

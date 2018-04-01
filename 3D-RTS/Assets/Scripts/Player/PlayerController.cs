@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
         Physics.Raycast(ray, out terrainHit, float.MaxValue, terrainMask);
         Physics.Raycast(ray, out hit);
 
-        
+        /*
         Plane p = new Plane(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 500.0f));
         float aa;
         p.Raycast(ray, out aa);
@@ -111,10 +111,9 @@ public class PlayerController : MonoBehaviour
 
             //check for input
             InputCheck(hit, terrainHit);
-        }
-        
+        }       
+        */
 
-        /*
         if (hit.collider)
         {
             // Move building with cursor if a building is currently selected (keep it on the terrain)
@@ -126,7 +125,6 @@ public class PlayerController : MonoBehaviour
             //check for input
             InputCheck(hit, terrainHit);
         }
-        */
 
         //check for battles
         BattleUpdate();
@@ -337,11 +335,11 @@ public class PlayerController : MonoBehaviour
                         {
                             for (int i = 0; i < groups.Count; i++)
                             {
-                                Debug.Log("started searching groups");
+                                //Debug.Log("started searching groups");
 
                                 for (int j = 0; j < groups[i].GetUnits().Count; j++)
                                 {
-                                    Debug.Log("searching units of group " + i);
+                                    //Debug.Log("searching units of group " + i);
 
                                     if (hit.collider.gameObject == groups[i].GetUnits()[j].GetGameObject())
                                     {
@@ -404,7 +402,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
     private void SetSelectedUnitsDestination(Vector3 destination, Transform dynamicDestination)
     {
         for (int i = 0; i < selectedGroups.Count; i++)
@@ -416,6 +413,7 @@ public class PlayerController : MonoBehaviour
         }
         patrolStartPoint = new Vector3(-1, -1, -1);
     }
+
     private void SetSelectedUnitsPatrol(Vector3 destination1, Vector3 destination2)
     {
         for (int i = 0; i < selectedGroups.Count; i++)
@@ -427,7 +425,6 @@ public class PlayerController : MonoBehaviour
         }
         patrolStartPoint = new Vector3(-1, -1, -1);
     }
-
 
     public void SelectOnRect(Vector2 v1, Vector2 v2)
     {
@@ -538,7 +535,6 @@ public class PlayerController : MonoBehaviour
         v21 = new Vector2(v2.x, v1.y);
         vn = v1 - ((Vector2.Distance(v1, v2) * 0.5f) * new Vector2(Vector3.Normalize((v1 - v2)).x, Vector3.Normalize((v1 - v2)).y));
 
-        Debug.Log("Here1");
         RaycastHit hit1;
         RaycastHit hit2;
         RaycastHit hit3;
@@ -669,6 +665,7 @@ public class PlayerController : MonoBehaviour
         Destroy(polyColGameObject);
 
     }
+
     //selects a building
     public void SelectBuilding(Building building)
     {
@@ -722,6 +719,9 @@ public class PlayerController : MonoBehaviour
         // Loop through the group and activate/deactivate the highlight quad for each unit
         for (int i = 0; i < group.GetUnits().Count; ++i)
         {
+            //if unit is dead he doesn't get highlighted anymore
+            if (group.GetUnits()[i].IsDead && shouldHighlight) continue;
+
             GameObject gameObj = group.GetUnits()[i].GetGameObject();
             foreach (Transform child in gameObj.transform)
             {
