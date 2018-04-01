@@ -53,7 +53,7 @@ GameObject:
   - component: {fileID: 23353694927690690}
   - component: {fileID: 114498032841969644}
   - component: {fileID: 65534640641196160}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: ArcheryRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 33700813286841636}
   - component: {fileID: 64717662390859494}
   - component: {fileID: 23561113422686266}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HighlightQuad (1)
   m_TagString: HighlightQuad
   m_Icon: {fileID: 0}
@@ -254,7 +254,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1411003141588078}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
+  m_LocalRotation: {x: 0.27059793, y: 0.65328157, z: 0.65328157, w: -0.27059793}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 300, y: 300, z: 300}
   m_Children:
@@ -270,7 +270,7 @@ Transform:
   - {fileID: 4684341434058074}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -90, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 225, z: 0}
 --- !u!4 &4684341434058074
 Transform:
   m_ObjectHideFlags: 1
@@ -460,4 +460,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 855c5649e726c2c49a822d35d41c5500, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingHealth: 0
+  buildingHealth: 500

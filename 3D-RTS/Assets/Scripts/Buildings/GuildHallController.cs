@@ -25,7 +25,7 @@ public class GuildHallController : MonoBehaviour
     {
         //setup members 
         //for now
-        building = new Building(gameObject, buildingHealth , "GuildHall" , true);
+        building = new Building(gameObject, Building.BuildingType.GUILDHALL, buildingHealth , "GuildHall" , true);
 
 
         building.name = "GuildHall";
@@ -46,6 +46,11 @@ public class GuildHallController : MonoBehaviour
         selectedNewUnitNum = -1;
         selectedRosterUnitNum = -1;
 
+    }
+
+    void Update()
+    {
+        building.Update();
     }
 
     //Add a unit to the roster
@@ -188,15 +193,6 @@ public class GuildHallController : MonoBehaviour
         
 
     }
-
-
-    void Update()
-    {
-        //check gui here 
-        // Update building
-        building.Update();
-    }
-
 
 
     void OnTriggerEnter(Collider other)

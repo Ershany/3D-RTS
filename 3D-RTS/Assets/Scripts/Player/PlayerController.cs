@@ -263,9 +263,14 @@ public class PlayerController : MonoBehaviour
                 // Place the building on the terrain
                 if (buildingToBeBuilt.PlaceBuildingOnTerrain())
                 {
-                    buildingToBeBuilt.GameObject.GetComponent<GuildHallController>().GuildHallPlaced();
+                    DeselectBuilding();
                     SelectBuilding(buildingToBeBuilt);
-                    guildHallBuilt = true;
+
+                    if (buildingToBeBuilt.Type == Building.BuildingType.GUILDHALL)
+                    {
+                        guildHallBuilt = true;
+                        buildingToBeBuilt.GameObject.GetComponent<GuildHallController>().GuildHallPlaced();
+                    }
                     buildingToBeBuilt = null;
                     Debug.Log("Building Placed");
                 }

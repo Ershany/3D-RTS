@@ -10,7 +10,7 @@ GameObject:
   - component: {fileID: 479178}
   - component: {fileID: 3308656}
   - component: {fileID: 2351616}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: wood
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ GameObject:
   - component: {fileID: 486584}
   - component: {fileID: 3380446}
   - component: {fileID: 2339852}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 431890}
   - component: {fileID: 3300986}
   - component: {fileID: 2376476}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: plants
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61,7 +61,7 @@ GameObject:
   - component: {fileID: 447116}
   - component: {fileID: 3310992}
   - component: {fileID: 2315260}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: brick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -79,7 +79,7 @@ GameObject:
   - component: {fileID: 9575846}
   - component: {fileID: 114833116644714770}
   - component: {fileID: 65436255431799000}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: TempleOfMagi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 451114}
   - component: {fileID: 3327224}
   - component: {fileID: 2364564}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: roof
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 463488}
   - component: {fileID: 3398594}
   - component: {fileID: 2322956}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,7 +154,7 @@ Transform:
   m_GameObject: {fileID: 181858}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_Children:
   - {fileID: 447116}
   - {fileID: 463488}
@@ -572,7 +572,7 @@ GameObject:
   - component: {fileID: 33391167652847142}
   - component: {fileID: 64851893792788246}
   - component: {fileID: 23023884443979116}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HighlightQuad (1)
   m_TagString: HighlightQuad
   m_Icon: {fileID: 0}
@@ -834,9 +834,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Convex: 0
-  m_InflateMesh: 0
+  m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!65 &65436255431799000
@@ -862,4 +862,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 855c5649e726c2c49a822d35d41c5500, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingHealth: 0
+  buildingHealth: 500

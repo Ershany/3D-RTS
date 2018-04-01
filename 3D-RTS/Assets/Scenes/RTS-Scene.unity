@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -1484,7 +1484,7 @@ Prefab:
     - target: {fileID: 224171518231044722, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0.79004836
+      value: 0.7897322
       objectReference: {fileID: 0}
     - target: {fileID: 224171518231044722, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
@@ -1494,22 +1494,22 @@ Prefab:
     - target: {fileID: 224525339166781462, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0.25811455
+      value: 0.25805667
       objectReference: {fileID: 0}
     - target: {fileID: 224525339166781462, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0.40835226
+      value: 0.40848488
       objectReference: {fileID: 0}
     - target: {fileID: 224931675022599706, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 177.49432
+      value: 177.45453
       objectReference: {fileID: 0}
     - target: {fileID: 224461523077330656, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 31.501389
+      value: 31.548813
       objectReference: {fileID: 0}
     - target: {fileID: 224931675022599706, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
@@ -1534,7 +1534,7 @@ Prefab:
     - target: {fileID: 224526746319373070, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 6.099983
+      value: 6.0999756
       objectReference: {fileID: 0}
     - target: {fileID: 224051209399826244, guid: a6741b7b18791d045902a32a7191189f,
         type: 2}

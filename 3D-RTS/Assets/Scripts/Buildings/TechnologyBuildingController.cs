@@ -49,6 +49,11 @@ public class TechnologyBuildingController : MonoBehaviour
         affectedUnit = "";
     }
 
+    void Update()
+    {
+        building?.Update();
+    }
+
     public void AddBuff(string buffName)
     {
         if (buffName == healthBuffName)
@@ -239,7 +244,13 @@ public class TechnologyBuildingController : MonoBehaviour
         //setup unit affected and building 
         this.affectedUnit = affectedUnit;
         buildingHealth = health;
-        building = new Building(gameObject , buildingHealth , name , isPlayer);
+
+        if (name == "Blacksmith")
+            building = new Building(gameObject, Building.BuildingType.BLACKSMITH, buildingHealth, name, isPlayer);
+        else if (name == "ArcheryRange")
+            building = new Building(gameObject, Building.BuildingType.ARCHERYRANGE, buildingHealth, name, isPlayer);
+        else if (name == "TempleOfMagi")
+            building = new Building(gameObject, Building.BuildingType.TEMPLEOFMAGI, buildingHealth, name, isPlayer);
     }
 
 

@@ -4,6 +4,12 @@ using UnityEngine.AI;
 
 public class Building
 {
+    public enum BuildingType
+    {
+        GUILDHALL, BLACKSMITH, ARCHERYRANGE, TEMPLEOFMAGI
+    }
+
+    public BuildingType Type { get; private set; }
     public bool IsDestroyed { get; private set; }
     public bool IsPlaced { get; private set; }
     public bool isPlayerBuilding;
@@ -15,18 +21,21 @@ public class Building
     private List<Renderer> renderers;
     private int containingColliderCount;
 
-    public Building(GameObject obj, float health , string buildingName , bool isPlayer)
+    public Building(GameObject obj, BuildingType buildingType, float health, string buildingName, bool isPlayer)
     {
         GameObject = obj;
+        Type = buildingType;
         renderers = new List<Renderer>();
         boxCollider = GameObject.GetComponent<BoxCollider>();
-        renderers.Add(this.GameObject.GetComponent<Renderer>());
-
+    
+        // Create references to object renderers
+        Renderer objRenderer = this.GameObject.GetComponent<Renderer>();
+        if (objRenderer != null)
+            renderers.Add(this.GameObject.GetComponent<Renderer>());
         foreach(Transform child in this.GameObject.transform)
         {
             if (!child.CompareTag("HeightCheck"))
             {
-                Debug.Log("we have a renderer");
                 renderers.Add(child.gameObject.GetComponent<Renderer>());
             }
         }
@@ -109,6 +118,8 @@ public class Building
             SetHighlightPower(0.0f);
             this.GameObject.layer = 0;
 
+            SetHighlightPower(0.0f);
+
             return true;
         }
 
@@ -136,7 +147,10 @@ public class Building
     {
         foreach (Renderer renderer in renderers)
         {
-            renderer.material.SetColor("_HighlightColor", highlightColor);
+            foreach (Material mat in renderer.materials)
+            {
+                mat.SetColor("_HighlightColor", highlightColor);
+            }
         }
     }
 
@@ -145,7 +159,10 @@ public class Building
     {
         foreach (Renderer renderer in renderers)
         {
-           // renderer.material.SetFloat("_HighlightPower", value);
+            foreach (Material mat in renderer.materials)
+            {
+                mat.SetFloat("_HighlightPower", value);
+            }
         }
     }
 }
