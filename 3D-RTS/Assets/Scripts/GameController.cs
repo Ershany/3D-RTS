@@ -290,10 +290,17 @@ public class GameController : MonoBehaviour
     //checking for units that want to return to the guild hall
     void GuildHallReturnCheck()
     {
-        if (guildHall != null)
+        if (guildHall != null && playerController.groups.Count > 0)
         {
+            Debug.Log(playerController.groups.Count);
             for (int i = 0; i < playerController.groups.Count; i++)
             {
+                if(playerController.groups[i].GetUnits().Count < 1)
+                {
+                    playerController.groups.RemoveAt(i);
+                    i--;
+                    continue;
+                }
                 //Change from destination to the actual player's mouse click
                 if (guildHall.gameObject.GetComponent<BoxCollider>().bounds.Contains(playerController.groups[i].rawDestination))
                 {
@@ -309,8 +316,9 @@ public class GameController : MonoBehaviour
 
                             if (guildHall.gameObject.GetComponent<BoxCollider>().bounds.SqrDistance(playerController.groups[i].GetUnits()[j].GetTransform().position) < 3)
                             {
-                                playerController.groups[i].GetUnits()[j].GetAgent().areaMask = 5;
+                                //playerController.groups[i].GetUnits()[j].GetAgent().areaMask = 5;
                                 guildHall.ReturnUnit(playerController.groups[i], j);
+                                j = 0;
                                 if (playerController.groups[i].GetUnits().Count == 0)
                                 {
                                     playerController.groups.RemoveAt(i);

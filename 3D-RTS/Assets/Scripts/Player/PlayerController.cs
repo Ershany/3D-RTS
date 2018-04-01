@@ -128,6 +128,7 @@ public class PlayerController : MonoBehaviour
 
         //check for battles
         BattleUpdate();
+        ErrorCorrection();
     }
 
     //Check for battles
@@ -750,5 +751,23 @@ public class PlayerController : MonoBehaviour
     {
         DeselectBuilding();
         DeselectGroups();
+    }
+
+    void ErrorCorrection()
+    {
+        for (int i = 0; i < groups.Count; i++)
+        {
+            for (int j = 0; j < groups[i].GetUnits().Count; j++)
+            {
+                if (groups[i].GetUnits()[j].GetGameObject().activeSelf)
+                {
+                    if (groups[i].GetUnits()[j].GetAgent().enabled == false)
+                    {
+                        Debug.Log("Reset agent for group " + i);
+                        groups[i].GetUnits()[j].GetAgent().enabled = true;
+                    }
+                }
+            }
+        }
     }
 }

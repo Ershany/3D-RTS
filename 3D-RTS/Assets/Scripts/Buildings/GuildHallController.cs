@@ -148,11 +148,12 @@ public class GuildHallController : MonoBehaviour
 
             for(int i = 0; i < unitsToBeDeployed.Count; i++)
             {
-                unitsToBeDeployed[i].GetTransform().position = transform.position + new Vector3(-4 + i, 0, -6);
+                Debug.Log((Vector3.Normalize(Vector3.Cross(transform.up, transform.forward))));
+                unitsToBeDeployed[i].GetTransform().position = transform.position + transform.up * 12 + (i * 6 * (Vector3.Normalize(Vector3.Cross(transform.up, transform.forward))));
                 unitsToBeDeployed[i].GetGameObject().SetActive(true);
             }
             Debug.Log(transform.position);
-            gameController.AddFactionGroup(unitsToBeDeployed, transform.position + new Vector3(-4, 0, -6), true);
+            gameController.AddFactionGroup(unitsToBeDeployed, unitsToBeDeployed[0].GetTransform().position, true);
             unitsToBeDeployed.Clear();
 
             Debug.Log("Deployed group");
