@@ -41,7 +41,7 @@ public class RandomEncounterController : MonoBehaviour
         if (random > 3)
         {
             //create the units at the position of the collision
-            FoeEncounter(collision.transform.position);
+            FoeEncounter(collision.transform);
             Debug.Log("u have encountered an ememy unit");
         }
         else
@@ -51,10 +51,15 @@ public class RandomEncounterController : MonoBehaviour
     }
 
     //setup a foe encounter
-    void FoeEncounter(Vector3 position)
+    void FoeEncounter(Transform trans)
     {
         //instantiate a random static unit
         int index = Random.Range(0 , EnvironmentUnits.staticUnits.Count - 1);
-        staticUnit = Instantiate(EnvironmentUnits.staticUnits[index] , position , Quaternion.identity).GetComponent<StaticUnitController>();
+        GameObject unit = Instantiate(EnvironmentUnits.staticUnits[index], trans.position, Quaternion.identity);
+
+        //I think the look at stuff is done in the battle
+        //unit.transform.LookAt();
+
+        staticUnit = unit.GetComponent<StaticUnitController>();
     }
 }

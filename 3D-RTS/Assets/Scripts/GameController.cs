@@ -21,6 +21,12 @@ public class GameController : MonoBehaviour
     public GameObject enemyInfantryPrefab;
     public GameObject enemyMagePrefab;
 
+    //Static Untis
+    public GameObject trollPrefab;
+    public GameObject goblinPrefab;
+    public GameObject wolfPrefab;
+    //public GameObject spiderPrefab; //maybe not the spider its not done yet 
+
     // UI stuff
     public GameObject groupPrefab;
     public GameObject arenaPrefab;
@@ -56,6 +62,11 @@ public class GameController : MonoBehaviour
             randomEncounters.Add(encounters[i].GetComponent<RandomEncounterController>());
         }
 
+        //setting up static units prefabs for random encounters
+        EnvironmentUnits.staticUnits.Add(trollPrefab);
+        EnvironmentUnits.staticUnits.Add(wolfPrefab);
+        //EnvironmentUnits.staticUnits.Add(spiderPrefab);
+        EnvironmentUnits.staticUnits.Add(goblinPrefab);
 
         //gold
         playerGold = 200;
