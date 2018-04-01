@@ -11,7 +11,7 @@ public static class EnvironmentUnits
 
 public class RandomEncounterController : MonoBehaviour
 {
-    StaticUnitController staticUnit;
+    public StaticUnitController staticUnit;
 
 	// Use this for initialization
 	void Start () {

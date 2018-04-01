@@ -7,6 +7,7 @@ using UnityEngine;
 //Buildings:
 //logic
 //UI
+//static units
 
 public class GameController : MonoBehaviour
 {
@@ -110,7 +111,6 @@ public class GameController : MonoBehaviour
 
         //Debug.Log("enemy groups: " + enemyController.enemyGroups.Count); 
         AddFactionGroup(enemyUnits, new Vector3(5.0f, 0.0f, 40.0f), false);
-
     }
 
     void Update()
@@ -233,15 +233,36 @@ public class GameController : MonoBehaviour
     //Check for a battle instance 
     void BattleCheck()
     {
-        //check for battles
+        //check for battles with player's units
         for (int i = 0; i < playerController.groups.Count; i++)
         {
-            //if we a group is in a battle leave
-            //might need to change this
+            //if group is in battle no need to check
             if (playerController.groups[i].GetFirstUnit().IsInBattle) continue;
 
+            //check for static units 
+            for (int w = 0; w < randomEncounters.Count; w++)
+            {
+                //if we don't have a created unit or the unit is not in battle
+                if (randomEncounters[w].staticUnit || randomEncounters[w].staticUnit.unit.IsInBattle) continue;
+
+                if (Vector3.Distance(randomEncounters[w].staticUnit.transform.position, playerController.groups[i].GetFirstUnit().GetTransform().position) < 4)
+                {
+                    //battle with static unit
+                    GameObject arena = Instantiate(arenaPrefab , playerController.groups[i].GetFirstUnit().GetTransform().position , Quaternion.identity);
+
+                    //position of battle, 2 groups in conflict, and arena asset 
+                    //playerController.battles.Add(new TurnBasedBattleController(new Vector3(playerController.groups[i].GetUnits()[k].GetTransform().position.x, 0.0f, playerController.groups[i].GetUnits()[k].GetTransform().position.z), playerController.groups[i], enemyController.enemyGroups[j], arena));
+
+                    //start battle for both units 
+                    //playerController.groups[i].BattleStarted();
+                }
+            }
+
+            //check enemy Units
             for (int j = 0; j < enemyController.enemyGroups.Count; j++)
             {
+                //if enemy is in battle continue
+                if (enemyController.enemyGroups[j].GetFirstUnit().IsInBattle) continue;
 
                 for (int k = 0; k < playerController.groups[i].GetUnits().Count; k++)
                 {
