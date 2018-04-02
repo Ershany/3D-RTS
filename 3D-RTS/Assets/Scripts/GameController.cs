@@ -100,9 +100,10 @@ public class GameController : MonoBehaviour
 
 
         /* Create some enemy units */
-        EnemyArcherController archer = Instantiate(enemyArcherPrefab, new Vector3(5.0f, 0.0f, 40.0f), Quaternion.identity, gameObject.transform).GetComponent<EnemyArcherController>();
-        EnemyInfantryController infantry = Instantiate(enemyInfantryPrefab, new Vector3(5.0f, 0.0f, 40.0f), Quaternion.identity, gameObject.transform).GetComponent<EnemyInfantryController>();
-        EnemyMageController mage = Instantiate(enemyMagePrefab, new Vector3(5.0f, 0.0f, 40.0f), Quaternion.identity, gameObject.transform).GetComponent<EnemyMageController>();
+        Vector3 enemyPos = new Vector3(412.0f, 0.0f, 450.0f);
+        EnemyArcherController archer = Instantiate(enemyArcherPrefab, enemyPos, Quaternion.identity, gameObject.transform).GetComponent<EnemyArcherController>();
+        EnemyInfantryController infantry = Instantiate(enemyInfantryPrefab, enemyPos, Quaternion.identity, gameObject.transform).GetComponent<EnemyInfantryController>();
+        EnemyMageController mage = Instantiate(enemyMagePrefab, enemyPos, Quaternion.identity, gameObject.transform).GetComponent<EnemyMageController>();
 
         List<DynamicUnit> enemyUnits = new List<DynamicUnit>();
         enemyUnits.Add(archer.demonUnit);
@@ -110,7 +111,7 @@ public class GameController : MonoBehaviour
         enemyUnits.Add(mage.demonUnit);
 
         //Debug.Log("enemy groups: " + enemyController.enemyGroups.Count); 
-        AddFactionGroup(enemyUnits, new Vector3(5.0f, 0.0f, 40.0f), false);
+        AddFactionGroup(enemyUnits, enemyPos, false);
     }
 
     void Update()
@@ -225,7 +226,7 @@ public class GameController : MonoBehaviour
 
         // Add either to player or enemy
         if (isPlayer) { playerController.groups.Add(grp); }
-        else { enemyController.enemyGroups.Add(grp); }
+        else { enemyController.AddGroup(grp); }
 
         factionUnits.Clear();
     }

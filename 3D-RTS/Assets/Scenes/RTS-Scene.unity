@@ -858,7 +858,7 @@ MonoBehaviour:
   smoothing: 2
   cameraSpeed: 100
   mouseDeadzoneOffset: 1
-  minCameraFOV: 40
+  minCameraFOV: 10
   cameraZoomSpeed: 1000
 --- !u!114 &1868534114
 MonoBehaviour:

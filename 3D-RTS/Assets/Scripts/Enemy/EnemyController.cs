@@ -4,30 +4,55 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    //enemy units
+    // members
     public List<Group> enemyGroups;
-    public Group selectedGroup { get; set; }
+    private Group strongestGroup;
+    private Group selectedGroup { get; set; }
+    public IState State { get; set; }
 
-    //game controller
+    // references
     public GameController gameController;
+    public PlayerController playerController;
 
     //maybe handle enemy units and buildings here
     public List<Building> enemyBuildings;
+
+    // states
+    public static OffenseState offenseState = new OffenseState();
+    public static DefenseState defenseState = new DefenseState();
+    public static HarvestState harvestState = new HarvestState();
 
     void Awake()
     {
         enemyBuildings = new List<Building>();
         enemyGroups = new List<Group>();
-
-        //Reference Game Controller
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+        playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
+
+        State = harvestState;
     }
 
-    // Update is called once per frame
     void Update()
     {
+        State?.Update(this);
+    }
 
-        //do stuff
-        //mostly ai stuff all enemy moves will be made here
+    public void AddGroup(Group group)
+    {
+        enemyGroups.Add(group);
+        
+        if (strongestGroup == null)
+        {
+            strongestGroup = group;
+        }
+        else
+        {
+            
+        }
+    }
+
+    public bool RemoveGroup(Group group) 
+    {
+        return enemyGroups.Remove(group);
     }
 }
