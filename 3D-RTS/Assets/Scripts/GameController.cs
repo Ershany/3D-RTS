@@ -81,22 +81,23 @@ public class GameController : MonoBehaviour
         //SOME RANDOM NAMES JUST FOR THE FUN OF IT 
         unitNames = new string[] { "" , "" , "" , "" , "" , "" , "" , "" , "" , "" , "" , "" , "" , ""};
 
+        
         /* Create some player units */
-        List<DynamicUnit> myUnits;
-        myUnits = new List<DynamicUnit>();
-        myUnits.Add(CreatePlayerArcher(new Vector3(20, 0, 20)));
-        myUnits.Add(CreatePlayerWarrior(new Vector3(20, 0, 20)));
-        myUnits.Add(CreatePlayerMage(new Vector3(20, 0, 20)));
+        //List<DynamicUnit> myUnits;
+        //myUnits = new List<DynamicUnit>();
+        //myUnits.Add(CreatePlayerArcher(new Vector3(20, 0, 20)));
+        //myUnits.Add(CreatePlayerWarrior(new Vector3(20, 0, 20)));
+        //myUnits.Add(CreatePlayerMage(new Vector3(20, 0, 20)));
 
-        // add some player units
-        AddFactionGroup(myUnits, new Vector3(20, 0, 20), true);
+        //// add some player units
+        //AddFactionGroup(myUnits, new Vector3(20, 0, 20), true);
 
-        myUnits.Add(CreatePlayerArcher(new Vector3(80, 0, 30)));
-        myUnits.Add(CreatePlayerWarrior(new Vector3(80, 0, 30)));
-        myUnits.Add(CreatePlayerMage(new Vector3(80, 0, 30)));
+        //myUnits.Add(CreatePlayerArcher(new Vector3(80, 0, 30)));
+        //myUnits.Add(CreatePlayerWarrior(new Vector3(80, 0, 30)));
+        //myUnits.Add(CreatePlayerMage(new Vector3(80, 0, 30)));
 
-        // add some player units
-        AddFactionGroup(myUnits, new Vector3(80, 0, 30), true);
+        //// add some player units
+        //AddFactionGroup(myUnits, new Vector3(80, 0, 30), true);
 
 
 
@@ -148,7 +149,7 @@ public class GameController : MonoBehaviour
     public Building CreateBlacksmith(bool isPlayer)
     {
         //instantiate blacksmith 
-        TechnologyBuildingController controller = Instantiate(blacksmithPrefab, Vector3.zero, Quaternion.Euler(0 , -225 , 0)).GetComponent<TechnologyBuildingController>();
+        TechnologyBuildingController controller = Instantiate(blacksmithPrefab, Vector3.zero, Quaternion.Euler(0 , -180 , 0)).GetComponent<TechnologyBuildingController>();
 
         List<string> blackSmithTechnologies = new List<string> { "Reinforced Armor" , "Courage" , "Spell Mastery" , "Education" , "Sword Mastery"};
         List<int> blacksmithBuffs = new List<int> { 3 , 1 , 1 , 2 , 2};
@@ -168,7 +169,7 @@ public class GameController : MonoBehaviour
     //check if player's or enemy's
     public Building CreateArcheryRange(bool isPlayer)
     {
-        TechnologyBuildingController controller = Instantiate(ArcheryRangePrefab, Vector3.zero, Quaternion.Euler(-90 , 225 , 0)).GetComponent<TechnologyBuildingController>();
+        TechnologyBuildingController controller = Instantiate(ArcheryRangePrefab, Vector3.zero, Quaternion.Euler(-90 , 180 , 0)).GetComponent<TechnologyBuildingController>();
 
         List<string> ArcheryRangeTechnologies = new List<string> { "Padding", "Resolve", "Spell Mastery", "Mental Strength", "Perception" };
         List<int> ArcheryRangeBuffs = new List<int> { 2, 2, 1, 1, 3 };
@@ -188,7 +189,7 @@ public class GameController : MonoBehaviour
     //check if player's or enemy's
     public Building CreateTempleOfMagi(bool isPlayer)
     {
-        TechnologyBuildingController controller = Instantiate(TempleOfMagiPrefab, Vector3.zero, Quaternion.Euler(0 , 135 , 0)).GetComponent<TechnologyBuildingController>();
+        TechnologyBuildingController controller = Instantiate(TempleOfMagiPrefab, Vector3.zero, Quaternion.Euler(0 , 180 , 0)).GetComponent<TechnologyBuildingController>();
 
         List<string> templeOfMagiTechnologies = new List<string> { "Armored Robes", "Mutations", "Mage Training", "Wisdom", "Contemplation" };
         List<int> templeOfmagiBuffs = new List<int> { 0, 0, 0, 0, 0 };
@@ -290,6 +291,60 @@ public class GameController : MonoBehaviour
     //checking for units that want to return to the guild hall
     void GuildHallReturnCheck()
     {
+        // if we don't have groups or a guild hall return
+        if (playerController.groups.Count < 1 || !guildHall) return;
+
+        // we have a guild hall and we have groups in this case 
+        if (guildHall)
+        {
+            //get collider
+            BoxCollider guildHallCollider = guildHall.gameObject.GetComponent<BoxCollider>();
+
+            //check for a returning unit
+            for (int i = 0; i < playerController.groups.Count; i++)
+            {
+                // if i clicked at the guild hall return this unit to the guild hall
+                if (guildHallCollider.bounds.Contains(playerController.groups[i].rawDestination))
+                {
+                    // return group to guild hall 
+                    playerController.groups[i].returningToGuildHall = true;
+                    playerController.groups[i].DisableCollisionsWithCollider(guildHallCollider);
+                    playerController.groups[i].ResetGroupDestination();
+                }
+
+                //check for returing units if they are close enough to be added back to the guild hall 
+                for (int j = 0; j < playerController.groups[i].GetUnits().Count; j++)
+                {
+                    // if they are not returning to guild hall ignore this check
+                    if (!playerController.groups[i].returningToGuildHall) return;
+
+                    //check distance squared to the guild hall to allow returning back
+                    if (guildHallCollider.bounds.SqrDistance(playerController.groups[i].GetUnits()[j].GetTransform().position) < 6)
+                    {
+                        //deselect group first (i set the function to be public in playerController)
+                        playerController.HighlightGroup(playerController.groups[i] , false);
+
+                        //add the entire group back to guild hall
+                        for (int w = 0; w < playerController.groups[i].GetUnits().Count; w++)
+                        {
+                            guildHall.roster.Add(playerController.groups[i].GetUnits()[w]);
+                            playerController.groups[i].GetUnits()[w].GetGameObject().SetActive(false);
+                            playerController.groups[i].GetUnits()[w].SetGameObjectParent(null);
+                        }
+
+                        //clear the group's unit , delete the group gameObject and remove the group itself
+                        playerController.groups[i].GetUnits().Clear();
+                        Destroy(playerController.groups[i].gameObject);
+                        playerController.groups.RemoveAt(i);
+                        i--;
+                        break;
+                    }
+                }
+            }
+        }
+
+        //julian's code here
+        /*
         if (guildHall != null && playerController.groups.Count > 0)
         {
             for (int i = 0; i < playerController.groups.Count; i++)
@@ -300,12 +355,15 @@ public class GameController : MonoBehaviour
                     i--;
                     continue;
                 }
+
+          
                 //Change from destination to the actual player's mouse click
                 if (guildHall.gameObject.GetComponent<BoxCollider>().bounds.Contains(playerController.groups[i].rawDestination))
                 {
                     playerController.groups[i].returningToGuildHall = true;
                     playerController.groups[i].DisableCollisionsWithCollider(guildHall.gameObject.GetComponent<BoxCollider>());
                     playerController.groups[i].ResetGroupDestination();
+
                     for (int j = 0; j < playerController.groups[i].GetUnits().Count; j++)
                     {
                         if (guildHall.gameObject.GetComponent<BoxCollider>().bounds.SqrDistance(playerController.groups[i].GetUnits()[j].GetTransform().position) < 6)
@@ -339,6 +397,7 @@ public class GameController : MonoBehaviour
                 }
             }
         }
+        */
     }
 
     // ????

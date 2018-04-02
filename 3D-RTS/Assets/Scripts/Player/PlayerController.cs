@@ -94,26 +94,6 @@ public class PlayerController : MonoBehaviour
         Physics.Raycast(ray, out terrainHit, float.MaxValue, terrainMask);
         Physics.Raycast(ray, out hit);
 
-        /*
-        Plane p = new Plane(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 500.0f));
-        float aa;
-        p.Raycast(ray, out aa);
-        Vector3 intersectPoint = ray.GetPoint(aa);
-
-        if (intersectPoint.x > 0 && intersectPoint.x < 500 &&
-            intersectPoint.z > 0 && intersectPoint.z < 500)
-        {
-            // Move building with cursor if a building is currently selected (keep it on the terrain)
-            if (buildingToBeBuilt != null)
-            {
-                buildingToBeBuilt.MoveBuilding(terrainHit.point);
-            }
-
-            //check for input
-            InputCheck(hit, terrainHit);
-        }       
-        */
-
         if (hit.collider)
         {
             // Move building with cursor if a building is currently selected (keep it on the terrain)
@@ -263,7 +243,9 @@ public class PlayerController : MonoBehaviour
                 // Place the building on the terrain
                 if (buildingToBeBuilt.PlaceBuildingOnTerrain())
                 {
-                    DeselectBuilding();
+                    //DeselectBuilding();
+                    //DeselectGroups();
+                    Deselect();
                     SelectBuilding(buildingToBeBuilt);
 
                     if (buildingToBeBuilt.Type == Building.BuildingType.GUILDHALL)
@@ -271,11 +253,10 @@ public class PlayerController : MonoBehaviour
                         guildHallBuilt = true;
                         buildingToBeBuilt.GameObject.GetComponent<GuildHallController>().GuildHallPlaced();
                     }
+
                     buildingToBeBuilt = null;
                     Debug.Log("Building Placed");
                 }
-
-                DeselectGroups();
             }
             else if (hit.collider.gameObject.name == "Terrain")
             {
@@ -331,11 +312,19 @@ public class PlayerController : MonoBehaviour
                     default:
                         if (hit.collider.gameObject.GetComponent<GuildHallController>() != null)
                         {
+                            Deselect();
                             SelectBuilding(hit.collider.gameObject.GetComponent<GuildHallController>().building);
-                            DeselectGroups();
                             playerSelectedSingleGroup = false;
                             playerSelectedGroups = false;
                             playerSelectedGuildHall = true;
+                        }
+                        else if (hit.collider.gameObject.GetComponent<TechnologyBuildingController>())
+                        {
+                            Deselect(); 
+                            SelectBuilding(hit.collider.gameObject.GetComponent<TechnologyBuildingController>().building);
+                            playerSelectedSingleGroup = false;
+                            playerSelectedGroups = false;
+                            playerSelectedGuildHall = false;
                         }
                         else
                         {
@@ -720,7 +709,7 @@ public class PlayerController : MonoBehaviour
     }
 
     //hightlight code for groups
-    void HighlightGroup(Group group, bool shouldHighlight)
+    public void HighlightGroup(Group group, bool shouldHighlight)
     {
         // Loop through the group and activate/deactivate the highlight quad for each unit
         for (int i = 0; i < group.GetUnits().Count; ++i)

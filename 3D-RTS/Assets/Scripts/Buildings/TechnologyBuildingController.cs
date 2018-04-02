@@ -253,7 +253,6 @@ public class TechnologyBuildingController : MonoBehaviour
             building = new Building(gameObject, Building.BuildingType.TEMPLEOFMAGI, buildingHealth, name, isPlayer);
     }
 
-
     //collision detection 
     void OnTriggerEnter(Collider other)
     {
