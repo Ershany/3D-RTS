@@ -39,13 +39,20 @@ public class RandomEncounterController : MonoBehaviour
         {
             if (objectsToIgnore.Contains(playCon.groups[i]))
             {
+                if (!playCon.groups[i].GetFirstUnit().IsInBattle)
+                {
+                    if(Random.Range(0,10) > 6)
+                    {
+                        objectsToIgnore.Remove(playCon.groups[i]);
+                    }
+                }
                 continue;
             }
             for (int j = 0; j < playCon.groups[i].GetUnits().Count; j++)
             {
                 int random = Random.Range(0, 7);
 
-                if (random > 1)
+                if (random > 5)
                 {
                     if (gameObject.GetComponent<Collider>().bounds.Contains(playCon.groups[i].GetUnits()[j].GetTransform().position))
                     {

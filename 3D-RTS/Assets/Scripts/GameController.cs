@@ -49,7 +49,6 @@ public class GameController : MonoBehaviour
     public string[] unitNames;
 
     //player and enemy resources
-    public int playerGold;
     public int enemyGold;
 
     void Awake()
@@ -71,7 +70,6 @@ public class GameController : MonoBehaviour
         //EnvironmentUnits.staticUnits.Add(goblinPrefab);
 
         //gold
-        playerGold = 200;
         enemyGold = 200;
 
         guildHall = null;

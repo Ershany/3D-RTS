@@ -54,6 +54,8 @@ public class PlayerController : MonoBehaviour
     private string activeCommand;
     private Vector3 patrolStartPoint;
 
+    public int playerGold;
+
     //used for terrain movements and selections
     int terrainMask;
 
@@ -70,6 +72,7 @@ public class PlayerController : MonoBehaviour
         groups = new List<Group>();
         playerBuildings = new List<Building>();
         behavior = new BehaviorUtil();
+        playerGold = 200;
 
         destinationMarker = Instantiate(markerPrefab , Vector3.zero , Quaternion.identity).GetComponent<EffectController>();
         magicSpell = Instantiate(spellPrefab , Vector3.zero , Quaternion.identity).GetComponent<ProjectileController>();
@@ -121,6 +124,7 @@ public class PlayerController : MonoBehaviour
             if (tbbc.battleOver)
             {
                 bool playersWon = true;
+                int enemyCount = 0;
                 if (tbbc.enemyGroup != null)
                 {
 
@@ -129,52 +133,57 @@ public class PlayerController : MonoBehaviour
 
                     for (int j = 0; i < tbbc.enemyGroup.GetUnits().Count; i++)
                     {
+                        enemyCount += 5;
                         if (!tbbc.enemyGroup.GetUnits()[j].IsDead)
                             playersWon = false;
                     }
-
-                    tbbc.playerGroup.BattledEnded();
-
-                    for (int j = 0; i < tbbc.playerGroup.GetUnits().Count; i++)
-                    {
-                        if (playersWon)
-                        {
-                            //Give players rewards
-                        }
-                    }
-
-                    tbbc.playerGroup.BattledEnded();
-                    Destroy(tbbc.arena);
-                    battles.Remove(tbbc);
-                    i--;
                 }
                 else
                 {
-
-
-
                     for (int j = 0; i < tbbc.randomBattleEnemies.Count; i++)
                     {
+                        enemyCount += 2;
                         if (tbbc.randomBattleEnemies[j].IsDead)
                             playersWon = false;
                         Destroy(tbbc.randomBattleEnemies[j].GetGameObject());
                         j--;
                     }
-
-
-                    for (int j = 0; i < tbbc.playerGroup.GetUnits().Count; i++)
-                    {
-                        if (playersWon)
-                        {
-                            //Give players rewards
-                        }
-                    }
-
-                    tbbc.playerGroup.BattledEnded();
-                    Destroy(tbbc.arena);
-                    battles.Remove(tbbc);
-                    i--;
                 }
+
+
+
+                tbbc.playerGroup.BattledEnded();
+
+                if (!tbbc.playerGroup.GetUnits()[0].IsPlayerControlled)
+                    continue;
+
+                int groupIndex = -1;
+                for (int j = 0; j < groups.Count; j++)
+                {
+                    if (tbbc.playerGroup == groups[j])
+                        groupIndex = j;
+                }
+                if (groupIndex == -1)
+                    continue;
+                for (int j = 0; j < groups[groupIndex].GetUnits().Count; j++)
+                {
+                    if (groups[groupIndex].GetUnits()[j].IsDead)
+                    {
+                        DynamicUnit temp = groups[groupIndex].GetUnits()[j];
+                        groups[groupIndex].GetUnits().RemoveAt(j);
+                        Destroy(temp.GetGameObject());
+
+                    }
+                    if (playersWon)
+                    {
+                        playerGold += enemyCount;
+                            //Give players rewards
+                    }
+                }
+                tbbc.playerGroup.BattledEnded();
+                Destroy(tbbc.arena);
+                battles.Remove(tbbc);
+                i--;
             }
             else
             {

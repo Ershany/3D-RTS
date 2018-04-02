@@ -197,6 +197,7 @@ public class GuildHallGUIUtil : MonoBehaviour
         if (guildCon.selectedNewUnitNum > 0 && guildCon.selectedNewUnitNum <= guildCon.defaultUnits.Count)
         {
             stdGUICon.PopulateStatusWindow(guildCon.defaultUnits[guildCon.selectedNewUnitNum - 1], recruitStatusWindow);
+            goldCostPanel.GetComponent<UnityEngine.UI.Text>().text = guildCon.goldCosts[guildCon.selectedNewUnitNum].ToString();
         }
     }
 
