@@ -33,7 +33,7 @@ public class NeutralUnit : DynamicUnit
         if (IsDead)
         {
             agent.isStopped = true;
-            collider.enabled = false;
+            gameObject.GetComponent<SphereCollider>().enabled = false;
             agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
         }
         if (IsAttacking)

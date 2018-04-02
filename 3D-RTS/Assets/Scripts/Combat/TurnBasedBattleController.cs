@@ -255,7 +255,6 @@ public class TurnBasedBattleController
             for (int i = 0; i < randomBattleEnemies.Count; i++)
             {
                 playerGroup.GetUnits()[i].GetTransform().localScale = new Vector3(4, 4, 4);
-                randomBattleEnemies[i].GetAgent().stoppingDistance = initialStoppingDistance;
             }
         }
     }

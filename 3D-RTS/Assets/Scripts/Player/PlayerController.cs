@@ -121,28 +121,60 @@ public class PlayerController : MonoBehaviour
             if (tbbc.battleOver)
             {
                 bool playersWon = true;
-                tbbc.enemyGroup.BattledEnded();
-
-                for (int j = 0; i < tbbc.enemyGroup.GetUnits().Count; i++)
+                if (tbbc.enemyGroup != null)
                 {
-                    if (!tbbc.enemyGroup.GetUnits()[j].IsDead)
-                        playersWon = false;
-                }
 
-                tbbc.playerGroup.BattledEnded();
 
-                for (int j = 0; i < tbbc.playerGroup.GetUnits().Count; i++)
-                {
-                    if (playersWon)
+                    tbbc.enemyGroup.BattledEnded();
+
+                    for (int j = 0; i < tbbc.enemyGroup.GetUnits().Count; i++)
                     {
-                        //Give players rewards
+                        if (!tbbc.enemyGroup.GetUnits()[j].IsDead)
+                            playersWon = false;
                     }
-                }
 
-                tbbc.playerGroup.BattledEnded();
-                Destroy(tbbc.arena);
-                battles.Remove(tbbc);
-                i--;
+                    tbbc.playerGroup.BattledEnded();
+
+                    for (int j = 0; i < tbbc.playerGroup.GetUnits().Count; i++)
+                    {
+                        if (playersWon)
+                        {
+                            //Give players rewards
+                        }
+                    }
+
+                    tbbc.playerGroup.BattledEnded();
+                    Destroy(tbbc.arena);
+                    battles.Remove(tbbc);
+                    i--;
+                }
+                else
+                {
+
+
+
+                    for (int j = 0; i < tbbc.randomBattleEnemies.Count; i++)
+                    {
+                        if (tbbc.randomBattleEnemies[j].IsDead)
+                            playersWon = false;
+                        Destroy(tbbc.randomBattleEnemies[j].GetGameObject());
+                        j--;
+                    }
+
+
+                    for (int j = 0; i < tbbc.playerGroup.GetUnits().Count; i++)
+                    {
+                        if (playersWon)
+                        {
+                            //Give players rewards
+                        }
+                    }
+
+                    tbbc.playerGroup.BattledEnded();
+                    Destroy(tbbc.arena);
+                    battles.Remove(tbbc);
+                    i--;
+                }
             }
             else
             {
