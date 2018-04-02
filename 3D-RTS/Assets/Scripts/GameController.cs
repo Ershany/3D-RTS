@@ -147,7 +147,7 @@ public class GameController : MonoBehaviour
     public Building CreateBlacksmith(bool isPlayer)
     {
         //instantiate blacksmith 
-        TechnologyBuildingController controller = Instantiate(blacksmithPrefab, Vector3.zero, Quaternion.Euler(0 , -180 , 0)).GetComponent<TechnologyBuildingController>();
+        TechnologyBuildingController controller = Instantiate(blacksmithPrefab, Vector3.zero, Quaternion.Euler(0 , -225 , 0)).GetComponent<TechnologyBuildingController>();
 
         List<string> blackSmithTechnologies = new List<string> { "Reinforced Armor" , "Courage" , "Spell Mastery" , "Education" , "Sword Mastery"};
         List<int> blacksmithBuffs = new List<int> { 3 , 1 , 1 , 2 , 2};
@@ -167,7 +167,7 @@ public class GameController : MonoBehaviour
     //check if player's or enemy's
     public Building CreateArcheryRange(bool isPlayer)
     {
-        TechnologyBuildingController controller = Instantiate(ArcheryRangePrefab, Vector3.zero, Quaternion.Euler(-90 , 180 , 0)).GetComponent<TechnologyBuildingController>();
+        TechnologyBuildingController controller = Instantiate(ArcheryRangePrefab, Vector3.zero, Quaternion.Euler(-90 , 225 , 0)).GetComponent<TechnologyBuildingController>();
 
         List<string> ArcheryRangeTechnologies = new List<string> { "Padding", "Resolve", "Spell Mastery", "Mental Strength", "Perception" };
         List<int> ArcheryRangeBuffs = new List<int> { 2, 2, 1, 1, 3 };
@@ -187,7 +187,7 @@ public class GameController : MonoBehaviour
     //check if player's or enemy's
     public Building CreateTempleOfMagi(bool isPlayer)
     {
-        TechnologyBuildingController controller = Instantiate(TempleOfMagiPrefab, Vector3.zero, Quaternion.Euler(0 , 180 , 0)).GetComponent<TechnologyBuildingController>();
+        TechnologyBuildingController controller = Instantiate(TempleOfMagiPrefab, Vector3.zero, Quaternion.Euler(0 , 135 , 0)).GetComponent<TechnologyBuildingController>();
 
         List<string> templeOfMagiTechnologies = new List<string> { "Armored Robes", "Mutations", "Mage Training", "Wisdom", "Contemplation" };
         List<int> templeOfmagiBuffs = new List<int> { 0, 0, 0, 0, 0 };
