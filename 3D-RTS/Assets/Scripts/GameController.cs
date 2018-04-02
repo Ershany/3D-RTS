@@ -65,10 +65,10 @@ public class GameController : MonoBehaviour
 
         //setting up static units prefabs for random encounters
         EnvironmentUnits.staticUnits = new List<GameObject>();
-        EnvironmentUnits.staticUnits.Add(trollPrefab);
+        //EnvironmentUnits.staticUnits.Add(trollPrefab);
         EnvironmentUnits.staticUnits.Add(wolfPrefab);
         //EnvironmentUnits.staticUnits.Add(spiderPrefab);
-        EnvironmentUnits.staticUnits.Add(goblinPrefab);
+        //EnvironmentUnits.staticUnits.Add(goblinPrefab);
 
         //gold
         playerGold = 200;
@@ -242,21 +242,33 @@ public class GameController : MonoBehaviour
             if (playerController.groups[i].GetFirstUnit().IsInBattle) continue;
 
             //check for static units 
+            
             for (int w = 0; w < randomEncounters.Count; w++)
             {
+                randomEncounters[w].UpdateRandomBattleController();
                 //if we don't have a created unit or the unit is not in battle
-                if (randomEncounters[w].staticUnit == null || randomEncounters[w].staticUnit.unit.IsInBattle) continue;
+                if (randomEncounters[w].neutralUnits == null) continue;
 
-                if (Vector3.SqrMagnitude(randomEncounters[w].staticUnit.transform.position - playerController.groups[i].GetFirstUnit().GetTransform().position) < 25)
+                if (randomEncounters[w].battleEncountered)
                 {
+                    //if (Vector3.SqrMagnitude(randomEncounters[w].transform.position - playerController.groups[i].GetFirstUnit().GetTransform().position) < 25)
+
+
+                    Debug.Log("Here4");
                     //battle with static unit
-                    //GameObject arena = Instantiate(arenaPrefab , playerController.groups[i].GetFirstUnit().GetTransform().position , Quaternion.identity);
+                    GameObject arena = Instantiate(arenaPrefab, randomEncounters[w].battleGroups[0].GetFirstUnit().GetTransform().position, Quaternion.identity);
 
                     //position of battle, 2 groups in conflict, and arena asset 
-                    //playerController.battles.Add(new TurnBasedBattleController(new Vector3(playerController.groups[i].GetUnits()[k].GetTransform().position.x, 0.0f, playerController.groups[i].GetUnits()[k].GetTransform().position.z), playerController.groups[i], enemyController.enemyGroups[j], arena));
+                    playerController.battles.Add(new TurnBasedBattleController(new Vector3(
+                        randomEncounters[w].battleGroups[0].GetFirstUnit().GetTransform().position.x,
+                        0.0f, randomEncounters[w].battleGroups[0].GetFirstUnit().GetTransform().position.z),
+                        randomEncounters[w].battleGroups[0], randomEncounters[w].GetUnits(0), arena));
 
                     //start battle for both units 
-                    //playerController.groups[i].BattleStarted();
+                    randomEncounters[w].neutralUnits.RemoveAt(0);
+                    randomEncounters[w].battleGroups.RemoveAt(0);
+                    randomEncounters[w].battleEncountered = false;
+                    playerController.groups[i].BattleStarted();
                 }
             }
 
