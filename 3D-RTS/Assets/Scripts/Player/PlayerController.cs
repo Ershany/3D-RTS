@@ -49,11 +49,15 @@ public class PlayerController : MonoBehaviour
     public MarkerController unitHit;
     public MarkerController destinationMarker;
 
+    private string activeCommand;
+    private Vector3 patrolStartPoint;
+
     //used for terrain movements and selections
     int terrainMask;
 
     void Awake()
     {
+        patrolStartPoint = new Vector3(-1, -1, -1);
         playerSelectedGroups = false;
         playerSelectedSingleGroup = false;
         playerSelectedGuildHall = false;
@@ -85,8 +89,13 @@ public class PlayerController : MonoBehaviour
         Physics.Raycast(ray, out terrainHit, float.MaxValue, terrainMask);
         Physics.Raycast(ray, out hit);
 
-        //if we didn't hit anything then there won't be a collider for it so we don't input check or do anything that uses the mouse
-        if (hit.collider != null)
+        Plane p = new Plane(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 500.0f));
+        float aa;
+        p.Raycast(ray, out aa);
+        Vector3 intersectPoint = ray.GetPoint(aa);
+
+        if (intersectPoint.x > 0 && intersectPoint.x < 500 &&
+            intersectPoint.z > 0 && intersectPoint.z < 500)
         {
             // Move building with cursor if a building is currently selected (keep it on the terrain)
             if (buildingToBeBuilt != null)
@@ -160,7 +169,7 @@ public class PlayerController : MonoBehaviour
                 buildingToBeBuilt = null;
             }
 
-            buildingToBeBuilt = Instantiate(guildHallPrefab, Vector3.zero, Quaternion.Euler(-90.0f, 0.0f, 0.0f)).GetComponent<GuildHallController>().building;
+            buildingToBeBuilt = Instantiate(guildHallPrefab, Vector3.zero, Quaternion.Euler(-90.0f, -45.0f, 0.0f)).GetComponent<GuildHallController>().building;
             buildingToBeBuilt.MoveBuilding(terrainHit.point);
         }
 
@@ -203,45 +212,95 @@ public class PlayerController : MonoBehaviour
             }
             else if (hit.collider.gameObject.name == "Terrain")
             {
-                Deselect();
-                Debug.Log("clicked terrain deselect buildingToBeBuilt");
+                switch (activeCommand)
+                {
+                    case "Move":
+                        if (selectedGroups.Count > 0)
+                            SetSelectedUnitsDestination(terrainHit.point, null);
+                        break;
+                    case "Attack":
+
+                        break;
+                    case "Patrol":
+                        if (patrolStartPoint.x != -1)
+                        {
+                            SetSelectedUnitsPatrol(patrolStartPoint, terrainHit.point);
+                        }
+                        else
+                        {
+                            patrolStartPoint = terrainHit.point;
+                        }
+                        break;
+
+                    default:
+                        Deselect();
+                        Debug.Log("clicked terrain deselect buildingToBeBuilt");
+                        break;
+                }
+
             }
             else if (hit.collider.gameObject != null)
             {
-                if (hit.collider.gameObject.GetComponent<GuildHallController>() != null)
-                {
-                    SelectBuilding(hit.collider.gameObject.GetComponent<GuildHallController>().building);
-                    DeselectGroups();
-                    playerSelectedSingleGroup = false;
-                    playerSelectedGroups = false;
-                    playerSelectedGuildHall = true;
-                }
-                else
-                {
-                    for (int i = 0; i < groups.Count; i++)
-                    {
-                        Debug.Log("started searching groups");
 
-                        for (int j = 0; j < groups[i].GetUnits().Count; j++)
+                switch (activeCommand)
+                {
+                    case "Move":
+                        if (selectedGroups.Count > 0)
+                            SetSelectedUnitsDestination(terrainHit.point, hit.collider.gameObject.transform);
+                        break;
+                    case "Attack":
+
+                        break;
+                    case "Patrol":
+                        if (patrolStartPoint.x != -1)
                         {
-                            Debug.Log("searching units of group " + i);
+                            SetSelectedUnitsPatrol(patrolStartPoint, terrainHit.point);
+                        }
+                        else
+                        {
+                            patrolStartPoint = terrainHit.point;
+                        }
+                        break;
 
-                            if (hit.collider.gameObject == groups[i].GetUnits()[j].GetGameObject())
+                    default:
+                        if (hit.collider.gameObject.GetComponent<GuildHallController>() != null)
+                        {
+                            SelectBuilding(hit.collider.gameObject.GetComponent<GuildHallController>().building);
+                            DeselectGroups();
+                            playerSelectedSingleGroup = false;
+                            playerSelectedGroups = false;
+                            playerSelectedGuildHall = true;
+                        }
+                        else
+                        {
+                            for (int i = 0; i < groups.Count; i++)
                             {
-                                DeselectGroups();
-                                selectedGroups.Add(groups[i]);
-                                SelectGroups();
-                                playerSelectedSingleGroup = true;
+                                Debug.Log("started searching groups");
 
-                                DeselectBuilding();
-                                buildingToBeBuilt = null;
-                                Debug.Log("found the selected group");
-                                break;
+                                for (int j = 0; j < groups[i].GetUnits().Count; j++)
+                                {
+                                    Debug.Log("searching units of group " + i);
+
+                                    if (hit.collider.gameObject == groups[i].GetUnits()[j].GetGameObject())
+                                    {
+                                        DeselectGroups();
+                                        selectedGroups.Add(groups[i]);
+                                        SelectGroups();
+                                        playerSelectedSingleGroup = true;
+                                        DeselectBuilding();
+                                        buildingToBeBuilt = null;
+                                        Debug.Log("found the selected group");
+                                        break;
+                                    }
+                                }
                             }
                         }
-                    }
+                        break;
                 }
+
             }
+
+
         }
 
         /*
@@ -271,19 +330,14 @@ public class PlayerController : MonoBehaviour
             else if (selectedGroups.Count > 0)
             {
                 //Move a groups to a position 
-                for (int i = 0; i < selectedGroups.Count; i++)
-                {
-                    if (!selectedGroups[i].GetFirstUnit().IsInBattle)
-                    {
-                        selectedGroups[i].SetGroupDestination(terrainHit.point);
-                    }
-                }
 
-                Vector3 destination = terrainHit.point + new Vector3(0, selectedGroups[0].GetFirstUnit().GetTransform().position.y + 5.0f, 0);
+
+                SetSelectedUnitsDestination(terrainHit.point, null);
 
                 //do destination marker code here (might need some animation etc...)
                 //destinationMarker.ActivateMarker(destination);
-                swordSlash.ActivateMarker(destination);
+                destinationMarker.ActivateMarker(selectedGroups[0].GetUnits()[0].GetAgent().destination);
+                //swordSlash.ActivateMarker(destination);
                 //unitHit.ActivateMarker(destination);
                 //magicSpell.Activate(selectedGroups[0].GetFirstUnit().GetTransform().position + new Vector3 (0, 5.0f ,0) , destination);
 
@@ -291,9 +345,36 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
+
+
+    private void SetSelectedUnitsDestination(Vector3 destination, Transform dynamicDestination)
+    {
+        for (int i = 0; i < selectedGroups.Count; i++)
+        {
+            if (!selectedGroups[i].GetFirstUnit().IsInBattle)
+            {
+                selectedGroups[i].SetGroupDestination(destination, dynamicDestination);
+            }
+        }
+        patrolStartPoint = new Vector3(-1, -1, -1);
+    }
+    private void SetSelectedUnitsPatrol(Vector3 destination1, Vector3 destination2)
+    {
+        for (int i = 0; i < selectedGroups.Count; i++)
+        {
+            if (!selectedGroups[i].GetFirstUnit().IsInBattle)
+            {
+                selectedGroups[i].SetGroupPatrol(destination1, destination2);
+            }
+        }
+        patrolStartPoint = new Vector3(-1, -1, -1);
+    }
+
+
     public void SelectOnRect(Vector2 v1, Vector2 v2)
     {
+		Vector3 point1, point2;
+		
         Debug.Log("Here1");
         RaycastHit hit1;
         RaycastHit hit2;
@@ -302,12 +383,50 @@ public class PlayerController : MonoBehaviour
 
         Physics.Raycast(ray1, out hit1, 200.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
         Physics.Raycast(ray2, out hit2, 200.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
+        Plane p = new Plane(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 500.0f));
+        float aa;
 
-        if (hit1.point != null && hit2.point != null) {
-            float minX = Mathf.Min(hit1.point.x, hit2.point.x);
-            float maxX = Mathf.Max(hit1.point.x, hit2.point.x);
-            float minZ = Mathf.Min(hit1.point.z, hit2.point.z);
-            float maxZ = Mathf.Max(hit1.point.z, hit2.point.z);
+        if (hit1.collider == null)
+        {
+            p.Raycast(ray1, out aa);
+            point1 = ray1.GetPoint(aa);
+        }
+        else
+        {
+            point1 = hit1.point;
+        }
+        if (hit2.collider == null)
+        {
+            p.Raycast(ray2, out aa);
+            point2 = ray2.GetPoint(aa);
+        }
+        else
+        {
+            point2 = hit2.point;
+        }
+
+        if (Input.GetKey(KeyCode.Semicolon))
+        {
+
+            if (GameObject.FindGameObjectsWithTag("tempTracker").Length > 0)
+                Destroy(GameObject.FindGameObjectWithTag("tempTracker"));
+
+            GameObject temp = Instantiate(arenaPrefab);
+
+            Vector3 center = point1 - ((Vector3.Distance(point1, point2) * 0.5f) * Vector3.Normalize((point1 - point2))) + new Vector3(0, 1, 0);
+
+            temp.tag = "tempTracker";
+
+            temp.transform.position = center;
+
+            temp.transform.localScale = new Vector3(Mathf.Abs(point1.x - point2.x), 1, Mathf.Abs(point1.z - point2.z));
+        }
+        
+        if (point1 != null && point2 != null) {
+            float minX = Mathf.Min(point1.x, point2.x);
+            float maxX = Mathf.Max(point1.x, point2.x);
+            float minZ = Mathf.Min(point1.z, point2.z);
+            float maxZ = Mathf.Max(point1.z, point2.z);
 
             List<Group> newSelectedGroups = new List<Group>();
 
@@ -322,7 +441,7 @@ public class PlayerController : MonoBehaviour
                     if (unitPos.x > minX &&
                         unitPos.x < maxX &&
                         unitPos.z > minZ &&
-                        unitPos.z < maxZ)
+                        unitPos.z < maxZ )
                     {
                         Debug.Log("Here3");
                         newSelectedGroups.Add(groups[i]);
@@ -352,6 +471,146 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void SelectOnPoly(Vector2 v1, Vector2 v2)
+    {
+        Vector2 v12, v21, vn;
+        Vector3 point1, point2, point3, point4, point5;
+
+        v12 = new Vector2(v1.x, v2.y);
+        v21 = new Vector2(v2.x, v1.y);
+        vn = v1 - ((Vector2.Distance(v1, v2) * 0.5f) * new Vector2(Vector3.Normalize((v1 - v2)).x, Vector3.Normalize((v1 - v2)).y));
+
+        Debug.Log("Here1");
+        RaycastHit hit1;
+        RaycastHit hit2;
+        RaycastHit hit3;
+        RaycastHit hit4;
+        RaycastHit hit5;
+
+        Ray ray1 = Camera.main.ScreenPointToRay(v1);
+        Ray ray2 = Camera.main.ScreenPointToRay(v2);
+        Ray ray3 = Camera.main.ScreenPointToRay(v12);
+        Ray ray4 = Camera.main.ScreenPointToRay(v21);
+
+        Physics.Raycast(ray1, out hit1, 200.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
+        Physics.Raycast(ray2, out hit2, 200.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
+        Physics.Raycast(ray3, out hit3, 200.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
+        Physics.Raycast(ray4, out hit4, 200.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
+
+        Plane p = new Plane(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 500.0f));
+        float aa;
+
+
+
+        if (hit1.collider == null)
+        {
+            p.Raycast(ray1, out aa);
+            point1 = ray1.GetPoint(aa);
+        }
+        else
+        {
+            point1 = hit1.point;
+        }
+
+        if (hit2.collider == null)
+        {
+            p.Raycast(ray2, out aa);
+            point2 = ray2.GetPoint(aa);
+        }
+        else
+        {
+            point2 = hit2.point;
+        }
+
+        if (hit3.collider == null)
+        {
+            p.Raycast(ray3, out aa);
+            point3 = ray3.GetPoint(aa);
+        }
+        else
+        {
+            point3 = hit3.point;
+        }
+
+        if (hit4.collider == null)
+        {
+            p.Raycast(ray4, out aa);
+            point4 = ray4.GetPoint(aa);
+        }
+        else
+        {
+            point4 = hit4.point;
+        }
+
+
+        Ray ray5 = Camera.main.ScreenPointToRay(vn);
+        Physics.Raycast(ray5, out hit5, 200.0f, 1 << GameObject.FindGameObjectWithTag("Terrain").layer);
+
+        if (hit5.collider == null)
+        {
+            p.Raycast(ray5, out aa);
+            point5 = ray5.GetPoint(aa);
+        }
+        else
+        {
+            point5 = hit5.point;
+        }
+        GameObject polyColGameObject = new GameObject();
+        polyColGameObject.AddComponent<PolygonCollider2D>();
+        PolygonCollider2D polyCollider = polyColGameObject.GetComponent<PolygonCollider2D>();
+        Vector2[] ptsArr = new Vector2[4];
+
+        ptsArr[0] = new Vector2 (point1.x, point1.z);
+        ptsArr[1] = new Vector2(point2.x, point2.z);
+        ptsArr[2] = new Vector2(point3.x, point3.z);
+        ptsArr[3] = new Vector2(point4.x, point4.z);
+
+
+        polyCollider.points = new Vector2[4];
+        polyCollider.points = ptsArr;
+
+        if (point1 != null && point2 != null)
+        {
+            
+            List<Group> newSelectedGroups = new List<Group>();
+
+            for (int i = 0; i < groups.Count; i++)
+            {
+                List<DynamicUnit> _units = groups[i].GetUnits();
+                for (int j = 0; j < _units.Count; j++)
+                {
+                    Vector3 unitPos = _units[j].GetTransform().position;
+                    //Debug.Log("Unit Number " + j.ToString() + " " + unitPos + " " + minX + " " + maxX + ")
+                    if (polyCollider.bounds.Contains(new Vector2(unitPos.x, unitPos.z)))
+                    {
+                        newSelectedGroups.Add(groups[i]);
+                        j = _units.Count;
+                    }
+                }
+            }
+
+            if (newSelectedGroups.Count > 0)
+            {
+                DeselectGroups();
+                selectedGroups = newSelectedGroups;
+                SelectGroups();
+
+                DeselectBuilding();
+                if (selectedGroups.Count == 1)
+                {
+                    Debug.Log("HereSingle");
+                    playerSelectedSingleGroup = true;
+                }
+                else
+                {
+                    Debug.Log("HereMany");
+                    playerSelectedGroups = true;
+                }
+            }
+        }
+        Destroy(polyColGameObject);
+
+    }
     //selects a building
     public void SelectBuilding(Building building)
     {
@@ -376,6 +635,7 @@ public class PlayerController : MonoBehaviour
             HighlightGroup(group, false);
         }
         selectedGroups.Clear();
+        patrolStartPoint = new Vector3(-1, -1, -1);
     }
 
     //deslect buildings
@@ -386,6 +646,16 @@ public class PlayerController : MonoBehaviour
             HighlightBuilding(buildingSelected, false);
             buildingSelected = null;
         }
+    }
+
+    public void SetActiveCommand(string command)
+    {
+        activeCommand = command;
+    }
+
+    public string GetActiveCommand()
+    {
+        return activeCommand;
     }
 
     //hightlight code for groups

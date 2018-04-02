@@ -5,13 +5,39 @@ using UnityEngine;
 public class Group : MonoBehaviour {
 
     private List<DynamicUnit> units;
-    private bool isInBattle;
     public bool returningToGuildHall;
     public Vector3 rawDestination;
+    private Transform dynamicDestination;
+
+    private Vector3 patrolPoint1, patrolPoint2;
+    private bool patrolling;
     void Awake()
     {
+        patrolling = false;
+        patrolPoint1 = patrolPoint2 = new Vector3(-1, -1, -1);
         units = new List<DynamicUnit>();
-        isInBattle = false;
+        dynamicDestination = null;
+    }
+
+    void Update()
+    {
+        if (dynamicDestination != null)
+        {
+            SetGroupDestination(dynamicDestination.position, dynamicDestination);
+        }
+        if (patrolling)
+        {
+            for (int i = 0; i < units.Count; i++)
+            {
+                if(Vector3.Distance(units[i].GetTransform().position, units[i].GetAgent().destination) < 5)
+                {
+                    if (rawDestination == patrolPoint1)
+                        SetGroupDestination(patrolPoint2, null);
+                    else
+                        SetGroupDestination(patrolPoint1, null);
+                }
+            }
+        }
     }
 
     public void AddUnit(DynamicUnit unit)
@@ -36,13 +62,24 @@ public class Group : MonoBehaviour {
         }
     }
 
-    public void SetGroupDestination(Vector3 dest)
+    public void SetGroupDestination(Vector3 dest, Transform dynDest)
     {
+        patrolling = false;
+        dynamicDestination = dynDest;
         rawDestination = dest;
         foreach(DynamicUnit unit in units)
         {
             unit.SetDestination(dest);
         }
+    }
+    public void SetGroupPatrol(Vector3 dest1, Vector3 dest2)
+    {
+
+        patrolling = true;
+        SetGroupDestination(dest1, null);
+        patrolPoint1 = dest1;
+        patrolPoint2 = dest2;
+
     }
     public void ResetGroupDestination()
     {
@@ -59,6 +96,7 @@ public class Group : MonoBehaviour {
             unit.GetAgent().radius = 0.0f;
         }
     }
+
     public void ReInitializeBumperCars()
     {
         foreach (DynamicUnit unit in units)
@@ -66,6 +104,7 @@ public class Group : MonoBehaviour {
             unit.GetAgent().radius = 0.5f;
         }
     }
+
     public void DisableCollisionsWithCollider(Collider col)
     {
         foreach(DynamicUnit unit in units)
@@ -85,6 +124,7 @@ public class Group : MonoBehaviour {
 
     public void StopGroupMovement()
     {
+        patrolling = false;
         foreach(DynamicUnit unit in units)
         {
             unit.StopMovement();
@@ -93,9 +133,10 @@ public class Group : MonoBehaviour {
 
     public void BattleStarted()
     {
-        isInBattle = true;
-        foreach(DynamicUnit unit in units)
+        patrolling = false;
+        foreach (DynamicUnit unit in units)
         {
+            
             unit.IsInBattle = true;
         }
     }
@@ -103,7 +144,6 @@ public class Group : MonoBehaviour {
 
     public void BattledEnded()
     {
-        isInBattle = false;
         foreach (DynamicUnit unit in units)
         {
             unit.IsInBattle = false;
