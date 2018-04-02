@@ -136,7 +136,6 @@ public class Group : MonoBehaviour {
         patrolling = false;
         foreach (DynamicUnit unit in units)
         {
-            
             unit.IsInBattle = true;
         }
     }

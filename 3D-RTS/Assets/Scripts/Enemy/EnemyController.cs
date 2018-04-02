@@ -15,9 +15,9 @@ public class EnemyController : MonoBehaviour
     public PlayerController playerController;
 
     // states
-    private static OffenseState offenseState;
-    private static DefenseState defenseState;
-    private static HarvestState harvestState;
+    public static OffenseState offenseState = new OffenseState();
+    public static DefenseState defenseState = new DefenseState();
+    public static HarvestState harvestState = new HarvestState();
 
     void Awake()
     {
@@ -25,7 +25,7 @@ public class EnemyController : MonoBehaviour
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
 
-        State = offenseState;
+        State = harvestState;
     }
 
     void Update()
