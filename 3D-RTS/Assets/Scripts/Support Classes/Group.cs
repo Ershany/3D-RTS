@@ -96,6 +96,7 @@ public class Group : MonoBehaviour {
             unit.GetAgent().radius = 0.0f;
         }
     }
+
     public void ReInitializeBumperCars()
     {
         foreach (DynamicUnit unit in units)
@@ -103,6 +104,7 @@ public class Group : MonoBehaviour {
             unit.GetAgent().radius = 0.5f;
         }
     }
+
     public void DisableCollisionsWithCollider(Collider col)
     {
         foreach(DynamicUnit unit in units)
