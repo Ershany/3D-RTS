@@ -64,9 +64,9 @@ public class GameController : MonoBehaviour
         }
 
         //setting up static units prefabs for random encounters
-        EnvironmentUnits.staticUnits = new List<GameObject>();
+        EnvironmentUnits.neutralUnits = new List<GameObject>();
         //EnvironmentUnits.staticUnits.Add(trollPrefab);
-        EnvironmentUnits.staticUnits.Add(wolfPrefab);
+        EnvironmentUnits.neutralUnits.Add(wolfPrefab);
         //EnvironmentUnits.staticUnits.Add(spiderPrefab);
         //EnvironmentUnits.staticUnits.Add(goblinPrefab);
 
