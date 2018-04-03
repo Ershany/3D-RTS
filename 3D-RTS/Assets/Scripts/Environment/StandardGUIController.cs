@@ -426,7 +426,6 @@ public class StandardGUIController : MonoBehaviour
 
         member.GetStatus(ref str, ref intel, ref dex, ref mHP, ref currHP, ref mMP, ref currMP, ref level);
 
-        Debug.Log(member.GetName());
 
         panel.transform.Find("Name").GetComponent<UnityEngine.UI.Text>().text = member.GetName();
         panel.transform.Find("Class").GetComponent<UnityEngine.UI.Text>().text = member.GetClassName().Substring(3, 4) ;

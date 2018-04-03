@@ -100,7 +100,7 @@ public class RandomEncounterController : MonoBehaviour
     void FoeEncounter(Transform trans)
     {
         //Use to control number of enemies in a random encounter
-        int enemyCount = Random.Range(1, 2);
+        int enemyCount = Random.Range(1, 4);
         Debug.Log("enemyCount: " + enemyCount);
         //instantiate a random static unit
         List<NeutralUnitController> newBattleGroup = new List<NeutralUnitController>();
@@ -109,7 +109,10 @@ public class RandomEncounterController : MonoBehaviour
             int index = Random.Range(0, EnvironmentUnits.neutralUnits.Count - 1);
             // unit.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
             newBattleGroup.Add(Instantiate(EnvironmentUnits.neutralUnits[0], trans.position, Quaternion.identity).GetComponent<NeutralUnitController>());
-
+            while (newBattleGroup[newBattleGroup.Count - 1].transform == null)
+            {
+                Debug.Log("waiting");
+            }
             Debug.Log(newBattleGroup[i].name);
         }
         neutralUnits.Add(newBattleGroup);

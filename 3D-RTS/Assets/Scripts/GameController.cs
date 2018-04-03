@@ -253,8 +253,10 @@ public class GameController : MonoBehaviour
                     //if (Vector3.SqrMagnitude(randomEncounters[w].transform.position - playerController.groups[i].GetFirstUnit().GetTransform().position) < 25)
 
 
-                    Debug.Log("Here4");
                     //battle with static unit
+                    if (randomEncounters[w].GetUnits(0)[0].GetGameObject() == null)
+                        continue;
+                    
                     GameObject arena = Instantiate(arenaPrefab, randomEncounters[w].battleGroups[0].GetFirstUnit().GetTransform().position, Quaternion.identity);
 
                     //position of battle, 2 groups in conflict, and arena asset 

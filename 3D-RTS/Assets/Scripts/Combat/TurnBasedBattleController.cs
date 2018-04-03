@@ -60,7 +60,7 @@ public class TurnBasedBattleController
             enemyGroup.GetUnits()[i].GetTransform().position = new Vector3(pos.x - 0.45f * arena.transform.localScale.x, pos.y, pos.z - 0.5f * arena.transform.localScale.z + arena.transform.localScale.z * (1.0f / (float)(enemyGroup.GetUnits().Count + 1)) * (i + 1));
             Physics.IgnoreCollision(localCollider, enemyGroup.GetUnits()[i].GetGameObject().GetComponent<Collider>());
 
-            enemyGroup.GetUnits()[i].GetTransform().LookAt(new Vector3(pos.x, playerGroup.GetUnits()[i].GetTransform().position.y, playerGroup.GetUnits()[i].GetTransform().position.z));
+            enemyGroup.GetUnits()[i].GetTransform().LookAt(new Vector3(pos.x, playerGroup.GetUnits()[Mathf.Min(i, playerGroup.GetUnits().Count - 1)].GetTransform().position.y, playerGroup.GetUnits()[Mathf.Min(i,playerGroup.GetUnits().Count - 1)].GetTransform().position.z));
 
 
             enemyGroup.GetUnits()[i].attackTime = Mathf.Min((float)enemyGroup.GetUnits()[i].GetDexterity() * (1.0f - ((float)enemyGroup.GetUnits()[i].GetDexterity() / 10f)) * 3.0f, 75.0f) / 100.0f;
@@ -111,7 +111,7 @@ public class TurnBasedBattleController
             Debug.Log(randomBattleEnemies.Count);
             Debug.Log(randomBattleEnemies[i].GetTransform());
             randomBattleEnemies[i].GetTransform().localScale = new Vector3(0.1f, 0.1f, 0.1f);
-            randomBattleEnemies[i].GetTransform().position = new Vector3(pos.x - 0.45f * arena.transform.localScale.x, pos.y, pos.z - 0.5f * arena.transform.localScale.z + arena.transform.localScale.z * (1.0f / (float)(randomBattleEnemies.Count + 1)) * (i + 1));
+            randomBattleEnemies[i].GetTransform().position = new Vector3(pos.x - 0.45f * arena.transform.localScale.x, pos.y, pos.z - 0.55f * arena.transform.localScale.z + arena.transform.localScale.z * (1.05f / (float)(randomBattleEnemies.Count + 1)) * (i + 1));
             Physics.IgnoreCollision(localCollider, randomBattleEnemies[i].GetGameObject().GetComponent<Collider>());
 
             randomBattleEnemies[i].GetTransform().transform.LookAt(new Vector3(pos.x, playerGroup.GetUnits()[i].GetTransform().position.y, playerGroup.GetUnits()[i].GetTransform().position.z));
@@ -214,13 +214,10 @@ public class TurnBasedBattleController
 
             if (!attackingUnit.IsAttacking && !delaying)
             {
-                Debug.Log("Check1");
                 if (!attackingUnit.GetAgent().pathPending && attackingUnit.GetAgent().remainingDistance <= attackingUnit.GetAgent().stoppingDistance)
                 {
-                    Debug.Log("Check2");
                     if (!returningToStartingPosition)
                     {
-                        Debug.Log("Check3");
                         returningToStartingPosition = true;
 
                         attackingUnit.GetAgent().stoppingDistance = 0.1f;
@@ -332,13 +329,10 @@ public class TurnBasedBattleController
 
             if (!attackingUnit.IsAttacking && !delaying)
             {
-                Debug.Log("Check1");
                 if (!attackingUnit.GetAgent().pathPending && attackingUnit.GetAgent().remainingDistance <= attackingUnit.GetAgent().stoppingDistance)
                 {
-                    Debug.Log("Check2");
                     if (!returningToStartingPosition)
                     {
-                        Debug.Log("Check3");
                         returningToStartingPosition = true;
 
                         attackingUnit.GetAgent().stoppingDistance = 0.1f;

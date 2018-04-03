@@ -136,6 +136,7 @@ public class PlayerController : MonoBehaviour
                         enemyCount += 5;
                         if (!tbbc.enemyGroup.GetUnits()[j].IsDead)
                             playersWon = false;
+                        Destroy(tbbc.enemyGroup.GetUnits()[j].GetGameObject());
                     }
                 }
                 else
@@ -143,7 +144,7 @@ public class PlayerController : MonoBehaviour
                     for (int j = 0; i < tbbc.randomBattleEnemies.Count; i++)
                     {
                         enemyCount += 2;
-                        if (tbbc.randomBattleEnemies[j].IsDead)
+                        if (!tbbc.randomBattleEnemies[j].IsDead)
                             playersWon = false;
                         Destroy(tbbc.randomBattleEnemies[j].GetGameObject());
                         j--;
@@ -177,6 +178,7 @@ public class PlayerController : MonoBehaviour
                     if (playersWon)
                     {
                         playerGold += enemyCount;
+                        groups[groupIndex].GetUnits()[j].GiveExp(enemyCount * 15);
                             //Give players rewards
                     }
                 }

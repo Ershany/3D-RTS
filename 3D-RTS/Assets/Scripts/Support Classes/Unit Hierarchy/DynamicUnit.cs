@@ -152,6 +152,11 @@ public abstract class DynamicUnit : Unit
 
     public int GetLevel()
     {
+        if (experience >= GetExperienceRequired())
+        {
+            experience -= GetExperienceRequired();
+            level++;
+        }
         return level;
     }
     
@@ -188,6 +193,16 @@ public abstract class DynamicUnit : Unit
         return className;
     }
 
+    public void GiveExp(int xp)
+    {
+        experience += xp;
+        if (experience >= GetExperienceRequired())
+        {
+            experience -= GetExperienceRequired();
+            level++;
+        }
+    }
+
     public int GetExperience()
     {
         return experience;
@@ -195,7 +210,7 @@ public abstract class DynamicUnit : Unit
 
     public int GetExperienceRequired()
     {
-        return level * 100;
+        return 100 + (30 * (level - 1));
     }
 
     public void PermaBuffMaxHealth(float healthBuff)
