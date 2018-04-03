@@ -14,6 +14,9 @@ public class EnemyController : MonoBehaviour
     public GameController gameController;
     public PlayerController playerController;
 
+    //maybe handle enemy units and buildings here
+    public List<Building> enemyBuildings;
+
     // states
     public static OffenseState offenseState = new OffenseState();
     public static DefenseState defenseState = new DefenseState();
@@ -21,6 +24,7 @@ public class EnemyController : MonoBehaviour
 
     void Awake()
     {
+        enemyBuildings = new List<Building>();
         enemyGroups = new List<Group>();
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();

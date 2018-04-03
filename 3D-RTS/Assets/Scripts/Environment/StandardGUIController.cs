@@ -47,6 +47,11 @@ public class StandardGUIController : MonoBehaviour
     public int partyCreationWindowMemberClicked;
     public int groupSelectedToPreview;
 
+    public GameObject goldPanelValue;
+    public GameObject groupCountValue;
+    public GameObject activeBattleCountValue;
+
+
     public GameObject guildhallGUICollider;
     public GameObject standardGUICollider;
 
@@ -119,7 +124,7 @@ public class StandardGUIController : MonoBehaviour
             Debug.Log(groupMembers[i].name);
         }
         //groupInfoPanel.transform.Find("GroupMembers").GetComponentsInChildren<GameObject>(true, groupMembers);
-   
+
 
         activeMember = 0;
         activeMemberPanel = -1;
@@ -140,6 +145,12 @@ public class StandardGUIController : MonoBehaviour
         standardGUICollider = Instantiate(standardGUIColliderPrefab);
         standardGUICollider.transform.SetParent(mainCamera.transform, false);
         standardGUICollider.SetActive(standardGUIPanel.activeSelf);
+
+
+
+        goldPanelValue = this.gameObject.transform.Find("Resources").Find("GoldValue").gameObject;
+        groupCountValue = this.gameObject.transform.Find("UnitCount").Find("NumUnits").gameObject;
+        activeBattleCountValue = this.gameObject.transform.Find("CurrentBattlesStatus").Find("NumBattles").gameObject;
 
         //buildingInfoPanel = GameObject.FindGameObjectWithTag("BuildingInformationPanel");
 
@@ -273,6 +284,7 @@ public class StandardGUIController : MonoBehaviour
         */
 
         UpdateColliders();
+        UpdateResources();
     }
 
     void OnGUI()
@@ -314,6 +326,14 @@ public class StandardGUIController : MonoBehaviour
     {
         guildhallGUICollider.SetActive(guildGUIPanel.activeSelf);
     }
+
+    void UpdateResources()
+    {
+        goldPanelValue.GetComponent<UnityEngine.UI.Text>().text = _playerController.playerGold.ToString();
+        groupCountValue.GetComponent<UnityEngine.UI.Text>().text = _playerController.groups.Count.ToString();
+        activeBattleCountValue.GetComponent<UnityEngine.UI.Text>().text = _playerController.battles.Count.ToString();
+    }
+
     public void SetActiveMember(int i)
     {
         Debug.Log(i);
@@ -409,7 +429,7 @@ public class StandardGUIController : MonoBehaviour
         Debug.Log(member.GetName());
 
         panel.transform.Find("Name").GetComponent<UnityEngine.UI.Text>().text = member.GetName();
-        panel.transform.Find("Class").GetComponent<UnityEngine.UI.Text>().text = member.GetClassName().Substring(3) ;
+        panel.transform.Find("Class").GetComponent<UnityEngine.UI.Text>().text = member.GetClassName().Substring(3, 4) ;
         panel.transform.Find("Level").Find("LevelValue").GetComponent<UnityEngine.UI.Text>().text = member.GetLevel().ToString();
         panel.transform.Find("Level").Find("LevelValue").GetComponent<UnityEngine.UI.Text>().text = level.ToString();
 

@@ -25,7 +25,6 @@ public abstract class DynamicUnit : Unit
     protected float strength_growth;
     protected float intelligence_growth;
     
-
     protected string name;
     protected string className;
     public float attackTime { get; set; }
@@ -104,7 +103,6 @@ public abstract class DynamicUnit : Unit
         agent.SetDestination(GetTransform().position);
     }
 
-
     public void BeginAttack(List<DynamicUnit> targets)
     {
         opponents = targets;
@@ -169,7 +167,6 @@ public abstract class DynamicUnit : Unit
         max = maxHealth;
     }
 
-
     public void GetStatus(ref int str, ref int intel, ref int dex, ref float mHP, ref float currHP, ref int mMP, ref int currMP, ref int lvl)
     {
         str = GetStrength();
@@ -201,5 +198,40 @@ public abstract class DynamicUnit : Unit
         return level * 100;
     }
 
+    public void PermaBuffMaxHealth(float healthBuff)
+    {
+        //find previous ratio of health
+        float healthRatio = currentHealth / maxHealth;
 
+        maxHealth += healthBuff;
+       
+        //resetup ratio of current health to max health
+        currentHealth = maxHealth * healthRatio;
+    }
+
+    public void PermaBuffMaxStrength(int strengthBuff)
+    {
+        strength += strengthBuff;
+    }
+
+    public void PremaBuffMaxMana(int manaBuff)
+    {
+        // find mana ratio before adding health
+        int manaRatio = currentMana / maxMana;
+
+        maxMana += manaBuff;
+
+        // resetup current mana after buff
+        currentMana = maxMana * manaRatio;
+    }
+
+    public void PermaBuffMaxIntelligence(int intelligenceBuff)
+    {
+        intelligence += intelligenceBuff;
+    }
+
+    public void PermaBuffMaxDexterity(int dexterityBuff)
+    {
+        dexterity += dexterityBuff;
+    }
 }

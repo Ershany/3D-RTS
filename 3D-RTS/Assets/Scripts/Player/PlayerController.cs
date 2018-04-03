@@ -6,6 +6,13 @@ public class PlayerController : MonoBehaviour
     //prefabs
     public GameObject guildHallPrefab;
     public GameObject arenaPrefab;
+    public GameObject markerPrefab;
+    public GameObject spellPrefab;
+    public GameObject slashPrefab;
+    public GameObject hitPrefab;
+
+    //references
+    public GameController gameController;
 
     //selected group of units
     public List<Group> selectedGroups;
@@ -27,7 +34,7 @@ public class PlayerController : MonoBehaviour
     public GameObject selectionPanel;
 
     //check whether a guild hall is built
-    public bool guildHallBuilt;    //I think we are only allowed to have one guild hall 
+    public bool guildHallBuilt;
 
     //booleans for player selection state 
     public bool playerSelectedGroups;
@@ -37,39 +44,40 @@ public class PlayerController : MonoBehaviour
     //behavior util file
     public BehaviorUtil behavior;
 
-    //particle systems for now here for testing purposes
-    //marker for unit destination
-    public GameObject markerPrefab;
-    public GameObject spellPrefab;
-    public GameObject slashPrefab;
-    public GameObject hitPrefab;
-
+    //controllers for the particle systems
     public ProjectileController magicSpell;
-    public MarkerController swordSlash;
-    public MarkerController unitHit;
-    public MarkerController destinationMarker;
+    public EffectController swordSlash;
+    public EffectController unitHit;
+    public EffectController destinationMarker;
 
+    //not really sure
     private string activeCommand;
     private Vector3 patrolStartPoint;
+
+    public int playerGold;
 
     //used for terrain movements and selections
     int terrainMask;
 
     void Awake()
     {
+        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         patrolStartPoint = new Vector3(-1, -1, -1);
         playerSelectedGroups = false;
         playerSelectedSingleGroup = false;
         playerSelectedGuildHall = false;
-        selectedGroups = new List<Group>();
-        behavior = new BehaviorUtil();
         guildHallBuilt = false;
+        selectedGroups = new List<Group>();
         battles = new List<TurnBasedBattleController>();
         groups = new List<Group>();
-        destinationMarker = Instantiate(markerPrefab , Vector3.zero , Quaternion.identity).GetComponent<MarkerController>();
+        playerBuildings = new List<Building>();
+        behavior = new BehaviorUtil();
+        playerGold = 200;
+
+        destinationMarker = Instantiate(markerPrefab , Vector3.zero , Quaternion.identity).GetComponent<EffectController>();
         magicSpell = Instantiate(spellPrefab , Vector3.zero , Quaternion.identity).GetComponent<ProjectileController>();
-        swordSlash = Instantiate(slashPrefab , Vector3.zero, Quaternion.identity).GetComponent<MarkerController>();
-        unitHit = Instantiate(hitPrefab , Vector3.zero , Quaternion.identity).GetComponent<MarkerController>();
+        swordSlash = Instantiate(slashPrefab , Vector3.zero, Quaternion.identity).GetComponent<EffectController>();
+        unitHit = Instantiate(hitPrefab , Vector3.zero , Quaternion.identity).GetComponent<EffectController>();
 
         //set explosion reference
         magicSpell.explosion = unitHit;
@@ -89,13 +97,7 @@ public class PlayerController : MonoBehaviour
         Physics.Raycast(ray, out terrainHit, float.MaxValue, terrainMask);
         Physics.Raycast(ray, out hit);
 
-        Plane p = new Plane(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 0.0f), new Vector3(500.0f, 0.0f, 500.0f));
-        float aa;
-        p.Raycast(ray, out aa);
-        Vector3 intersectPoint = ray.GetPoint(aa);
-
-        if (intersectPoint.x > 0 && intersectPoint.x < 500 &&
-            intersectPoint.z > 0 && intersectPoint.z < 500)
+        if (hit.collider)
         {
             // Move building with cursor if a building is currently selected (keep it on the terrain)
             if (buildingToBeBuilt != null)
@@ -109,6 +111,7 @@ public class PlayerController : MonoBehaviour
 
         //check for battles
         BattleUpdate();
+        ErrorCorrection();
     }
 
     //Check for battles
@@ -121,24 +124,62 @@ public class PlayerController : MonoBehaviour
             if (tbbc.battleOver)
             {
                 bool playersWon = true;
-                tbbc.enemyGroup.BattledEnded();
-
-                for (int j = 0; i < tbbc.enemyGroup.GetUnits().Count; i++)
+                int enemyCount = 0;
+                if (tbbc.enemyGroup != null)
                 {
-                    if (!tbbc.enemyGroup.GetUnits()[j].IsDead)
-                        playersWon = false;
-                }
 
-                tbbc.playerGroup.BattledEnded();
 
-                for (int j = 0; i < tbbc.playerGroup.GetUnits().Count; i++)
-                {
-                    if (playersWon)
+                    tbbc.enemyGroup.BattledEnded();
+
+                    for (int j = 0; i < tbbc.enemyGroup.GetUnits().Count; i++)
                     {
-                        //Give players rewards
+                        enemyCount += 5;
+                        if (!tbbc.enemyGroup.GetUnits()[j].IsDead)
+                            playersWon = false;
+                    }
+                }
+                else
+                {
+                    for (int j = 0; i < tbbc.randomBattleEnemies.Count; i++)
+                    {
+                        enemyCount += 2;
+                        if (tbbc.randomBattleEnemies[j].IsDead)
+                            playersWon = false;
+                        Destroy(tbbc.randomBattleEnemies[j].GetGameObject());
+                        j--;
                     }
                 }
 
+
+
+                tbbc.playerGroup.BattledEnded();
+
+                if (!tbbc.playerGroup.GetUnits()[0].IsPlayerControlled)
+                    continue;
+
+                int groupIndex = -1;
+                for (int j = 0; j < groups.Count; j++)
+                {
+                    if (tbbc.playerGroup == groups[j])
+                        groupIndex = j;
+                }
+                if (groupIndex == -1)
+                    continue;
+                for (int j = 0; j < groups[groupIndex].GetUnits().Count; j++)
+                {
+                    if (groups[groupIndex].GetUnits()[j].IsDead)
+                    {
+                        DynamicUnit temp = groups[groupIndex].GetUnits()[j];
+                        groups[groupIndex].GetUnits().RemoveAt(j);
+                        Destroy(temp.GetGameObject());
+
+                    }
+                    if (playersWon)
+                    {
+                        playerGold += enemyCount;
+                            //Give players rewards
+                    }
+                }
                 tbbc.playerGroup.BattledEnded();
                 Destroy(tbbc.arena);
                 battles.Remove(tbbc);
@@ -173,6 +214,48 @@ public class PlayerController : MonoBehaviour
             buildingToBeBuilt.MoveBuilding(terrainHit.point);
         }
 
+        //build blacksmith
+        if (Input.GetKeyDown("2"))
+        {
+            if (buildingToBeBuilt != null)
+            {
+                //Replace buildings if we already have a building to build
+                Destroy(buildingToBeBuilt.GameObject);
+                buildingToBeBuilt = null;
+            }
+
+            buildingToBeBuilt = gameController.CreateBlacksmith(true);
+            buildingToBeBuilt.MoveBuilding(terrainHit.point);
+        }
+
+        //build Archery range
+        if (Input.GetKeyDown("3"))
+        {
+            if (buildingToBeBuilt != null)
+            {
+                //Replace buildings if we already have a building to build
+                Destroy(buildingToBeBuilt.GameObject);
+                buildingToBeBuilt = null;
+            }
+
+            buildingToBeBuilt = gameController.CreateArcheryRange(true);
+            buildingToBeBuilt.MoveBuilding(terrainHit.point);
+        }
+
+        //build temple of magi
+        if (Input.GetKeyDown("4"))
+        {
+            if (buildingToBeBuilt != null)
+            {
+                //Replace buildings if we already have a building to build
+                Destroy(buildingToBeBuilt.GameObject);
+                buildingToBeBuilt = null;
+            }
+
+            buildingToBeBuilt = gameController.CreateTempleOfMagi(true);
+            buildingToBeBuilt.MoveBuilding(terrainHit.point);
+        }
+
         /*
             *HOTKEY FOR SELECTING UNITS (TabKey)
         */
@@ -185,7 +268,7 @@ public class PlayerController : MonoBehaviour
                 //selectedGroups = groups[(groups.IndexOf(selectedGroup) + 1) % groups.Count];
             }
         }
-        
+
         /*
             LEFT MOUSE CLICK:
             *Place buildings
@@ -201,14 +284,20 @@ public class PlayerController : MonoBehaviour
                 // Place the building on the terrain
                 if (buildingToBeBuilt.PlaceBuildingOnTerrain())
                 {
-                    buildingToBeBuilt.GameObject.GetComponent<GuildHallController>().GuildHallPlaced();
+                    //DeselectBuilding();
+                    //DeselectGroups();
+                    Deselect();
                     SelectBuilding(buildingToBeBuilt);
-                    guildHallBuilt = true;
+
+                    if (buildingToBeBuilt.Type == Building.BuildingType.GUILDHALL)
+                    {
+                        guildHallBuilt = true;
+                        buildingToBeBuilt.GameObject.GetComponent<GuildHallController>().GuildHallPlaced();
+                    }
+
                     buildingToBeBuilt = null;
                     Debug.Log("Building Placed");
                 }
-
-                DeselectGroups();
             }
             else if (hit.collider.gameObject.name == "Terrain")
             {
@@ -232,10 +321,9 @@ public class PlayerController : MonoBehaviour
                         }
                         break;
 
-                    default:
-                        Deselect();
-                        Debug.Log("clicked terrain deselect buildingToBeBuilt");
-                        break;
+                        //Deselect();
+                        //Debug.Log("clicked terrain deselect buildingToBeBuilt");
+                        //break;
                 }
 
             }
@@ -265,21 +353,29 @@ public class PlayerController : MonoBehaviour
                     default:
                         if (hit.collider.gameObject.GetComponent<GuildHallController>() != null)
                         {
+                            Deselect();
                             SelectBuilding(hit.collider.gameObject.GetComponent<GuildHallController>().building);
-                            DeselectGroups();
                             playerSelectedSingleGroup = false;
                             playerSelectedGroups = false;
                             playerSelectedGuildHall = true;
+                        }
+                        else if (hit.collider.gameObject.GetComponent<TechnologyBuildingController>())
+                        {
+                            Deselect(); 
+                            SelectBuilding(hit.collider.gameObject.GetComponent<TechnologyBuildingController>().building);
+                            playerSelectedSingleGroup = false;
+                            playerSelectedGroups = false;
+                            playerSelectedGuildHall = false;
                         }
                         else
                         {
                             for (int i = 0; i < groups.Count; i++)
                             {
-                                Debug.Log("started searching groups");
+                                //Debug.Log("started searching groups");
 
                                 for (int j = 0; j < groups[i].GetUnits().Count; j++)
                                 {
-                                    Debug.Log("searching units of group " + i);
+                                    //Debug.Log("searching units of group " + i);
 
                                     if (hit.collider.gameObject == groups[i].GetUnits()[j].GetGameObject())
                                     {
@@ -297,10 +393,7 @@ public class PlayerController : MonoBehaviour
                         }
                         break;
                 }
-
             }
-
-
         }
 
         /*
@@ -330,13 +423,12 @@ public class PlayerController : MonoBehaviour
             else if (selectedGroups.Count > 0)
             {
                 //Move a groups to a position 
-
-
                 SetSelectedUnitsDestination(terrainHit.point, null);
+
+                destinationMarker.ActivateMarker(selectedGroups[0].GetUnits()[0].GetAgent().destination + new Vector3 (0 , 0.5f, 0));
 
                 //do destination marker code here (might need some animation etc...)
                 //destinationMarker.ActivateMarker(destination);
-                destinationMarker.ActivateMarker(selectedGroups[0].GetUnits()[0].GetAgent().destination);
                 //swordSlash.ActivateMarker(destination);
                 //unitHit.ActivateMarker(destination);
                 //magicSpell.Activate(selectedGroups[0].GetFirstUnit().GetTransform().position + new Vector3 (0, 5.0f ,0) , destination);
@@ -345,7 +437,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
 
     private void SetSelectedUnitsDestination(Vector3 destination, Transform dynamicDestination)
     {
@@ -358,6 +449,7 @@ public class PlayerController : MonoBehaviour
         }
         patrolStartPoint = new Vector3(-1, -1, -1);
     }
+
     private void SetSelectedUnitsPatrol(Vector3 destination1, Vector3 destination2)
     {
         for (int i = 0; i < selectedGroups.Count; i++)
@@ -369,7 +461,6 @@ public class PlayerController : MonoBehaviour
         }
         patrolStartPoint = new Vector3(-1, -1, -1);
     }
-
 
     public void SelectOnRect(Vector2 v1, Vector2 v2)
     {
@@ -480,7 +571,6 @@ public class PlayerController : MonoBehaviour
         v21 = new Vector2(v2.x, v1.y);
         vn = v1 - ((Vector2.Distance(v1, v2) * 0.5f) * new Vector2(Vector3.Normalize((v1 - v2)).x, Vector3.Normalize((v1 - v2)).y));
 
-        Debug.Log("Here1");
         RaycastHit hit1;
         RaycastHit hit2;
         RaycastHit hit3;
@@ -611,6 +701,7 @@ public class PlayerController : MonoBehaviour
         Destroy(polyColGameObject);
 
     }
+
     //selects a building
     public void SelectBuilding(Building building)
     {
@@ -659,11 +750,14 @@ public class PlayerController : MonoBehaviour
     }
 
     //hightlight code for groups
-    void HighlightGroup(Group group, bool shouldHighlight)
+    public void HighlightGroup(Group group, bool shouldHighlight)
     {
         // Loop through the group and activate/deactivate the highlight quad for each unit
         for (int i = 0; i < group.GetUnits().Count; ++i)
         {
+            //if unit is dead he doesn't get highlighted anymore
+            if (group.GetUnits()[i].IsDead && shouldHighlight) continue;
+
             GameObject gameObj = group.GetUnits()[i].GetGameObject();
             foreach (Transform child in gameObj.transform)
             {
@@ -692,5 +786,23 @@ public class PlayerController : MonoBehaviour
     {
         DeselectBuilding();
         DeselectGroups();
+    }
+
+    void ErrorCorrection()
+    {
+        for (int i = 0; i < groups.Count; i++)
+        {
+            for (int j = 0; j < groups[i].GetUnits().Count; j++)
+            {
+                if (groups[i].GetUnits()[j].GetGameObject().activeSelf)
+                {
+                    if (groups[i].GetUnits()[j].GetAgent().enabled == false)
+                    {
+                        Debug.Log("Reset agent for group " + i);
+                        groups[i].GetUnits()[j].GetAgent().enabled = true;
+                    }
+                }
+            }
+        }
     }
 }

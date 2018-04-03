@@ -53,8 +53,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4676087539069780}
-  - component: {fileID: 114906569996035740}
   - component: {fileID: 136056136341693686}
+  - component: {fileID: 114302284633222586}
   m_Layer: 0
   m_Name: MagicSpell
   m_TagString: Untagged
@@ -134,7 +134,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114906569996035740
+--- !u!114 &114302284633222586
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1407806210695964}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d11537da087f774eaccc534097c6b7e, type: 3}
+  m_Script: {fileID: 11500000, guid: 364ceeeab7fdc4b4c8609b412eb004a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   explosion: {fileID: 0}

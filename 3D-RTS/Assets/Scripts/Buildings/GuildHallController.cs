@@ -21,11 +21,17 @@ public class GuildHallController : MonoBehaviour
     public int selectedNewUnitNum;
     public int selectedRosterUnitNum;
 
+    public int[] goldCosts;
 
     void Awake()
     {
+        goldCosts = new int[3];
+        goldCosts[0] = 10;
+        goldCosts[1] = 10;
+        goldCosts[2] = 10;
         //setup members 
-        building = new Building(gameObject, buildingHealth);
+        //for now
+        building = new Building(gameObject, Building.BuildingType.GUILDHALL, buildingHealth , "GuildHall" , true);
 
 
         building.name = "GuildHall";
@@ -44,8 +50,13 @@ public class GuildHallController : MonoBehaviour
 
 
         selectedNewUnitNum = -1;
-        selectedRosterUnitNum = -1;
+        selectedRosterUnitNum = 0;
 
+    }
+
+    void Update()
+    {
+        building.Update();
     }
 
     //Add a unit to the roster
@@ -81,23 +92,29 @@ public class GuildHallController : MonoBehaviour
         //setActive of game Object to false first
 
         //NEEDS CHANGING
-        if (selectedNewUnitNum == 1)
+        if (playerController.playerGold > 10)
         {
-            FactionUnit tempUnit = gameController.CreatePlayerWarrior(new Vector3());
-            tempUnit.GetGameObject().SetActive(false);
-            roster.Add(tempUnit);
-        }
-        else if (selectedNewUnitNum == 2)
-        {
-            FactionUnit tempUnit = gameController.CreatePlayerArcher(new Vector3());
-            tempUnit.GetGameObject().SetActive(false);
-            roster.Add(tempUnit);
-        }
-        else if (selectedNewUnitNum == 3)
-        {
-            FactionUnit tempUnit = gameController.CreatePlayerMage(new Vector3());
-            tempUnit.GetGameObject().SetActive(false);
-            roster.Add(tempUnit);
+            if (selectedNewUnitNum == 1)
+            {
+                FactionUnit tempUnit = gameController.CreatePlayerWarrior(new Vector3());
+                tempUnit.GetGameObject().SetActive(false);
+                roster.Add(tempUnit);
+                playerController.playerGold -= 10;
+            }
+            else if (selectedNewUnitNum == 2)
+            {
+                FactionUnit tempUnit = gameController.CreatePlayerArcher(new Vector3());
+                tempUnit.GetGameObject().SetActive(false);
+                roster.Add(tempUnit);
+                playerController.playerGold -= 10;
+            }
+            else if (selectedNewUnitNum == 3)
+            {
+                FactionUnit tempUnit = gameController.CreatePlayerMage(new Vector3());
+                tempUnit.GetGameObject().SetActive(false);
+                roster.Add(tempUnit);
+                playerController.playerGold -= 10;
+            }
         }
     }
 
@@ -148,11 +165,12 @@ public class GuildHallController : MonoBehaviour
 
             for(int i = 0; i < unitsToBeDeployed.Count; i++)
             {
-                unitsToBeDeployed[i].GetTransform().position = transform.position + new Vector3(-4 + i, 0, -6);
+                Debug.Log((Vector3.Normalize(Vector3.Cross(transform.up, transform.forward))));
+                unitsToBeDeployed[i].GetTransform().position = transform.position + transform.up * 12 + (i * 6 * (Vector3.Normalize(Vector3.Cross(transform.up, transform.forward))));
                 unitsToBeDeployed[i].GetGameObject().SetActive(true);
             }
             Debug.Log(transform.position);
-            gameController.AddFactionGroup(unitsToBeDeployed, transform.position + new Vector3(-4, 0, -6), true);
+            gameController.AddFactionGroup(unitsToBeDeployed, unitsToBeDeployed[0].GetTransform().position, true);
             unitsToBeDeployed.Clear();
 
             Debug.Log("Deployed group");
@@ -187,15 +205,6 @@ public class GuildHallController : MonoBehaviour
         
 
     }
-
-
-    void Update()
-    {
-        //check gui here 
-        // Update building
-        building.Update();
-    }
-
 
 
     void OnTriggerEnter(Collider other)

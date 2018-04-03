@@ -29,7 +29,6 @@ public abstract class Unit
         maxHealth = currentHealth = health;
     }
 
-
     public void HealDamage(float healAmount)
     {
         currentHealth += healAmount;
@@ -43,8 +42,4 @@ public abstract class Unit
     {
         gameObject.transform.SetParent(parent);
     }
-
-
-
-
 }
