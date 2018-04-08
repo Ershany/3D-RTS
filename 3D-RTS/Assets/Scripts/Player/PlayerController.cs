@@ -180,11 +180,13 @@ public class PlayerController : MonoBehaviour
                         playerGold += enemyCount;
                         groups[groupIndex].GetUnits()[j].GiveExp(enemyCount * 15);
                             //Give players rewards
+                        
                     }
                 }
                 tbbc.playerGroup.BattledEnded();
                 Destroy(tbbc.arena);
                 battles.Remove(tbbc);
+                groups[groupIndex].randomBattleBufferTimer += 0.5f + ((float) Random.Range(0.0f, 1.0f));
                 i--;
             }
             else

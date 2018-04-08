@@ -37,22 +37,22 @@ public class RandomEncounterController : MonoBehaviour
 
         for (int i = 0; i < playCon.groups.Count; i++)
         {
+            if (playCon.groups[i].randomBattleBufferTimer > 0.001f)
+                continue;
+
             if (objectsToIgnore.Contains(playCon.groups[i]))
             {
                 if (!playCon.groups[i].GetFirstUnit().IsInBattle)
                 {
-                    if(Random.Range(0,10) > 6)
-                    {
-                        objectsToIgnore.Remove(playCon.groups[i]);
-                    }
+                    objectsToIgnore.Remove(playCon.groups[i]);
                 }
                 continue;
             }
             for (int j = 0; j < playCon.groups[i].GetUnits().Count; j++)
             {
-                int random = Random.Range(0, 7);
+                int random = Random.Range(0, 100);
 
-                if (random > 5)
+                if (random > 80)
                 {
                     if (gameObject.GetComponent<Collider>().bounds.Contains(playCon.groups[i].GetUnits()[j].GetTransform().position))
                     {
@@ -64,6 +64,12 @@ public class RandomEncounterController : MonoBehaviour
                         j = 4;
                     }
 
+                }
+                else
+                {
+                    float randomF = (float)random;
+                    randomF /= 1000;
+                    playCon.groups[i].randomBattleBufferTimer += randomF;
                 }
             }
         }

@@ -9,10 +9,13 @@ public class Group : MonoBehaviour {
     public Vector3 rawDestination;
     private Transform dynamicDestination;
 
+    public float randomBattleBufferTimer;
+
     private Vector3 patrolPoint1, patrolPoint2;
     private bool patrolling;
     void Awake()
     {
+        randomBattleBufferTimer = 0;
         patrolling = false;
         patrolPoint1 = patrolPoint2 = new Vector3(-1, -1, -1);
         units = new List<DynamicUnit>();
@@ -21,6 +24,8 @@ public class Group : MonoBehaviour {
 
     void Update()
     {
+        if (randomBattleBufferTimer > 0.0f)
+            randomBattleBufferTimer -= Time.deltaTime;
         if (dynamicDestination != null)
         {
             SetGroupDestination(dynamicDestination.position, dynamicDestination);

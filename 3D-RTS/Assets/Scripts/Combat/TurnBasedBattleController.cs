@@ -114,7 +114,7 @@ public class TurnBasedBattleController
             randomBattleEnemies[i].GetTransform().position = new Vector3(pos.x - 0.45f * arena.transform.localScale.x, pos.y, pos.z - 0.55f * arena.transform.localScale.z + arena.transform.localScale.z * (1.05f / (float)(randomBattleEnemies.Count + 1)) * (i + 1));
             Physics.IgnoreCollision(localCollider, randomBattleEnemies[i].GetGameObject().GetComponent<Collider>());
 
-            randomBattleEnemies[i].GetTransform().transform.LookAt(new Vector3(pos.x, playerGroup.GetUnits()[i].GetTransform().position.y, playerGroup.GetUnits()[i].GetTransform().position.z));
+            randomBattleEnemies[i].GetTransform().transform.LookAt(new Vector3(pos.x, playerGroup.GetUnits()[Mathf.Min(i, playerGroup.GetUnits().Count - 1)].GetTransform().position.y, playerGroup.GetUnits()[Mathf.Min(i, playerGroup.GetUnits().Count - 1)].GetTransform().position.z));
 
 
             randomBattleEnemies[i].attackTime = 0.5f + (float) Random.Range(0.0f, 1.0f);
