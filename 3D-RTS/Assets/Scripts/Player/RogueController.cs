@@ -12,11 +12,7 @@ public class RogueController : MonoBehaviour
 
     void Awake()
     {
-        int[] stats = new int[3];
-        stats[0] = 4;
-        stats[1] = 6;
-        stats[2] = 8;
-        unit = new FactionUnit(gameObject, unitHealth, stats, true, "WK_ARCHER");
+        unit = new FactionUnit(gameObject, true, "Archer");
     }
 
     void Update()

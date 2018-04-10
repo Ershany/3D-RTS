@@ -13,7 +13,7 @@ public class NeutralUnit : DynamicUnit
     private bool attackAnimTriggered;
     private bool dealtDamage;
 
-    public NeutralUnit(GameObject obj, float health , float damage , string name) : base(obj, health, false, "Neutral Unit")
+    public NeutralUnit(GameObject obj, float health , float damage , string name) : base(obj, false, "Neutral Unit")
     {
         IsInBattle = false;
         strength = (int) damage;

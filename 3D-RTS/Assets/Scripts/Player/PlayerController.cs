@@ -131,7 +131,7 @@ public class PlayerController : MonoBehaviour
 
                     tbbc.enemyGroup.BattledEnded();
 
-                    for (int j = 0; i < tbbc.enemyGroup.GetUnits().Count; i++)
+                    for (int j = 0; j < tbbc.enemyGroup.GetUnits().Count; j++)
                     {
                         enemyCount += 5;
                         if (!tbbc.enemyGroup.GetUnits()[j].IsDead)
@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-                    for (int j = 0; i < tbbc.randomBattleEnemies.Count; i++)
+                    for (int j = 0; j < tbbc.randomBattleEnemies.Count; j++)
                     {
                         enemyCount += 2;
                         if (!tbbc.randomBattleEnemies[j].IsDead)

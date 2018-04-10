@@ -60,6 +60,25 @@ public static class StatKey
         }
     }
 
+    public static class GuildHall
+    {
+        public static float HEALTH = 100;
+        public static int MANA = 0;
+        public static int STRENGTH = 0;
+        public static int INTELLIGENCE = 0;
+        public static int DEXTERITY = -10000;
+
+        public static class Growth
+        {
+            public static float HEALTH = 10.0f;
+            public static float MANA = 0;
+            public static float STRENGTH = 0;
+            public static float INTELLIGENCE = 0.0f;
+            public static float DEXTERITY = 0;
+        }
+    }
+
+
 
     public static void GetStats(string c, ref float hp, ref int mp, ref int str, ref int intel, ref int dex,
                                 ref float hpGrowth, ref float manaGrowth, ref float strGrowth, ref float intelGrowth, ref float dexGrowth)
@@ -68,7 +87,6 @@ public static class StatKey
         switch (c)
         {
             case "Warrior":
-            case "EnemyWarrior":
                 hp = Warrior.HEALTH;
                 mp = Warrior.MANA;
                 str = Warrior.STRENGTH;
@@ -81,7 +99,6 @@ public static class StatKey
                 dexGrowth = Warrior.Growth.DEXTERITY;
                 break;
             case "Archer":
-            case "EnemyArcher":
                 hp = Archer.HEALTH;
                 mp = Archer.MANA;
                 str = Archer.STRENGTH;
@@ -94,6 +111,41 @@ public static class StatKey
                 dexGrowth = Archer.Growth.DEXTERITY;
                 break;
             case "Mage":
+                hp = Mage.HEALTH;
+                mp = Mage.MANA;
+                str = Mage.STRENGTH;
+                intel = Mage.INTELLIGENCE;
+                dex = Mage.DEXTERITY;
+                hpGrowth = Mage.Growth.HEALTH;
+                manaGrowth = Mage.Growth.MANA;
+                strGrowth = Mage.Growth.STRENGTH;
+                intelGrowth = Mage.Growth.INTELLIGENCE;
+                dexGrowth = Mage.Growth.DEXTERITY;
+                break;
+            case "EnemyWarrior":
+                hp = Warrior.HEALTH;
+                mp = Warrior.MANA;
+                str = Warrior.STRENGTH;
+                intel = Warrior.INTELLIGENCE;
+                dex = Warrior.DEXTERITY;
+                hpGrowth = Warrior.Growth.HEALTH;
+                manaGrowth = Warrior.Growth.MANA;
+                strGrowth = Warrior.Growth.STRENGTH;
+                intelGrowth = Warrior.Growth.INTELLIGENCE;
+                dexGrowth = Warrior.Growth.DEXTERITY;
+                break;
+            case "EnemyArcher":
+                hp = Archer.HEALTH;
+                mp = Archer.MANA;
+                str = Archer.STRENGTH;
+                intel = Archer.INTELLIGENCE;
+                dex = Archer.DEXTERITY;
+                hpGrowth = Archer.Growth.HEALTH;
+                manaGrowth = Archer.Growth.MANA;
+                strGrowth = Archer.Growth.STRENGTH;
+                intelGrowth = Archer.Growth.INTELLIGENCE;
+                dexGrowth = Archer.Growth.DEXTERITY;
+                break;
             case "EnemyMage":
                 hp = Mage.HEALTH;
                 mp = Mage.MANA;
@@ -105,6 +157,18 @@ public static class StatKey
                 strGrowth = Mage.Growth.STRENGTH;
                 intelGrowth = Mage.Growth.INTELLIGENCE;
                 dexGrowth = Mage.Growth.DEXTERITY;
+                break;
+            case "GuildHall":
+                hp = GuildHall.HEALTH;
+                mp = GuildHall.MANA;
+                str = GuildHall.STRENGTH;
+                intel = GuildHall.INTELLIGENCE;
+                dex = GuildHall.DEXTERITY;
+                hpGrowth = GuildHall.Growth.HEALTH;
+                manaGrowth = GuildHall.Growth.MANA;
+                strGrowth = GuildHall.Growth.STRENGTH;
+                intelGrowth = GuildHall.Growth.INTELLIGENCE;
+                dexGrowth = GuildHall.Growth.DEXTERITY;
                 break;
         }
     }

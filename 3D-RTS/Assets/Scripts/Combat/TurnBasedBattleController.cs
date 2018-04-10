@@ -19,6 +19,8 @@ public class TurnBasedBattleController
     private bool delaying;
     private float initialStoppingDistance;
 
+    private Vector3 position;
+
     public bool factionBattle;
 
 
@@ -34,6 +36,8 @@ public class TurnBasedBattleController
         delaying = false;
         initialStoppingDistance = playerGroup.GetUnits()[0].GetAgent().stoppingDistance;
         factionBattle = true;
+
+        position = pos;
 
         BoxCollider localCollider = arena.GetComponent<BoxCollider>();
 
@@ -372,6 +376,81 @@ public class TurnBasedBattleController
         }
     }
 
+    public void AddUnitsToGroup(List<DynamicUnit> units, Group group)
+    {
+        if (group != playerGroup && group != enemyGroup)
+        {
+            Debug.Log("Attempting to add units to invalid Group");
+            return;
+        }
+        else
+        {
+            AddUnitsToBattle(units, group.GetUnits());
+        }
+    }
+
+    public void AddUnitsToBattle(List<DynamicUnit> unitsToAdd, List<DynamicUnit> targetDynamicUnitList)
+    {
+        
+        if (targetDynamicUnitList.Count + unitsToAdd.Count > 4)
+        {
+            Debug.Log("Attempting to add too many units");
+            return;
+        }
+        else
+        {
+            for (int i = 0; i < unitsToAdd.Count; i++)
+            {
+                unitsToAdd[i].attackTime = Mathf.Min((float)playerGroup.GetUnits()[i].GetDexterity() * (1.0f - ((float)playerGroup.GetUnits()[i].GetDexterity() / 10f)) * 3.0f, 75.0f) / 100.0f;
+            }
+            targetDynamicUnitList.AddRange(unitsToAdd);
+            BoxCollider localCollider = arena.GetComponent<BoxCollider>();
+            for (int i = 0; i < targetDynamicUnitList.Count; i++)
+            {
+                targetDynamicUnitList[i].GetTransform().localScale = new Vector3(1, 1, 1);
+                targetDynamicUnitList[i].GetTransform().position = new Vector3(position.x + 0.45f * arena.transform.localScale.x, position.y, position.z - 0.5f * arena.transform.localScale.z + arena.transform.localScale.z * (1.0f / (float)(playerGroup.GetUnits().Count + 1)) * (i + 1));
+                Physics.IgnoreCollision(localCollider, targetDynamicUnitList[i].GetGameObject().GetComponent<Collider>());
+                
+               
+                if (targetDynamicUnitList[i].GetAgent() != null)
+                {
+                    targetDynamicUnitList[i].GetAgent().stoppingDistance = 2.0f;
+                    targetDynamicUnitList[i].Halt();
+                }
+
+            }
+        }
+    }
+
+    public void AddUnitToGroupInBattle(DynamicUnit unit, Group group)
+    {
+
+        group.AddUnit(unit);
+        BoxCollider localCollider = arena.GetComponent<BoxCollider>();
+        for (int i = 0; i < group.GetUnits().Count; i++)
+        {
+            if (!group.GetUnits()[i].IsAttacking)
+            {
+                group.GetUnits()[i].GetTransform().localScale = new Vector3(1, 1, 1);
+                group.GetUnits()[i].GetTransform().position = new Vector3(position.x + 0.45f * arena.transform.localScale.x, position.y, position.z + 0.5f * arena.transform.localScale.z - arena.transform.localScale.z * (1.0f / (float)(group.GetUnits().Count + 1)) * (i + 1));
+                Physics.IgnoreCollision(localCollider, group.GetUnits()[i].GetGameObject().GetComponent<Collider>());
+
+                group.GetUnits()[i].GetTransform().LookAt(new Vector3(position.x, group.GetUnits()[i].GetTransform().position.y, group.GetUnits()[i].GetTransform().position.z));
+
+                if (group.GetUnits()[i].GetAgent() != null)
+                {
+                    group.GetUnits()[i].GetAgent().stoppingDistance = 2.0f;
+                    group.GetUnits()[i].Halt();
+                }
+            }
+            else
+            {
+                returnPos = new Vector3(position.x + 0.45f * arena.transform.localScale.x, position.y, position.z - 0.5f * arena.transform.localScale.z + arena.transform.localScale.z * (1.0f / (float)(playerGroup.GetUnits().Count + 1)) * (i + 1));
+            }
+
+        }
+        group.BattleStarted();
+    }
 
     public bool ResolvedAttack()
     {

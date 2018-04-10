@@ -10,9 +10,7 @@ public class EnemyMageController : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
-        health = 20.0f;
-        int[] stats = { 8, 5, 12 };
-        demonUnit = new FactionUnit(gameObject, health, stats, false , "UD_MAGE");
+        demonUnit = new FactionUnit(gameObject, false , "EnemyMage");
     }
 
     // Update is called once per frame

@@ -10,11 +10,10 @@ public abstract class Unit
     protected GameObject gameObject { get; private set; }
     protected CapsuleCollider collider;
 
-    public Unit(GameObject obj, float health)
+    public Unit(GameObject obj)
     {
         gameObject = obj;
         collider = gameObject.GetComponent<CapsuleCollider>();
-        maxHealth = currentHealth = health;
         IsDead = false;
     }
 
@@ -38,8 +37,20 @@ public abstract class Unit
         }
     }
 
+    public void SetUninitiatedGameObject(GameObject _gameObject)
+    {
+        if (gameObject == null)
+        {
+            gameObject = _gameObject;
+        }
+        else
+        {
+            Debug.Log("gameObject not null");
+        }
+    }
+
     public void SetGameObjectParent(Transform parent)
     {
-        gameObject.transform.SetParent(parent);
+        gameObject.transform.SetParent(parent,false);
     }
 }

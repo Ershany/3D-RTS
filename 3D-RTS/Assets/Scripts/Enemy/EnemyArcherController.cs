@@ -10,9 +10,7 @@ public class EnemyArcherController : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
-        health = 10.0f;
-        int[] stats = { 15, 6, 12 };
-        demonUnit = new FactionUnit(gameObject, health, stats, false , "UD_ARCHER");
+        demonUnit = new FactionUnit(gameObject, false , "EnemyArcher");
     }
 
     // Update is called once per frame

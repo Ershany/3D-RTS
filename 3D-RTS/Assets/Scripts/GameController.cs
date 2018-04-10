@@ -51,6 +51,8 @@ public class GameController : MonoBehaviour
     //player and enemy resources
     public int enemyGold;
 
+    public bool gameOver;
+
     void Awake()
     {
         //Get all the random encounters to check for their battles 
@@ -112,6 +114,8 @@ public class GameController : MonoBehaviour
 
         //Debug.Log("enemy groups: " + enemyController.enemyGroups.Count); 
         AddFactionGroup(enemyUnits, enemyPos, false);
+
+        gameOver = false;
     }
 
     void Update()
@@ -231,6 +235,29 @@ public class GameController : MonoBehaviour
         factionUnits.Clear();
     }
 
+    public Group CreateGroup(List<DynamicUnit> units, Vector3 position)
+    {
+        Group grp = Instantiate(groupPrefab, position, Quaternion.identity).GetComponent<Group>();
+
+        for (int i = 0; i < units.Count; i++)
+        {
+            if (i != 0)
+            {
+                units[i].GetTransform().position = units[i - 1].GetTransform().position + new Vector3(4.0f, 0, 0);
+            }
+            else
+            {
+                units[0].GetTransform().position += new Vector3(4.0f, 0, -0.0f);
+            }
+
+            grp.AddUnit(units[i]);
+        }
+
+        return grp;
+
+    }
+
+
     //Check for a battle instance 
     void BattleCheck()
     {
@@ -289,7 +316,7 @@ public class GameController : MonoBehaviour
 
                             //position of battle, 2 groups in conflict, and arena asset 
                             playerController.battles.Add(new TurnBasedBattleController(new Vector3(playerController.groups[i].GetUnits()[k].GetTransform().position.x, 0.0f, playerController.groups[i].GetUnits()[k].GetTransform().position.z), playerController.groups[i], enemyController.enemyGroups[j], arena));
-
+                            
                             //start battle for both units 
                             playerController.groups[i].BattleStarted();
                             enemyController.enemyGroups[j].BattleStarted();
@@ -299,8 +326,33 @@ public class GameController : MonoBehaviour
                 }
             }
         }
+
+        BuildingBattleCheck();
     }
 
+    //Currently used for checking battles with the player's GuildHall and enemyGroups.
+    //Plan on expanding code to include enemy buildings when they become available.
+    void BuildingBattleCheck()
+    {
+        if (!playerController.guildHallBuilt)
+            return;
+        for (int i = 0; i < enemyController.enemyGroups.Count; i++)
+        {
+            if (enemyController.enemyGroups[i].GetFirstUnit().IsInBattle)
+                continue;
+            for (int j = 0; j < enemyController.enemyGroups[i].GetUnits().Count; j++) {
+                if (Vector3.SqrMagnitude(guildHall.transform.position - enemyController.enemyGroups[i].GetUnits()[j].GetTransform().position) < 400)
+                {
+                    GameObject arena = Instantiate(arenaPrefab, enemyController.enemyGroups[i].GetUnits()[j].GetTransform().position, Quaternion.identity);
+
+                    guildHall.InitiateBattle(enemyController.enemyGroups[i], enemyController.enemyGroups[i].GetUnits()[j].GetTransform().position, arena);
+
+                    enemyController.enemyGroups[i].BattleStarted();
+                    break;
+                }
+            }
+        }
+    }
     //checking for units that want to return to the guild hall
     void GuildHallReturnCheck()
     {
@@ -413,9 +465,11 @@ public class GameController : MonoBehaviour
         */
     }
 
-    // ????
+
     public bool DestinationWithinTarget(Vector3 destination, GameObject target)
     {
         return target.GetComponent<BoxCollider>().bounds.Contains(destination);
     } 
+
+
 }

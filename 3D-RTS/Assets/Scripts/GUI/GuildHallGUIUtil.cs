@@ -143,6 +143,13 @@ public class GuildHallGUIUtil : MonoBehaviour
         {
             if (i < rosterPanels.Count)
             {
+                if (rosterPanels[i] == null)
+                {
+                    rosterPanels.RemoveAt(i);
+                    i--;
+                    continue;
+                }
+
                 if (rosterPanels[i].transform.Find("TextValues").Find("Name").GetComponent<Text>().text != guildCon.roster[i].GetName() ||
                     rosterPanels[i].transform.Find("Text").GetComponent<Text>().text != (i.ToString())) 
                 {
@@ -197,7 +204,7 @@ public class GuildHallGUIUtil : MonoBehaviour
         if (guildCon.selectedNewUnitNum > 0 && guildCon.selectedNewUnitNum <= guildCon.defaultUnits.Count)
         {
             stdGUICon.PopulateStatusWindow(guildCon.defaultUnits[guildCon.selectedNewUnitNum - 1], recruitStatusWindow);
-            goldCostPanel.GetComponent<UnityEngine.UI.Text>().text = guildCon.goldCosts[guildCon.selectedNewUnitNum].ToString();
+            goldCostPanel.GetComponent<UnityEngine.UI.Text>().text = guildCon.goldCosts[guildCon.selectedNewUnitNum - 1].ToString();
         }
     }
 
@@ -209,7 +216,7 @@ public class GuildHallGUIUtil : MonoBehaviour
         GameObject rosterPanel = Instantiate(stdGUICon.rosterUnitPrefab);
 
         rosterPanel.transform.Find("TextValues").Find("Name").GetComponent<Text>().text = rosterMember.GetName();
-        rosterPanel.transform.Find("TextValues").Find("Class").GetComponent<Text>().text = rosterMember.GetClassName().Substring(3);
+        rosterPanel.transform.Find("TextValues").Find("Class").GetComponent<Text>().text = rosterMember.GetClassName().Substring(0);
         rosterPanel.transform.Find("TextValues").Find("Level").Find("LevelValue").GetComponent<Text>().text = rosterMember.GetLevel().ToString();
 
         rosterPanel.transform.Find("Text").GetComponent<Text>().text = i.ToString();

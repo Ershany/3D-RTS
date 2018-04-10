@@ -43,6 +43,8 @@ public class Group : MonoBehaviour {
                 }
             }
         }
+
+        CullDead();
     }
 
     public void AddUnit(DynamicUnit unit)
@@ -158,6 +160,19 @@ public class Group : MonoBehaviour {
     public List<DynamicUnit> GetUnits()
     {
         return units;
+    }
+
+    public void CullDead()
+    {
+        for (int i = 0; i < units.Count; i++)
+        {
+            if (units[i].IsDead && units[i].GetCurrentHealth() < 0)
+            {
+                DynamicUnit temp = units[i];
+                units.Remove(units[i]);
+                Destroy(temp.GetGameObject());
+            }
+        }
     }
 
     public DynamicUnit GetFirstUnit()

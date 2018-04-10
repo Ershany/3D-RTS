@@ -10,9 +10,7 @@ public class EnemyInfantryController : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
-        health = 15.0f;
-        int[] stats = { 10, 5, 12};
-        demonUnit = new FactionUnit(gameObject, health, stats, false , "UD_WARRIOR");
+        demonUnit = new FactionUnit(gameObject, false , "EnemyWarrior");
     }
 
     // Update is called once per frame

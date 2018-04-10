@@ -23,6 +23,11 @@ public class GuildHallController : MonoBehaviour
 
     public int[] goldCosts;
 
+    public GameObject battleRepPrefab;
+    private List<DynamicUnit> battleRepresentatives;
+    public List<TurnBasedBattleController> guildHallBattles;
+    public List<Group> battleGroups;
+
     void Awake()
     {
         goldCosts = new int[3];
@@ -52,11 +57,16 @@ public class GuildHallController : MonoBehaviour
         selectedNewUnitNum = -1;
         selectedRosterUnitNum = 0;
 
+        guildHallBattles = new List<TurnBasedBattleController>();
+        battleRepresentatives = new List<DynamicUnit>();
+        battleGroups = new List<Group>();
+
     }
 
     void Update()
     {
         building.Update();
+        BattleUpdate();
     }
 
     //Add a unit to the roster
@@ -182,11 +192,17 @@ public class GuildHallController : MonoBehaviour
     {
         for (int i = 0; i < myUnits.GetUnits().Count; i++)
         {
-            // reset gameObjects to not be active
-
-            roster.Add(myUnits.GetUnits()[i]);
+            if (myUnits.GetUnits()[i].GetClassName() != "GuildHall")
+            {
+                roster.Add(myUnits.GetUnits()[i]);
+            }
+            else
+            {
+                battleRepresentatives.Remove(myUnits.GetUnits()[i]);
+                Destroy(myUnits.GetUnits()[i].GetGameObject());
+            }
             myUnits.GetUnits().RemoveAt(i);
-            i--;
+                i--;
         }
 
         //delete group 
@@ -204,6 +220,123 @@ public class GuildHallController : MonoBehaviour
         myGroup.GetUnits().RemoveAt(i);
         
 
+    }
+
+    public void InitiateBattle(Group enemyGroup, Vector3 initiatingUnitPosition, GameObject arenaObject)
+    {
+        Group gGroup = gameController.CreateGroup(new List<DynamicUnit>(), initiatingUnitPosition);
+
+        gGroup.AddUnit(CreateBattleRepresentative());
+
+        for (int i = 0; i < 3; i++)
+        {
+            if (roster.Count < 1)
+                continue;
+            int index = Random.Range(0, roster.Count);
+            gGroup.AddUnit(roster[index]);
+            roster[index].GetGameObject().SetActive(true);
+            roster.RemoveAt(index);
+        }
+
+
+        battleGroups.Add(gGroup);
+
+        TurnBasedBattleController tbbc = new TurnBasedBattleController(initiatingUnitPosition, gGroup, enemyGroup, arenaObject);
+
+        guildHallBattles.Add(tbbc);
+    }
+
+    private void BattleUpdate()
+    {
+
+        for (int i = 0; i < guildHallBattles.Count; i++)
+        {
+            guildHallBattles[i].Update();
+
+            while (guildHallBattles[i].playerGroup.GetUnits().Count < 4 && roster.Count > 1)
+            {
+
+                int index = Random.Range(0, roster.Count);
+                guildHallBattles[i].AddUnitToGroupInBattle(roster[index], guildHallBattles[i].playerGroup);
+                roster[index].GetGameObject().SetActive(true);
+                roster.RemoveAt(index);
+            }
+
+            if (guildHallBattles[i].battleOver)
+            {
+                bool playersWon = true;
+                int enemyCount = 0;
+
+
+                guildHallBattles[i].enemyGroup.BattledEnded();
+
+                for (int j = 0; j < guildHallBattles[i].enemyGroup.GetUnits().Count; j++)
+                {
+                    enemyCount += 5;
+                    if (!guildHallBattles[i].enemyGroup.GetUnits()[j].IsDead)
+                        playersWon = false;
+                    Destroy(guildHallBattles[i].enemyGroup.GetUnits()[j].GetGameObject());
+                }
+
+                guildHallBattles[i].playerGroup.BattledEnded();
+
+                if (!guildHallBattles[i].playerGroup.GetUnits()[0].IsPlayerControlled)
+                    continue;
+
+                int groupIndex = -1;
+                for (int j = 0; j < battleGroups.Count; j++)
+                {
+                    if (guildHallBattles[i].playerGroup == battleGroups[j])
+                        groupIndex = j;
+                }
+                if (groupIndex == -1)
+                    continue;
+                for (int j = 0; j < battleGroups[groupIndex].GetUnits().Count; j++)
+                {
+                    if (battleGroups[groupIndex].GetUnits()[j].IsDead)
+                    {
+                        DynamicUnit temp = battleGroups[groupIndex].GetUnits()[j];
+                        battleGroups[groupIndex].GetUnits().RemoveAt(j);
+                        Destroy(temp.GetGameObject());
+
+                    }
+                    if (playersWon)
+                    {
+                        playerController.playerGold += enemyCount;
+                        battleGroups[groupIndex].GetUnits()[j].GiveExp(enemyCount * 15);
+                        //Give players rewards
+
+                    }
+                }
+                guildHallBattles[i].playerGroup.BattledEnded();
+                Destroy(guildHallBattles[i].arena);
+                guildHallBattles.RemoveAt(i);
+                ReturnGroup(battleGroups[groupIndex]);
+                i--;
+            }
+        }
+
+        for (int i = 0; i < battleRepresentatives.Count; i++)
+        {
+            buildingHealth = Mathf.Min(buildingHealth, battleRepresentatives[i].GetCurrentHealth());
+        }
+
+        if (buildingHealth < 0)
+        {
+            gameController.gameOver = true;
+        }
+
+    }
+
+    DynamicUnit CreateBattleRepresentative()
+    {
+        GameObject representative = Instantiate(battleRepPrefab);
+        FactionUnit battleRepresentative = new FactionUnit(representative, true, "GuildHall");
+
+        battleRepresentative.TakeDamage(battleRepresentative.GetCurrentHealth() - buildingHealth);  
+
+        battleRepresentatives.Add(battleRepresentative);
+        return battleRepresentative;
     }
 
 

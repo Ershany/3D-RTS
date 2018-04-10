@@ -36,7 +36,7 @@ public abstract class DynamicUnit : Unit
     //used for now 
     public Vector3 destination;
 
-    public DynamicUnit(GameObject obj, float health, bool playerControlled , string className) : base(obj, health)
+    public DynamicUnit(GameObject obj, bool playerControlled , string className) : base(obj)
     {
         IsPlayerControlled = playerControlled;
         agent = gameObject.GetComponent<NavMeshAgent>();
@@ -45,6 +45,9 @@ public abstract class DynamicUnit : Unit
         IsAttacking = false;
         IsInBattle = false;
         this.className = className;
+        StatKey.GetStats(className, ref maxHealth, ref maxMana, ref strength, ref intelligence, ref dexterity,
+                         ref health_growth, ref mana_growth, ref strength_growth, ref intelligence_growth, ref dexterity_growth);
+        currentHealth = maxHealth;
     }
 
     //these are probably for the useless units that are used for gui
@@ -60,7 +63,7 @@ public abstract class DynamicUnit : Unit
         level = 1;
         experience = 0;
         name = "NAME";
-        this.className = "WK_" + className;
+        this.className = className;
     }
 
     public Rigidbody GetRigidbody()
@@ -100,7 +103,8 @@ public abstract class DynamicUnit : Unit
 
     public void Halt()
     {
-        agent.SetDestination(GetTransform().position);
+        if (agent.isOnNavMesh)
+            agent.SetDestination(GetTransform().position);
     }
 
     public void BeginAttack(List<DynamicUnit> targets)
@@ -133,7 +137,7 @@ public abstract class DynamicUnit : Unit
         {
             IsDead = true;
         }
-        else
+        else if (gameObject.GetComponent<Animator>() != null)
             anim.SetBool("TakeDamage", true);
     }
 
@@ -170,6 +174,11 @@ public abstract class DynamicUnit : Unit
     {
         curr = currentHealth;
         max = maxHealth;
+    }
+    
+    public float GetCurrentHealth()
+    {
+        return currentHealth;
     }
 
     public void GetStatus(ref int str, ref int intel, ref int dex, ref float mHP, ref float currHP, ref int mMP, ref int currMP, ref int lvl)
