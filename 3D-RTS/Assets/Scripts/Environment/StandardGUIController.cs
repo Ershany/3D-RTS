@@ -32,7 +32,17 @@ public class StandardGUIController : MonoBehaviour
     public static List<UnityEngine.UI.Button> buttonsGroupMembers;
     public static GameObject buildingInfoPanel;
     public static GameObject buildingStatusPanel;
-    public static GameObject itemInfoPanel;
+    public static List<GameObject> availableUpgradesPanels;
+
+    public static class BuildingActionButtons
+    {
+        public static GameObject strUp;
+        public static GameObject intUp;
+        public static GameObject dexUp;
+        public static GameObject hpUp;
+        public static GameObject mpUp;
+
+    }
 
     public GameObject currentActivePanel;
 
@@ -54,6 +64,7 @@ public class StandardGUIController : MonoBehaviour
 
     public GameObject guildhallGUICollider;
     public GameObject standardGUICollider;
+    public TechnologyBuildingController techCon;
 
     [ColorUsageAttribute(true, true, 0, 1, 0, 1, order = 0)]
     public Color selectionRectFillColor;
@@ -129,7 +140,24 @@ public class StandardGUIController : MonoBehaviour
         activeMember = 0;
         activeMemberPanel = -1;
         partyCreationWindowMemberClicked = -1;
-        buildingInfoPanel = new GameObject();
+
+
+        buildingInfoPanel = this.gameObject.transform.Find("TechBuildingUI").gameObject;
+        buildingStatusPanel = buildingInfoPanel.transform.Find("BuildingInformationPanel").Find("StatusWindow").Find("BuildingInfoPanel").gameObject;
+
+        availableUpgradesPanels = new List<GameObject>();
+        for (int i = 1; i < 4; i++)
+        {
+            availableUpgradesPanels.Add(buildingInfoPanel.transform.Find("BuildingInformationPanel").Find("StatusWindow").Find("UpgradeInfoPanel").Find("UpgradePanel" + i).gameObject);
+        }
+
+        BuildingActionButtons.strUp = buildingInfoPanel.transform.Find("AvailableUpgrades").Find("Upgrades").Find("StrengthBuff").gameObject;
+        BuildingActionButtons.intUp = buildingInfoPanel.transform.Find("AvailableUpgrades").Find("Upgrades").Find("IntelBuff").gameObject;
+        BuildingActionButtons.dexUp = buildingInfoPanel.transform.Find("AvailableUpgrades").Find("Upgrades").Find("DexBuff").gameObject;
+        BuildingActionButtons.hpUp = buildingInfoPanel.transform.Find("AvailableUpgrades").Find("Upgrades").Find("HealthBuff").gameObject;
+        BuildingActionButtons.mpUp = buildingInfoPanel.transform.Find("AvailableUpgrades").Find("Upgrades").Find("ManaBuff").gameObject;
+
+        buildingInfoPanel.SetActive(false);
 
         guildGUI = new GuildHallGUIUtil(GameObject.FindGameObjectWithTag("GuildHallGUIPanel"), this);
         guildGUIPanel.SetActive(false);
@@ -193,6 +221,7 @@ public class StandardGUIController : MonoBehaviour
                     unitInfoPanel.SetActive(true);
                     GroupsPanelsDestructor();
                     standardGUIPanel.SetActive(true);
+                    buildingInfoPanel.SetActive(false);
                     guildGUIPanel.SetActive(false);
                     _playerController.playerSelectedSingleGroup = false;
                     activeMemberPanel = -1;
@@ -259,6 +288,7 @@ public class StandardGUIController : MonoBehaviour
                 {
                     currentSelectionType = "GuildHall";
                     guildGUIPanel.SetActive(true);
+                    buildingInfoPanel.SetActive(false);
                     standardGUIPanel.SetActive(false);
                     guildGUI.recruitPanel.SetActive(false);
                     if (selectedGroupsPanel.activeSelf)
@@ -269,6 +299,19 @@ public class StandardGUIController : MonoBehaviour
                 }
                 guildGUI.UpdatePartyCreationPanel();
                 guildGUI.UpdateRosterUnitsPanel();
+            }
+            else if (_playerController.buildingSelected.GameObject.GetComponent<TechnologyBuildingController>() != null)
+            {
+                if ((currentSelectionType != "TechBuilding" || !buildingInfoPanel.activeSelf) || (techCon != null && techCon.building.name != _playerController.buildingSelected.name))
+                {
+                    techCon = _playerController.buildingSelected.GameObject.GetComponent<TechnologyBuildingController>();
+
+                    currentSelectionType = "TechBuilding";
+                    buildingInfoPanel.SetActive(true);
+                    guildGUIPanel.SetActive(false);
+                    standardGUIPanel.SetActive(false);
+                }
+                PopulateBuildingInfoPanel();
             }
         }
 
@@ -395,6 +438,35 @@ public class StandardGUIController : MonoBehaviour
     public void HoldPositionCommand()
     {
         _playerController.SetActiveCommand("HoldPosition");
+    }
+
+    public void UpgradeSelected(string upgradeName)
+    {
+        if (techCon != null && currentSelectionType == "TechBuilding")
+        {
+            switch (upgradeName)
+            {
+                case ("Strength"):
+                    techCon.BuffStrength();
+                    break;
+
+                case ("Intel"):
+                    techCon.BuffIntelligence();
+                    break;
+
+                case ("Dex"):
+                    techCon.BuffDexterity();
+                    break;
+
+                case ("Health"):
+                    techCon.BuffHealth();
+                    break;
+
+                case ("Mana"):
+                    techCon.BuffMana();
+                    break;
+            }
+        }
     }
 
     public void GroupPreviewSelected(int i)
@@ -529,6 +601,118 @@ public class StandardGUIController : MonoBehaviour
         }
 
         selectedGroupsPanel.SetActive(false);
+    }
+
+    public void PopulateBuildingInfoPanel()
+    {
+        if (techCon != null)
+        {
+            buildingStatusPanel.transform.Find("NamePanel").Find("Name").GetComponent<UnityEngine.UI.Text>().text = _playerController.buildingSelected.name;
+
+            buildingStatusPanel.transform.Find("Health").Find("HealthCurrent").GetComponent<UnityEngine.UI.Text>().text = ((int)_playerController.buildingSelected.currentHealth).ToString();
+            buildingStatusPanel.transform.Find("Health").Find("HealthCurrent").Find("HealthMax").GetComponent<UnityEngine.UI.Text>().text = ((int)_playerController.buildingSelected.maxHealth).ToString();
+
+            int upgradeCount = 0;
+
+            if (techCon.strengthBuff != 0 && upgradeCount < 2)
+            {
+                PopulateUpgradeInfoPanel(availableUpgradesPanels[upgradeCount], "STR", techCon.strengthBuff, 20);
+                upgradeCount++;
+                BuildingActionButtons.strUp.SetActive(true);
+            }
+            else
+            {
+                BuildingActionButtons.strUp.SetActive(false);
+            }
+            if (techCon.intelligenceBuff != 0 && upgradeCount < 2)
+            {
+                PopulateUpgradeInfoPanel(availableUpgradesPanels[upgradeCount], "INTEL", techCon.intelligenceBuff, 20);
+                upgradeCount++;
+                BuildingActionButtons.intUp.SetActive(true);
+            }
+            else
+            {
+                BuildingActionButtons.intUp.SetActive(false);
+            }
+            if (techCon.dexterityBuff != 0 && upgradeCount < 2)
+            {
+                PopulateUpgradeInfoPanel(availableUpgradesPanels[upgradeCount], "DEX", techCon.dexterityBuff, 20);
+                upgradeCount++;
+                BuildingActionButtons.dexUp.SetActive(true);
+            }
+            else
+            {
+                BuildingActionButtons.dexUp.SetActive(false);
+            }
+            if (techCon.healthBuff != 0 && upgradeCount < 2)
+            {
+                PopulateUpgradeInfoPanel(availableUpgradesPanels[upgradeCount], "HEALTH", (int)techCon.healthBuff, 20);
+                upgradeCount++;
+                BuildingActionButtons.hpUp.SetActive(true);
+            }
+            else
+            {
+                BuildingActionButtons.hpUp.SetActive(false);
+            }
+            if (techCon.manaBuff != 0 && upgradeCount < 2)
+            {
+                PopulateUpgradeInfoPanel(availableUpgradesPanels[upgradeCount], "MANA", techCon.manaBuff, 20);
+                upgradeCount++;
+                BuildingActionButtons.mpUp.SetActive(true);
+            }
+            else
+            {
+                BuildingActionButtons.mpUp.SetActive(false);
+            }
+
+            for (int i = upgradeCount; i < 3; i++)
+            {
+                availableUpgradesPanels[i].SetActive(false);
+            }
+
+
+
+        }
+
+       
+
+        /* Alternate Specific Populate function method
+        switch (_playerController.buildingSelected.name)
+        {
+            case ("BlackSmith"):
+                PopulateBlacksmithInfoPanel();
+                break;
+
+            case ("ArcheryRange"):
+                PopulateArcheryRangeInfoPanel();
+                break;
+
+            case ("TempleOfMagi"):
+                PopulateTempleOfMagiInfoPanel();
+                break;
+
+        }
+        */
+    }
+
+    public void PopulateUpgradeInfoPanel(GameObject panel, string upgradeName, int value, int cost)
+    {
+        panel.transform.Find("UpgradeInfo").Find("UpgradeName").GetComponent<UnityEngine.UI.Text>().text = upgradeName;
+        panel.transform.Find("UpgradeInfo").Find("IncreaseValue").GetComponent<UnityEngine.UI.Text>().text = value.ToString();
+        panel.transform.Find("UpgradeInfo").Find("Cost").GetComponent<UnityEngine.UI.Text>().text = cost.ToString();
+    }
+
+    public void PopulateBlacksmithInfoPanel()
+    {
+
+    }
+    public void PopulateArcheryRangeInfoPanel()
+    {
+
+    }
+    public void PopulateTempleOfMagiInfoPanel()
+    {
+
     }
 
     public bool MouseIsOnGUI(Vector2 pos)

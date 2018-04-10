@@ -516,7 +516,7 @@ public class PlayerController : MonoBehaviour
 
             temp.transform.localScale = new Vector3(Mathf.Abs(point1.x - point2.x), 1, Mathf.Abs(point1.z - point2.z));
         }
-        
+
         if (point1 != null && point2 != null) {
             float minX = Mathf.Min(point1.x, point2.x);
             float maxX = Mathf.Max(point1.x, point2.x);

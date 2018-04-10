@@ -155,8 +155,8 @@ public class GameController : MonoBehaviour
         TechnologyBuildingController controller = Instantiate(blacksmithPrefab, Vector3.zero, Quaternion.Euler(0 , -225 , 0)).GetComponent<TechnologyBuildingController>();
 
         List<string> blackSmithTechnologies = new List<string> { "Reinforced Armor" , "Courage" , "Spell Mastery" , "Education" , "Sword Mastery"};
-        List<int> blacksmithBuffs = new List<int> { 3 , 1 , 1 , 2 , 2};
-        string unitAffected = "Warrior"; //might need to be changed
+        List<int> blacksmithBuffs = new List<int> { 1 , 1 , 0 , 0 , 0};
+        string unitAffected = "Everyone"; //might need to be changed
         float health = 200.0f;
 
         controller.SetupBuilding(blackSmithTechnologies , blacksmithBuffs , unitAffected , health , "Blacksmith" , isPlayer);
@@ -175,8 +175,8 @@ public class GameController : MonoBehaviour
         TechnologyBuildingController controller = Instantiate(ArcheryRangePrefab, Vector3.zero, Quaternion.Euler(-90 , 225 , 0)).GetComponent<TechnologyBuildingController>();
 
         List<string> ArcheryRangeTechnologies = new List<string> { "Padding", "Resolve", "Spell Mastery", "Mental Strength", "Perception" };
-        List<int> ArcheryRangeBuffs = new List<int> { 2, 2, 1, 1, 3 };
-        string unitAffected = "Archer"; //might need to be changed
+        List<int> ArcheryRangeBuffs = new List<int> { 0, 0, 0, 0, 1 };
+        string unitAffected = "Everyone"; //might need to be changed
         float health = 150.0f;
 
         controller.SetupBuilding(ArcheryRangeTechnologies, ArcheryRangeBuffs, unitAffected, health , "ArcheryRange" , isPlayer);
@@ -195,8 +195,8 @@ public class GameController : MonoBehaviour
         TechnologyBuildingController controller = Instantiate(TempleOfMagiPrefab, Vector3.zero, Quaternion.Euler(0 , 135 , 0)).GetComponent<TechnologyBuildingController>();
 
         List<string> templeOfMagiTechnologies = new List<string> { "Armored Robes", "Mutations", "Mage Training", "Wisdom", "Contemplation" };
-        List<int> templeOfmagiBuffs = new List<int> { 0, 0, 0, 0, 0 };
-        string unitAffected = "Mage"; //might need to be changed
+        List<int> templeOfmagiBuffs = new List<int> { 0, 0, 1, 1, 0 };
+        string unitAffected = "Everyone"; //might need to be changed
         float health = 300.0f;
 
         controller.SetupBuilding(templeOfMagiTechnologies, templeOfmagiBuffs, unitAffected, health , "TempleOfMagi" , isPlayer);

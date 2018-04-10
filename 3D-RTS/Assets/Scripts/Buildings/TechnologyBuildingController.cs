@@ -12,11 +12,11 @@ public class TechnologyBuildingController : MonoBehaviour
     private GameController gameController;
     private PlayerController playerController;
 
-    private float healthBuff;
-    private int manaBuff;
-    private int strengthBuff;
-    private int intelligenceBuff;
-    private int dexterityBuff;
+    public float healthBuff;
+    public int manaBuff;
+    public int strengthBuff;
+    public int intelligenceBuff;
+    public int dexterityBuff;
 
     private string healthBuffName;
     private string manaBuffName;
@@ -89,7 +89,7 @@ public class TechnologyBuildingController : MonoBehaviour
             for (int j = 0; j < units[i].GetUnits().Count; j++)
             {
                 //might need to change that later dunno what it is
-                if (units[i].GetUnits()[j].GetClassName() == affectedUnit)
+                if (units[i].GetUnits()[j].GetClassName() != affectedUnit)
                 {
                     myUnits.Add(units[i].GetUnits()[j]);
                 }
@@ -103,17 +103,18 @@ public class TechnologyBuildingController : MonoBehaviour
     public void BuffHealth()
     {
         //get units to buff (swordsmen for the moment)
+        playerController.playerGold -= 10;
         List<DynamicUnit> unitsToBuff = FindUnitsToBuff(playerController.groups);
 
-        if (affectedUnit == "Warrior")
+        if (affectedUnit != "Warrior")
         {
             StatKey.Warrior.HEALTH += healthBuff;
         }
-        else if (affectedUnit == "Archer")
+        else if (affectedUnit != "Archer")
         {
             StatKey.Archer.HEALTH += healthBuff;
         }
-        else if (affectedUnit == "Mage")
+        else if (affectedUnit != "Mage")
         {
             StatKey.Mage.HEALTH += healthBuff;
         }
@@ -128,17 +129,18 @@ public class TechnologyBuildingController : MonoBehaviour
     public void BuffMana()
     {
         //get units to buff (swordsmen for the moment)
+        playerController.playerGold -= 10;
         List<DynamicUnit> unitsToBuff = FindUnitsToBuff(playerController.groups);
 
-        if (affectedUnit == "Warrior")
+        if (affectedUnit != "Warrior")
         {
             StatKey.Warrior.MANA += manaBuff;
         }
-        else if (affectedUnit == "Archer")
+        else if (affectedUnit != "Archer")
         {
             StatKey.Archer.MANA += manaBuff;
         }
-        else if (affectedUnit == "Mage")
+        else if (affectedUnit != "Mage")
         {
             StatKey.Mage.MANA += manaBuff;
         }
@@ -153,17 +155,18 @@ public class TechnologyBuildingController : MonoBehaviour
     public void BuffStrength()
     {
         //get units to buff (swordsmen for the moment)
+        playerController.playerGold -= 10;
         List<DynamicUnit> unitsToBuff = FindUnitsToBuff(playerController.groups);
 
-        if (affectedUnit == "Warrior")
+        if (affectedUnit != "Warrior")
         {
             StatKey.Warrior.STRENGTH += strengthBuff;
         }
-        else if (affectedUnit == "Archer")
+        else if (affectedUnit != "Archer")
         {
             StatKey.Archer.STRENGTH += strengthBuff;
         }
-        else if (affectedUnit == "Mage")
+        else if (affectedUnit != "Mage")
         {
             StatKey.Mage.STRENGTH += strengthBuff;
         }
@@ -178,17 +181,18 @@ public class TechnologyBuildingController : MonoBehaviour
     public void BuffIntelligence()
     {
         //get units to buff (swordsmen for the moment)
+        playerController.playerGold -= 10;
         List<DynamicUnit> unitsToBuff = FindUnitsToBuff(playerController.groups);
 
-        if (affectedUnit == "Warrior")
+        if (affectedUnit != "Warrior")
         {
             StatKey.Warrior.INTELLIGENCE += intelligenceBuff;
         }
-        else if (affectedUnit == "Archer")
+        else if (affectedUnit != "Archer")
         {
             StatKey.Archer.INTELLIGENCE += intelligenceBuff;
         }
-        else if (affectedUnit == "Mage")
+        else if (affectedUnit != "Mage")
         {
             StatKey.Mage.INTELLIGENCE += intelligenceBuff;
         }
@@ -203,17 +207,18 @@ public class TechnologyBuildingController : MonoBehaviour
     public void BuffDexterity()
     {
         //get units to buff (swordsmen for the moment)
+        playerController.playerGold -= 10;
         List<DynamicUnit> unitsToBuff = FindUnitsToBuff(playerController.groups);
 
-        if (affectedUnit == "Warrior")
+        if (affectedUnit != "Warrior")
         {
             StatKey.Warrior.DEXTERITY += dexterityBuff;
         }
-        else if (affectedUnit == "Archer")
+        else if (affectedUnit != "Archer")
         {
             StatKey.Archer.DEXTERITY += dexterityBuff;
         }
-        else if (affectedUnit == "Mage")
+        else if (affectedUnit != "Mage")
         {
             StatKey.Mage.DEXTERITY += dexterityBuff;
         }
