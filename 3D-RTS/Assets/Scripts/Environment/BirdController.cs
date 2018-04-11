@@ -18,7 +18,7 @@ public class BirdController : MonoBehaviour {
         // Wander birds
         for (int i = 0; i < 10; ++i)
         {
-            Bird obj = Instantiate(birdPrefab, new Vector3(i * 3, birdHeight, i * 3), Quaternion.identity, this.gameObject.transform).GetComponent<Bird>();
+            Bird obj = Instantiate(birdPrefab, Bird.RandomWanderPos(), Quaternion.identity, this.gameObject.transform).GetComponent<Bird>();
             obj.BeginWander(Bird.RandomWanderPos());
         }
     }

@@ -743,7 +743,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aeaaa037ecdf3d4382bd88eb33ad6c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingHealth: 50
+  buildingHealth: 10
   playerControlled: 1
   selectedNewUnitNum: 0
   selectedRosterUnitNum: 0
