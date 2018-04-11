@@ -21,7 +21,7 @@ public class NeutralUnit : DynamicUnit
         intelligence = 5;
         maxMana = 10;
         currentMana = maxMana;
-
+        currentHealth = maxHealth;
         this.name = name;
         anim = obj.GetComponent<Animator>();
     }

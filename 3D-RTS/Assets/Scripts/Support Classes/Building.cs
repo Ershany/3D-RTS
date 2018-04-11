@@ -16,7 +16,7 @@ public class Building
     public GameObject GameObject { get; private set; }
     public string name;
 
-    private float maxHealth, currentHealth;
+    public float maxHealth, currentHealth;
     private BoxCollider boxCollider;
     private List<Renderer> renderers;
     private int containingColliderCount;
