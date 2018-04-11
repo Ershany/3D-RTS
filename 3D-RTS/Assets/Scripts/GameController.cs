@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 //TO DO LIST:
 //Add a string array for names
@@ -52,6 +52,8 @@ public class GameController : MonoBehaviour
     public int enemyGold;
 
     public bool gameOver;
+    public bool playerWon;
+    private Text gameOverText;
 
     void Awake()
     {
@@ -116,6 +118,8 @@ public class GameController : MonoBehaviour
         AddFactionGroup(enemyUnits, enemyPos, false);
 
         gameOver = false;
+        playerWon = false;
+        gameOverText = GameObject.FindGameObjectWithTag("EndGameText").GetComponent<Text>();
     }
 
     void Update()
@@ -125,6 +129,13 @@ public class GameController : MonoBehaviour
 
         //check for units returning back to guild hall
         GuildHallReturnCheck();
+
+        // Check for end state
+        if (gameOver)
+        {
+            if (playerWon) gameOverText.text = "You Win!";
+            else gameOverText.text = "You Lose!";
+        }
     }
 
     //Archer creation

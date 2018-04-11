@@ -8,6 +8,18 @@ TagManager:
   - PlayerController
   - HeightCheck
   - BattlePos
+  - EnemyController
+  - Terrain
+  - GuildHall
+  - HighlightQuad
+  - RandomEncounter
+  - GuildHallGUIPanel
+  - StandardGUIPanel
+  - GroupInformationPanel
+  - GroupMemberPanelButton
+  - GroupMemberPanel
+  - DefenseLoc
+  - EndGameText
   layers:
   - Default
   - TransparentFX

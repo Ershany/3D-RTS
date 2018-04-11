@@ -1,5 +1,5 @@
 ﻿public interface IState {
     
-    void Update(EnemyController controller);
+    void Update();
 
 }

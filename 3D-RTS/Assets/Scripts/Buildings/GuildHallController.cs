@@ -6,6 +6,7 @@ public class GuildHallController : MonoBehaviour
 {
     // Unit Stats
     [Range(1.0f, 1000.0f)] public float buildingHealth = 500.0f;
+    public bool playerControlled = true;
 
     // References
     public Building building;
@@ -36,7 +37,7 @@ public class GuildHallController : MonoBehaviour
         goldCosts[2] = 10;
         //setup members 
         //for now
-        building = new Building(gameObject, Building.BuildingType.GUILDHALL, buildingHealth , "GuildHall" , true);
+        building = new Building(gameObject, Building.BuildingType.GUILDHALL, buildingHealth , "GuildHall" , playerControlled);
 
 
         building.name = "GuildHall";

@@ -7,6 +7,7 @@ public class TechnologyBuildingController : MonoBehaviour
     //general stat buff controller 
     //Stats
     [Range(1.0f, 1000.0f)] public float buildingHealth;
+    public bool playerControlled = true;
 
     public Building building;
     private GameController gameController;

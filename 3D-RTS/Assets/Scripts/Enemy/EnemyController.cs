@@ -18,23 +18,29 @@ public class EnemyController : MonoBehaviour
     public List<Building> enemyBuildings;
 
     // states
-    public static OffenseState offenseState = new OffenseState();
-    public static DefenseState defenseState = new DefenseState();
-    public static HarvestState harvestState = new HarvestState();
+    public static OffenseState offenseState;
+    public static DefenseState defenseState;
+    public static HarvestState harvestState;
 
     void Awake()
     {
+        offenseState = new OffenseState(this.gameObject);
+        defenseState = new DefenseState(this.gameObject);
+        harvestState = new HarvestState(this.gameObject);
+
+        
         enemyBuildings = new List<Building>();
         enemyGroups = new List<Group>();
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
 
-        State = harvestState;
+        State = defenseState;
+        defenseState.SetDefenseTime(10.0f);
     }
 
     void Update()
     {
-        State?.Update(this);
+        State?.Update();
     }
 
     public void AddGroup(Group group)
