@@ -43,8 +43,6 @@ public class Group : MonoBehaviour {
                 }
             }
         }
-
-        CullDead();
     }
 
     public void AddUnit(DynamicUnit unit)

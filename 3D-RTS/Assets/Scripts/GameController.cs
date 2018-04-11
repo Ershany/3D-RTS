@@ -225,19 +225,16 @@ public class GameController : MonoBehaviour
     {
         Group grp = Instantiate(groupPrefab, position, Quaternion.identity).GetComponent<Group>();
 
-        for (int i = 0; i < factionUnits.Count; i++)
+        if (factionUnits.Count > 0)
         {
-            if (i != 0)
-            {
-                factionUnits[i].GetTransform().position = factionUnits[i - 1].GetTransform().position + new Vector3(4.0f, 0, 0);
-            }
-            else
-            {
-                factionUnits[0].GetTransform().position += new Vector3(4.0f, 0, -0.0f);
-            }
+            grp.AddUnit(factionUnits[0]);
 
-            grp.AddUnit(factionUnits[i]);
+            for (int i = 1; i < factionUnits.Count; i++)
+            {
+                grp.AddUnit(factionUnits[i]);
+            }
         }
+        
 
         // Add either to player or enemy
         if (isPlayer) { playerController.groups.Add(grp); }
