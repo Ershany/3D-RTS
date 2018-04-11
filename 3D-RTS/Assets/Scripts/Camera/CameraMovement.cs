@@ -59,7 +59,7 @@ public class CameraMovement : MonoBehaviour
     void ProcessMouseScroll()
     {
         // If UI is selected, don't process mouse scroll because the UI should be processing the mouse scrolling
-        if (player.buildingSelected == null || player.buildingSelected != null)
+        if (player.buildingSelected == null)
         {
             float deltaScroll = Input.GetAxis("Mouse ScrollWheel"); // Zoom out = negative      Zoom in = positive
             cameraFOV += -(deltaScroll * cameraZoomSpeed * Time.deltaTime);
