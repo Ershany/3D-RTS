@@ -66,7 +66,10 @@ public class GuildHallController : MonoBehaviour
 
     void Update()
     {
-        building.Update();
+        if (playerControlled)
+        {
+            building.Update();
+        }
         BattleUpdate();
     }
 
@@ -173,10 +176,13 @@ public class GuildHallController : MonoBehaviour
         //reset their gameObject's active to true
         if (unitsToBeDeployed.Count > 0)
         {
+            Debug.Log("Building pos " + transform.position.ToString());
             for(int i = 0; i < unitsToBeDeployed.Count; i++)
             {
+                Debug.Log(i + ": " + unitsToBeDeployed[i].GetTransform().position);
                 unitsToBeDeployed[i].GetTransform().position = transform.position + ((i + 1) * new Vector3(0.0f, 0.0f, -2.0f));
                 unitsToBeDeployed[i].GetGameObject().SetActive(true);
+                Debug.Log(i + ": " + unitsToBeDeployed[i].GetTransform().position);
             }
             gameController.AddFactionGroup(unitsToBeDeployed, unitsToBeDeployed[0].GetTransform().position, true);
             unitsToBeDeployed.Clear();

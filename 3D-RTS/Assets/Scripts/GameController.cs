@@ -109,13 +109,45 @@ public class GameController : MonoBehaviour
         EnemyInfantryController infantry = Instantiate(enemyInfantryPrefab, enemyPos, Quaternion.identity, gameObject.transform).GetComponent<EnemyInfantryController>();
         EnemyMageController mage = Instantiate(enemyMagePrefab, enemyPos, Quaternion.identity, gameObject.transform).GetComponent<EnemyMageController>();
 
+        Vector3 enemyPos1 = new Vector3(375.0f, 0.0f, 445.0f);
+        EnemyArcherController archer1 = Instantiate(enemyArcherPrefab, enemyPos1, Quaternion.identity, gameObject.transform).GetComponent<EnemyArcherController>();
+        EnemyInfantryController infantry1 = Instantiate(enemyInfantryPrefab, enemyPos1 + new Vector3(4.0f, 0.0f, 0.0f), Quaternion.identity, gameObject.transform).GetComponent<EnemyInfantryController>();
+        EnemyMageController mage1 = Instantiate(enemyMagePrefab, enemyPos1 + new Vector3(2.0f, 0.0f, 0.0f), Quaternion.identity, gameObject.transform).GetComponent<EnemyMageController>();
+
+        Vector3 enemyPos2 = new Vector3(400.0f, 0.0f, 445.0f);
+        EnemyArcherController archer2 = Instantiate(enemyArcherPrefab, enemyPos2, Quaternion.identity, gameObject.transform).GetComponent<EnemyArcherController>();
+        EnemyInfantryController infantry2 = Instantiate(enemyInfantryPrefab, enemyPos2 + new Vector3(4.0f, 0.0f, 0.0f), Quaternion.identity, gameObject.transform).GetComponent<EnemyInfantryController>();
+        EnemyMageController mage2 = Instantiate(enemyMagePrefab, enemyPos2 + new Vector3(2.0f, 0.0f, 0.0f), Quaternion.identity, gameObject.transform).GetComponent<EnemyMageController>();
+
+        Vector3 enemyPos3 = new Vector3(410.0f, 0.0f, 430.0f);
+        EnemyArcherController archer3 = Instantiate(enemyArcherPrefab, enemyPos3, Quaternion.identity, gameObject.transform).GetComponent<EnemyArcherController>();
+        EnemyInfantryController infantry3 = Instantiate(enemyInfantryPrefab, enemyPos3 + new Vector3(4.0f, 0.0f, 0.0f), Quaternion.identity, gameObject.transform).GetComponent<EnemyInfantryController>();
+        EnemyMageController mage3 = Instantiate(enemyMagePrefab, enemyPos3 + new Vector3(2.0f, 0.0f, 0.0f), Quaternion.identity, gameObject.transform).GetComponent<EnemyMageController>();
+
         List<DynamicUnit> enemyUnits = new List<DynamicUnit>();
         enemyUnits.Add(archer.demonUnit);
         enemyUnits.Add(infantry.demonUnit);
         enemyUnits.Add(mage.demonUnit);
-
-        //Debug.Log("enemy groups: " + enemyController.enemyGroups.Count); 
         AddFactionGroup(enemyUnits, enemyPos, false);
+
+        List<DynamicUnit> enemyUnits1 = new List<DynamicUnit>();
+        enemyUnits1.Add(archer1.demonUnit);
+        enemyUnits1.Add(infantry1.demonUnit);
+        enemyUnits1.Add(mage1.demonUnit);
+        AddFactionGroup(enemyUnits1, enemyPos1, false);
+
+        List<DynamicUnit> enemyUnits2 = new List<DynamicUnit>();
+        enemyUnits2.Add(archer2.demonUnit);
+        enemyUnits2.Add(infantry2.demonUnit);
+        enemyUnits2.Add(mage2.demonUnit);
+        AddFactionGroup(enemyUnits2, enemyPos2, false);
+
+        List<DynamicUnit> enemyUnits3 = new List<DynamicUnit>();
+        enemyUnits3.Add(archer3.demonUnit);
+        enemyUnits3.Add(infantry3.demonUnit);
+        enemyUnits3.Add(mage3.demonUnit);
+        AddFactionGroup(enemyUnits3, enemyPos3, false);
+
 
         gameOver = false;
         playerWon = false;

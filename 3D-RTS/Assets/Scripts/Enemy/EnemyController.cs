@@ -6,7 +6,6 @@ public class EnemyController : MonoBehaviour
 {
     // members
     public List<Group> enemyGroups;
-    private Group strongestGroup;
     private Group selectedGroup { get; set; }
     public IState State { get; set; }
 
@@ -46,15 +45,6 @@ public class EnemyController : MonoBehaviour
     public void AddGroup(Group group)
     {
         enemyGroups.Add(group);
-        
-        if (strongestGroup == null)
-        {
-            strongestGroup = group;
-        }
-        else
-        {
-            
-        }
     }
 
     public bool RemoveGroup(Group group) 

@@ -130,10 +130,71 @@ public abstract class DynamicUnit : Unit
         }
     }
 
+    public void AttackRandomEnemy()
+    {
+        if (this.intelligence > 10)
+        {
+            IsAttacking = true;
+            int randIndex = Random.Range(0, 4);
+            int safeGuard = 0;
+            while (opponents[randIndex].IsDead && safeGuard < 100)
+            {
+                randIndex = Random.Range(0, 4);
+                safeGuard++;
+            }
+            if (safeGuard > 99)
+            {
+                AttackAnyEnemy();
+            }
+            else
+            {
+
+                Vector3 offsetVector = Vector3.Normalize(opponents[randIndex].GetTransform().position - GetTransform().position);
+                float scale = 4.0f;
+                Vector3 targetPosition = opponents[randIndex].GetTransform().position - scale * offsetVector;
+                SetDestination(targetPosition);
+            }
+        }
+        else
+        {
+            AttackTargettedEnemy();
+        }
+    }
+
+    public void AttackTargettedEnemy()
+    {
+        int index = -1;
+        float hpCounter = 10000.0f;
+
+        for (int i = 0; i < opponents.Count; i++)
+        {
+            if (!opponents[i].IsDead)
+            {
+                if (opponents[i].GetCurrentHealth() < hpCounter)
+                {
+                    index = i;
+                    hpCounter = opponents[i].GetCurrentHealth();
+                }
+            }
+        }
+        if (index == -1)
+        {
+            AttackAnyEnemy();
+        }
+        else
+        {
+            Vector3 offsetVector = Vector3.Normalize(opponents[index].GetTransform().position - GetTransform().position);
+            float scale = 4.0f;
+            Vector3 targetPosition = opponents[index].GetTransform().position - scale * offsetVector;
+            SetDestination(targetPosition);
+        }
+
+    }
+
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        if (currentHealth <= 0.0f)
+        if (currentHealth <= 0.0f && this.className != "GuildHall")
         {
             IsDead = true;
         }

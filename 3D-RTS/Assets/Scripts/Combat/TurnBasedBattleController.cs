@@ -200,14 +200,14 @@ public class TurnBasedBattleController
             {
                 attackingUnit = attackQueue.Dequeue();
                 returnPos = attackingUnit.GetTransform().position;
-                attackingUnit.AttackAnyEnemy();
+                attackingUnit.AttackRandomEnemy();
             }
 
             else if (ResolvedAttack() || attackingUnit.IsDead)
             {
                 attackingUnit = attackQueue.Dequeue();
                 returnPos = attackingUnit.GetTransform().position;
-                attackingUnit.AttackAnyEnemy();
+                attackingUnit.AttackRandomEnemy();
             }
 
         }
@@ -315,14 +315,14 @@ public class TurnBasedBattleController
             {
                 attackingUnit = attackQueue.Dequeue();
                 returnPos = attackingUnit.GetTransform().position;
-                attackingUnit.AttackAnyEnemy();
+                attackingUnit.AttackRandomEnemy();
             }
 
             else if (ResolvedAttack() || attackingUnit.IsDead)
             {
                 attackingUnit = attackQueue.Dequeue();
                 returnPos = attackingUnit.GetTransform().position;
-                attackingUnit.AttackAnyEnemy();
+                attackingUnit.AttackRandomEnemy();
             }
 
         }
